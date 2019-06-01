@@ -1,4 +1,3 @@
-/* global document */
 import { dpr, npx, thinLineWidth } from './helper';
 
 function invoke(name, ...args) {
@@ -51,11 +50,11 @@ class Canvas2d {
   }
 
   moveTo(x, y) {
-    return invoke.call(this, 'moveTo', npx(x), npx(y));
+    return invoke.call(this, 'moveTo', npx(x) - 0.5, npx(y) - 0.5);
   }
 
   lineTo(x, y) {
-    return invoke.call(this, 'lineTo', npx(x), npx(y));
+    return invoke.call(this, 'lineTo', npx(x) - 0.5, npx(y) - 0.5);
   }
 
   line(...xys) {

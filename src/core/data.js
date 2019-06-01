@@ -93,17 +93,24 @@ const defaultSettings = {
   },
 };
 
+const defaultData = {
+  styles: [],
+  merges: [],
+  rows: {},
+  cols: {},
+};
+
 const toolbarHeight = 41;
 
 export default class Data {
   constructor(settings = {}) {
     this.settings = helper.merge(defaultSettings, settings);
     // the origin data object for save
-    this._ = {};
+    this._ = helper.merge(defaultData);
   }
 
   load(data) {
-    this._ = data || {};
+    this._ = helper.merge(defaultData, data);
   }
 
   defaultStyle() {
@@ -112,7 +119,6 @@ export default class Data {
 
   canvas() {
     const { view } = this.settings;
-    console.log(':', this.settings);
     return {
       width: view.width(),
       height: view.height() - toolbarHeight,

@@ -30,14 +30,15 @@ class CreateElement {
   }
 
   child(t) {
-    if (!t) return ;
-    let el = t;
-    if (typeof t === 'string') {
-      el = document.createTextNode(t);
-    } else {
-      el = t.el;
+    if (t) {
+      let el = t;
+      if (typeof t === 'string') {
+        el = document.createTextNode(t);
+      } else {
+        ({ el } = t);
+      }
+      this.el.appendChild(el);
     }
-    this.el.appendChild(el);
     return this;
   }
 
