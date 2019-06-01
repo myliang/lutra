@@ -2,8 +2,7 @@ function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function merge(...sources) {
-  const object = {};
+function mergeDeep(object = {}, ...sources) {
   sources.forEach((source) => {
     Object.keys(source).forEach((key) => {
       const v = source[key];
@@ -12,7 +11,7 @@ function merge(...sources) {
         object[key] = v;
       } else if (typeof v !== 'function' && !Array.isArray(v) && v instanceof Object) {
         object[key] = object[key] || {};
-        merge(object[key], v);
+        mergeDeep(object[key], v);
       } else {
         object[key] = v;
       }
@@ -21,14 +20,36 @@ function merge(...sources) {
   return object;
 }
 
-function rangeSum(min, max, v) {
+function rangeSum(min, max, getv) {
   let total = 0;
-  for (let i = min; i < max; i += 1) total += v(i);
+  for (let i = min; i < max; i += 1) total += getv(i);
   return total;
+}
+
+function rangeEach(min, max, getv, cb) {
+  let total = 0;
+  for (let i = min; i < max; i += 1) {
+    const v = getv(i);
+    cb(i, v, total);
+    total += v;
+  }
+}
+
+function rangeIf(min, max, getv, cb) {
+  let total = 0;
+  let lasti = 0;
+  for (let i = min; i < max; i += 1) {
+    total += getv(i);
+    lasti = i;
+    if (cb(total)) break;
+  }
+  return lasti;
 }
 
 export default {
   clone,
-  merge,
+  merge: (...sources) => mergeDeep({}, ...sources),
   rangeSum,
+  rangeEach,
+  rangeIf,
 };

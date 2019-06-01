@@ -30,9 +30,12 @@ class CreateElement {
   }
 
   child(t) {
-    let { el } = t;
+    if (!t) return ;
+    let el = t;
     if (typeof t === 'string') {
       el = document.createTextNode(t);
+    } else {
+      el = t.el;
     }
     this.el.appendChild(el);
     return this;

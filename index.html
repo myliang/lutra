@@ -13,7 +13,6 @@
       // x.spreadsheet.locale('zh-cn');
       var xs = x.formdesigner('#x-form-designer-demo', {})
         .loadData({
-          freeze: 'B3',
           styles: [
             {
               bgcolor: '#f4f5f8',
@@ -50,9 +49,6 @@
               }
             }
           },
-        }).change((cdata) => {
-          console.log(cdata);
-          console.log(xs.validate());
         });
     }
   </script>

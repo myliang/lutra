@@ -21,7 +21,7 @@ function drow({ settings }) {
 function height(data, index, h) {
   let r = row(data, index);
   if (h) {
-    r ||= nrow(data, index);
+    r = r || nrow(data, index);
     r.height = h;
     return h;
   }

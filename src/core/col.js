@@ -21,7 +21,7 @@ function dcol({ settings }) {
 function width(data, index, w) {
   let c = col(data, index);
   if (w) {
-    c ||= ncol(data, index);
+    c = c || ncol(data, index);
     c.width = w;
     return w;
   }

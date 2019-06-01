@@ -1,43 +1,35 @@
 /* global window, document */
-import { h } from './component/element';
-import DataProxy from './core/data_proxy';
-import Sheet from './component/sheet';
+import h from './dom/create-element';
+import Data from './core/data';
+import TableCanvas from './component/table-canvas';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
 import './index.less';
 
 
-class Spreadsheet {
-  constructor(selectors, options = {}) {
+class FormDesigner {
+  constructor(selectors, settings = {}) {
     let targetEl = selectors;
     if (typeof selectors === 'string') {
       targetEl = document.querySelector(selectors);
     }
-    this.data = new DataProxy('sheet1', options);
-    const rootEl = h('div', `${cssPrefix}`)
-      .on('contextmenu', evt => evt.preventDefault());
+    this.data = new Data(settings);
+    // console.log('data:', this.data);
+
+    const tableEl = h('canvas', `${cssPrefix}-table`);
+    this.tableCanvas = new TableCanvas(tableEl.el, this.data);
+
+    const rootEl = h('div', `${cssPrefix}`, tableEl)
+      .on('contextmenu.prevent', () => {});
+
     // create canvas element
     targetEl.appendChild(rootEl.el);
-    this.sheet = new Sheet(rootEl, this.data);
+
+    this.tableCanvas.render();
   }
 
   loadData(data) {
-    this.sheet.loadData(data);
-    return this;
-  }
-
-  getData() {
-    return this.data.getData();
-  }
-
-  validate() {
-    const { validations } = this.data;
-    return validations.errors.size <= 0;
-  }
-
-  change(cb) {
-    this.data.change = cb;
-    return this;
+    this.data.load(data);
   }
 
   static locale(lang, message) {
