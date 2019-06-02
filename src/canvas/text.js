@@ -14,6 +14,6 @@
  *  }
  * }
  */
-export function text(canvas, box, attr = {}, textwrap = true) {
+export default function text(canvas, box, attr = {}, textwrap = true) {
   // to do
 }

@@ -6,7 +6,7 @@ function invoke(name, ...args) {
   return this;
 }
 
-class Canvas2d {
+export default class CanvasBase {
   constructor(el) {
     this.el = el;
     this.ctx = el.getContext('2d');
@@ -39,6 +39,18 @@ class Canvas2d {
     cb(ctx);
     ctx.restore();
     return this;
+  }
+
+  fill() {
+    return invoke.call(this, 'fill');
+  }
+
+  clip() {
+    return invoke.call(this, 'clip');
+  }
+
+  rect(x, y, w, h) {
+    return invoke.call(this, 'rect', npx(x), npx(y), npx(w), npx(h));
   }
 
   fillRect(x, y, w, h) {
@@ -94,8 +106,4 @@ class Canvas2d {
     }
     return this;
   }
-}
-
-export default function (el, w, h) {
-  return new Canvas2d(el, w, h);
 }

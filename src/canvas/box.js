@@ -1,4 +1,4 @@
-class Box {
+export default class Box {
   constructor(x, y, w, h, bgcolor = '#ffffff', border = {}, padding = 5) {
     this.x = x;
     this.y = y;
@@ -70,8 +70,10 @@ class Box {
     } = this;
     return [[x, y], [x, y + height]];
   }
-}
 
-export default function box(...args) {
-  return new Box(...args);
+  static create({
+    x, y, w, h,
+  }) {
+    return new Box(x, y, w, h);
+  }
 }

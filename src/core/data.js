@@ -52,6 +52,7 @@ import helper from './helper';
 import { baseFonts } from './font';
 import row from './row';
 import col from './col';
+import cell from './cell';
 import CellRange from './cell-range';
 
 const defaultSettings = {
@@ -100,7 +101,7 @@ const defaultData = {
   rows: {},
   cols: {},
   scroll: {
-    ri: 0, ci: 0, x: 0, y: 0,
+    ri: 0, ci: 0, x: 0, y: 100,
   },
   selector: {
     sri: 0, sci: 0, eri: 0, eci: 0,
@@ -140,6 +141,10 @@ export default class Data {
     return this._.scroll;
   }
 
+  get selector() {
+    return this._.selector;
+  }
+
   get canvas() {
     const { view } = this.settings;
     return {
@@ -151,9 +156,29 @@ export default class Data {
   get viewRange() {
     const { ri, ci } = this.scroll;
     const { width, height } = this.canvas;
-    const eri = helper.rangeIf(ri, row.len(this), i => row.height(this, i), total => total > height);
-    const eci = helper.rangeIf(ci, col.len(this), i => col.width(this, i), total => total > width);
+    const { indexWidth, indexHeight } = this;
+    const eri = row.endIndex(this, ri, height + indexHeight);
+    const eci = col.endIndex(this, ci, width + indexWidth);
     return new CellRange(ri, ci, eri, eci, width, height);
+  }
+
+  cell(ri, ci) {
+    return cell(this, ri, ci);
+  }
+
+  cellStyle(ri, ci) {
+    return cell.style(this, ri, ci);
+  }
+
+  cellBox(ri, ci) {
+    const { scroll } = this;
+    const x = col.sumWidth(this, scroll.ri, ri);
+    const y = row.sumHeight(this, scroll.ci, ci);
+    const w = col.width(this, ci);
+    const h = row.height(this, ri);
+    return {
+      x, y, w, h,
+    };
   }
 
   rowHeightsEach(min, max, cb) {

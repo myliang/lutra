@@ -1,12 +1,27 @@
-import create from './2d';
-import box from './box';
-import { text } from './text';
-import { thinLineWidth, npx } from './helper';
+import CanvasBase from './base';
+import Box from './box';
+import text from './text';
+import border from './border';
+import clip from './clip';
 
-export default {
-  create,
-  box,
-  text,
-  thinLineWidth,
-  npx,
-};
+export default class Canvas extends CanvasBase {
+  border(box) {
+    border(this, box);
+  }
+
+  text(box, attr = {}, textwrap = true) {
+    text(this, box, attr, textwrap);
+  }
+
+  clip(box, contentcb) {
+    clip(this, box, contentcb);
+  }
+
+  static create(el) {
+    return new Canvas(el);
+  }
+
+  static box(options) {
+    return Box.create(options);
+  }
+}

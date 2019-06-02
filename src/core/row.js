@@ -36,12 +36,16 @@ function len(data, v) {
   return rows(data).len || drow(data).len;
 }
 
-function sum(data, min, max) {
+function sumHeight(data, min, max) {
   return helper.rangeSum(min, max, i => height(data, i));
 }
 
-function total(data) {
-  return sum(0, len(data));
+function totalHeight(data) {
+  return sumHeight(data, 0, len(data));
+}
+
+function endIndex(data, si, threshold) {
+  return helper.rangeIf(si, len(data), i => height(data, i), total => total > threshold);
 }
 
 function each(data, cb) {
@@ -76,11 +80,13 @@ function remove(data, sri, eri) {
   });
 }
 
-export default {
+Object.assign(row, {
   height,
   len,
-  sum,
-  total,
+  sumHeight,
+  totalHeight,
+  endIndex,
   add,
   remove,
-};
+});
+export default row;

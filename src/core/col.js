@@ -36,12 +36,16 @@ function len(data, v) {
   return cols(data).len || dcol(data).len;
 }
 
-function sum(data, min, max) {
+function sumWidth(data, min, max) {
   return helper.rangeSum(min, max, i => width(data, i));
 }
 
-function total(data) {
-  return sum(0, len(data));
+function totalWidth(data) {
+  return sumWidth(0, len(data));
+}
+
+function endIndex(data, si, threshold) {
+  return helper.rangeIf(si, len(data), i => width(data, i), total => total > threshold);
 }
 
 function update(data, n, cb) {
@@ -80,8 +84,9 @@ function remove(data, sci, eci) {
 export default {
   width,
   len,
-  sum,
-  total,
+  sumWidth,
+  totalWidth,
+  endIndex,
   add,
   remove,
 };

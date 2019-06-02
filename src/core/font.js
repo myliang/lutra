@@ -30,7 +30,7 @@ const fontSizes = [
   // { pt: 72, px: 95.6 },
 ];
 
-function getFontSizePxByPt(pt) {
+function pt2px(pt) {
   for (let i = 0; i < fontSizes.length; i += 1) {
     const fontSize = fontSizes[i];
     if (fontSize.pt === pt) {
@@ -44,5 +44,5 @@ export default {};
 export {
   fontSizes,
   baseFonts,
-  getFontSizePxByPt,
+  pt2px,
 };
