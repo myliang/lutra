@@ -41,6 +41,14 @@ class Canvas2d {
     return this;
   }
 
+  fillRect(x, y, w, h) {
+    return invoke.call(this, 'fillRect', npx(x), npx(y), npx(w), npx(h));
+  }
+
+  fillText(text, x, y) {
+    return invoke.call(this, 'fillText', text, npx(x), npx(y));
+  }
+
   translate(x, y) {
     return invoke.call(this, 'translate', npx(x), npx(y));
   }
@@ -66,6 +74,7 @@ class Canvas2d {
       }
       ctx.stroke();
     }
+    return this;
   }
 
   // style: thin | medium | thick | dashed | dotted

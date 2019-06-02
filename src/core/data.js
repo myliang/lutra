@@ -55,7 +55,7 @@ import col from './col';
 import CellRange from './cell-range';
 
 const defaultSettings = {
-  mode: 'designer', // design, write, read
+  mode: 'design', // design, write, read
   fonts: baseFonts,
   scroll: {
     ri: 0,
@@ -69,6 +69,7 @@ const defaultSettings = {
   },
   row: {
     len: 100,
+    indexHeight: 25,
     height: 25,
   },
   col: {
@@ -98,6 +99,12 @@ const defaultData = {
   merges: [],
   rows: {},
   cols: {},
+  scroll: {
+    ri: 0, ci: 0, x: 0, y: 0,
+  },
+  selector: {
+    sri: 0, sci: 0, eri: 0, eci: 0,
+  },
 };
 
 const toolbarHeight = 41;
@@ -113,11 +120,27 @@ export default class Data {
     this._ = helper.merge(defaultData, data);
   }
 
-  defaultStyle() {
+  get design() {
+    return this.settings.mode === 'design';
+  }
+
+  get indexHeight() {
+    return this.settings.row.indexHeight;
+  }
+
+  get indexWidth() {
+    return this.settings.col.indexWidth;
+  }
+
+  get defaultStyle() {
     return this.settings.style;
   }
 
-  canvas() {
+  get scroll() {
+    return this._.scroll;
+  }
+
+  get canvas() {
     const { view } = this.settings;
     return {
       width: view.width(),
@@ -125,19 +148,19 @@ export default class Data {
     };
   }
 
-  viewRange() {
+  get viewRange() {
     const { ri, ci } = this.scroll;
     const { width, height } = this.canvas;
-    const eri = helper.rangeIf(0, row.len(this), i => row.height(this, i), total => total > height);
-    const eci = helper.rangeIf(0, col.len(this), i => col.width(this, i), total => total > width);
-    return new CellRange(ri, ci, eri, eci);
+    const eri = helper.rangeIf(ri, row.len(this), i => row.height(this, i), total => total > height);
+    const eci = helper.rangeIf(ci, col.len(this), i => col.width(this, i), total => total > width);
+    return new CellRange(ri, ci, eri, eci, width, height);
   }
 
-  rowHeightsEach(cb) {
-    helper.rangeEach(0, row.len(this), i => row.height(this, i), cb);
+  rowHeightsEach(min, max, cb) {
+    helper.rangeEach(min, max, i => row.height(this, i), cb);
   }
 
-  colWidthsEach(cb) {
-    helper.rangeEach(0, col.len(this), i => col.width(this, i), cb);
+  colWidthsEach(min, max, cb) {
+    helper.rangeEach(min, max, i => col.width(this, i), cb);
   }
 }
