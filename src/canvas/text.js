@@ -69,7 +69,7 @@ export default function text(canvas, txt, box, attr = {}, textwrap = true) {
     }
     const tx = box.textx(align);
     let ty = box.texty(valign, hoffset);
-    // console.log('tx: ', tx, ', ty:', ty);
+    // console.log('tx: ', tx, ', ty:', ty, ', hoffset:', hoffset);
     if (textwrap && txtWidth > box.innerWidth) {
       const textLine = { len: 0, start: 0 };
       for (let i = 0; i < txt.length; i += 1) {

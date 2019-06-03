@@ -8,5 +8,11 @@ export default function clipRect(canvas, box, contentcb) {
       .clip()
       .fill();
     contentcb();
+    /*
+    canvas.saveRestore(() => {
+      canvas.rect(x + 5, y + 5, width - 2, height - 2).clip();
+      contentcb();
+    });
+    */
   });
 }

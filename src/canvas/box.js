@@ -1,5 +1,5 @@
 export default class Box {
-  constructor(x, y, w, h, bgcolor = '#ffffff', border = {}, padding = 5) {
+  constructor(x, y, w, h, bgcolor = '#ffffff', border = {}, padding = 3) {
     this.x = x;
     this.y = y;
     this.width = w;
@@ -25,7 +25,7 @@ export default class Box {
     if (align === 'left') {
       x += padding;
     } else if (align === 'center') {
-      x += width / 2;
+      x += width / 2 - 1;
     } else if (align === 'right') {
       x += width - padding;
     }
@@ -39,9 +39,9 @@ export default class Box {
     if (align === 'top') {
       y += padding;
     } else if (align === 'middle') {
-      y += height / 2 - offset + padding;
+      y += height / 2 - offset;
     } else if (align === 'bottom') {
-      y += height - offset * 2 - padding;
+      y += height - padding - offset * 2;
     }
     return y;
   }

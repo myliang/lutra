@@ -64,21 +64,17 @@ function renderHeader(viewRange) {
   });
 }
 
-function createBox(ri, ci) {
-  return Canvas.box(this.data.cellBox(ri, ci));
-}
-
-function renderCell(ri, ci) {
+function renderCell(ri, ci, cellBox) {
   const { canvas, data } = this;
   const cell = data.cell(ri, ci);
   if (!cell.get()) return;
-
-  // console.log('ceLL:', cell);
+  // if (data.merges.includes(ri, ci)) return;
 
   const {
     bgcolor, border, font, align, valign, color, underline, textwrap,
   } = cell.style;
-  const box = createBox.call(this, ri, ci);
+  const box = Canvas.box(cellBox());
+  // console.log(ri, ci, box);
   box.bgcolor = bgcolor;
   if (border) {
     box.border = border;
@@ -97,12 +93,21 @@ function renderCell(ri, ci) {
 
 function renderContent(viewRange) {
   const { canvas, data } = this;
-  const { indexWidth, indexHeight } = data;
+  const {
+    indexWidth, indexHeight, merges,
+  } = data;
   canvas.saveRestore(() => {
     canvas.translate(indexWidth, indexHeight);
     // 1 render cell
-    viewRange.each((ri, ci) => renderCell.call(this, ri, ci));
+    viewRange.each((ri, ci) => {
+      renderCell.call(this, ri, ci, () => data.cellBox(ri, ci));
+    });
     // 2 render merge
+    merges.each(viewRange, ({
+      sri, sci, eri, eci,
+    }) => {
+      renderCell.call(this, sri, sci, () => data.cellBox(sri, sci, eri, eci));
+    });
   });
 }
 

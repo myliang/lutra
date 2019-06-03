@@ -22,7 +22,11 @@ function mergeDeep(object = {}, ...sources) {
 
 function rangeSum(min, max, getv) {
   let total = 0;
-  for (let i = min; i < max; i += 1) total += getv(i);
+  if (max >= min) {
+    for (let i = min; i < max; i += 1) total += getv(i);
+  } else {
+    for (let i = max; i < min; i += 1) total -= getv(i);
+  }
   return total;
 }
 

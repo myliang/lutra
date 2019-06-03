@@ -161,8 +161,8 @@ export default class Data {
     const {
       indexWidth, indexHeight, rows, cols,
     } = this;
-    const eri = rows.endIndex(this, ri, height + indexHeight);
-    const eci = cols.endIndex(this, ci, width + indexWidth);
+    const eri = rows.endIndex(ri, height + indexHeight);
+    const eci = cols.endIndex(ci, width + indexWidth);
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
@@ -170,12 +170,19 @@ export default class Data {
     return new Cell(this._, this.settings, ri, ci);
   }
 
-  cellBox(ri, ci) {
+  // cellBox(ri, ci)
+  // cellBox(sri, sci, eri, eci);
+  cellBox(ri, ci, ...args) {
     const { scroll, cols, rows } = this;
-    const x = cols.sumWidth(scroll.ri, ri);
-    const y = rows.sumHeight(scroll.ci, ci);
-    const w = cols.width(ci);
-    const h = rows.height(ri);
+    const x = cols.sumWidth(scroll.ci, ci);
+    const y = rows.sumHeight(scroll.ri, ri);
+    let w = cols.width(ci);
+    let h = rows.height(ri);
+    if (arguments.length === 4) {
+      const [eri, eci] = args;
+      w = cols.sumWidth(ci, eci + 1);
+      h = rows.sumHeight(ri, eri + 1);
+    }
     return {
       x, y, w, h,
     };
