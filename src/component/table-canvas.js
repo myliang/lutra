@@ -6,7 +6,9 @@ import { pt2px } from '../core/font';
 function renderGrid(viewRange) {
   const { canvas, data } = this;
   const style = data.defaultStyle;
-  const { indexWidth, indexHeight } = data;
+  const {
+    indexWidth, indexHeight, rows, cols,
+  } = data;
   const {
     sri, sci, eri, eci, w, h,
   } = viewRange;
@@ -16,10 +18,10 @@ function renderGrid(viewRange) {
       lineWidth: thinLineWidth(),
       strokeStyle: '#e6e6e6',
     }).translate(indexWidth, indexHeight);
-    data.rowHeightsEach(sri, eri, (i, hh, total) => {
+    rows.heights(sri, eri, (i, hh, total) => {
       canvas.line([0, total], [w, total]);
     });
-    data.colWidthsEach(sci, eci, (i, ww, total) => {
+    cols.widths(sci, eci, (i, ww, total) => {
       canvas.line([total, 0], [total, h]);
     });
   });
@@ -27,7 +29,9 @@ function renderGrid(viewRange) {
 
 function renderHeader(viewRange) {
   const { canvas, data } = this;
-  const { indexWidth, indexHeight } = data;
+  const {
+    indexWidth, indexHeight, rows, cols,
+  } = data;
   const {
     sri, sci, eri, eci, w, h,
   } = viewRange;
@@ -45,16 +49,16 @@ function renderHeader(viewRange) {
       lineWidth: thinLineWidth(),
       strokeStyle: '#e6e6e6',
     });
-    data.rowHeightsEach(sri, eri, (i, hh, total) => {
+    rows.heights(sri, eri, (i, hh, total) => {
       const y = total + indexHeight;
       canvas.line([0, y], [indexWidth, y])
-        .fillText(i + 1, indexWidth / 2, y + (h / 2));
+        .fillText(i + 1, indexWidth / 2, y + (hh / 2));
     });
     canvas.line([indexWidth, indexHeight], [indexWidth, h]);
-    data.colWidthsEach(sci, eci, (i, ww, total) => {
+    cols.widths(sci, eci, (i, ww, total) => {
       const x = total + indexWidth;
       canvas.line([x, 0], [x, indexHeight])
-        .fillText(stringAt(i), x + (w / 2), indexHeight / 2);
+        .fillText(stringAt(i), x + (ww / 2), indexHeight / 2);
     });
     canvas.line([indexWidth, indexHeight], [w, indexHeight]);
   });
@@ -67,25 +71,31 @@ function createBox(ri, ci) {
 function renderCell(ri, ci) {
   const { canvas, data } = this;
   const cell = data.cell(ri, ci);
-  if (!cell) return;
+  if (!cell.get()) return;
+
+  // console.log('ceLL:', cell);
 
   const {
-    bgcolor, border, font,
-  } = data.cellStyle(ri, ci);
-  const box = createBox(ri, ci);
+    bgcolor, border, font, align, valign, color, underline, textwrap,
+  } = cell.style;
+  const box = createBox.call(this, ri, ci);
   box.bgcolor = bgcolor;
   if (border) {
     box.border = border;
     canvas.border(box);
   }
-  canvas.clip(box, () => {
-    // const cellText = '';
+  canvas.clipRect(box, () => {
     const nfont = Object.assign({}, font);
+    // console.log(nfont);
     nfont.size = pt2px(font.size);
+    // console.log('cellText:', cellText, box);
+    canvas.text(cell.value, box, {
+      align, valign, font: nfont, color, underline,
+    }, textwrap);
   });
 }
 
-function renderContent(viewRange, tx, ty) {
+function renderContent(viewRange) {
   const { canvas, data } = this;
   const { indexWidth, indexHeight } = data;
   canvas.saveRestore(() => {
@@ -105,17 +115,16 @@ export default class TableCanvas {
   render() {
     const { canvas, data } = this;
     const {
-      viewRange, design, indexHeight, indexWidth,
+      viewRange, design,
     } = data;
     const { w, h } = viewRange;
-    const { x, y } = data.scroll;
     canvas.clear(w, h).resize(w, h);
 
     if (design) {
       // canvas.translate(indexWidth, indexHeight);
       renderGrid.call(this, viewRange);
       renderHeader.call(this, viewRange);
-      renderContent.call(this, viewRange, -x + indexWidth, -y + indexHeight);
+      renderContent.call(this, viewRange);
     }
   }
 }

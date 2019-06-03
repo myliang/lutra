@@ -28,8 +28,11 @@ class FormDesigner {
     this.tableCanvas.render();
   }
 
-  loadData(data) {
-    this.data.load(data);
+  loadData(d) {
+    const { data, tableCanvas } = this;
+    data.load(d);
+    tableCanvas.render();
+    return this;
   }
 
   static locale(lang, message) {

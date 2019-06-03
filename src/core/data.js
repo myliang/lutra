@@ -49,15 +49,14 @@
  * }
  */
 import helper from './helper';
-import { baseFonts } from './font';
-import row from './row';
-import col from './col';
-import cell from './cell';
+import Rows from './row';
+import Cols from './col';
+import Cell from './cell';
 import CellRange from './cell-range';
+import Merges from './merge';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
-  fonts: baseFonts,
   scroll: {
     ri: 0,
     ci: 0,
@@ -113,12 +112,15 @@ const toolbarHeight = 41;
 export default class Data {
   constructor(settings = {}) {
     this.settings = helper.merge(defaultSettings, settings);
-    // the origin data object for save
-    this._ = helper.merge(defaultData);
+    this.load({});
   }
 
   load(data) {
     this._ = helper.merge(defaultData, data);
+    const { _, settings } = this;
+    this.merges = new Merges(_);
+    this.rows = new Rows(_, settings);
+    this.cols = new Cols(_, settings);
   }
 
   get design() {
@@ -156,36 +158,26 @@ export default class Data {
   get viewRange() {
     const { ri, ci } = this.scroll;
     const { width, height } = this.canvas;
-    const { indexWidth, indexHeight } = this;
-    const eri = row.endIndex(this, ri, height + indexHeight);
-    const eci = col.endIndex(this, ci, width + indexWidth);
+    const {
+      indexWidth, indexHeight, rows, cols,
+    } = this;
+    const eri = rows.endIndex(this, ri, height + indexHeight);
+    const eci = cols.endIndex(this, ci, width + indexWidth);
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
   cell(ri, ci) {
-    return cell(this, ri, ci);
-  }
-
-  cellStyle(ri, ci) {
-    return cell.style(this, ri, ci);
+    return new Cell(this._, this.settings, ri, ci);
   }
 
   cellBox(ri, ci) {
-    const { scroll } = this;
-    const x = col.sumWidth(this, scroll.ri, ri);
-    const y = row.sumHeight(this, scroll.ci, ci);
-    const w = col.width(this, ci);
-    const h = row.height(this, ri);
+    const { scroll, cols, rows } = this;
+    const x = cols.sumWidth(scroll.ri, ri);
+    const y = rows.sumHeight(scroll.ci, ci);
+    const w = cols.width(ci);
+    const h = rows.height(ri);
     return {
       x, y, w, h,
     };
-  }
-
-  rowHeightsEach(min, max, cb) {
-    helper.rangeEach(min, max, i => row.height(this, i), cb);
-  }
-
-  colWidthsEach(min, max, cb) {
-    helper.rangeEach(min, max, i => col.width(this, i), cb);
   }
 }

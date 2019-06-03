@@ -33,12 +33,13 @@ export default class Box {
   }
 
   texty(align, offset) {
+    // console.log('offset:', offset);
     const { height, padding } = this;
     let { y } = this;
     if (align === 'top') {
       y += padding;
     } else if (align === 'middle') {
-      y += height / 2 - offset;
+      y += height / 2 - offset + padding;
     } else if (align === 'bottom') {
       y += height - offset * 2 - padding;
     }

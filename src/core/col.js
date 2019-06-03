@@ -1,92 +1,51 @@
 import helper from './helper';
 
-function cols({ _ }, v) {
-  if (v) _.cols = v;
-  return _.cols;
-}
-
-function col(data, index) {
-  return undefined || cols(data)[index];
-}
-
-function ncol({ _ }, index) {
-  _.cols[index] = {};
-  return _.cols[index];
-}
-
-function dcol({ settings }) {
-  return settings.col;
-}
-
-function width(data, index, w) {
-  let c = col(data, index);
-  if (w) {
-    c = c || ncol(data, index);
-    c.width = w;
-    return w;
+export default class Cols {
+  constructor({ cols }, { col }) {
+    this._ = cols;
+    this.settings = col;
   }
-  return (c && c.width) || dcol(data).width;
-}
 
-function len(data, v) {
-  if (v) {
-    cols(data).len = len(data) + v;
-    return v;
+  get(i) {
+    return this._[i];
   }
-  return cols(data).len || dcol(data).len;
-}
 
-function sumWidth(data, min, max) {
-  return helper.rangeSum(min, max, i => width(data, i));
-}
-
-function totalWidth(data) {
-  return sumWidth(0, len(data));
-}
-
-function endIndex(data, si, threshold) {
-  return helper.rangeIf(si, len(data), i => width(data, i), total => total > threshold);
-}
-
-function update(data, n, cb) {
-  const { rows } = data._;
-  Object.entries(rows).forEach(([ri, row]) => {
-    if (row.cells) {
-      const ncells = {};
-      Object.entries(row.cells).forEach(([ci, cell]) => {
-        const nci = cb(ci, cell, ri, row);
-        if (nci > 0) ncells[nci] = cell;
-      });
-      row.cells = ncells;
+  width(i, v) {
+    const { _, settings } = this;
+    const c = _[i];
+    if (v) {
+      if (c) {
+        c.width = v;
+      } else {
+        _[i] = { width: v };
+      }
+      return v;
     }
-  });
-  len(data, n);
-}
+    return (c && c.width) || settings.width;
+  }
 
-function add(data, sci, n = 1) {
-  update(data, n, (ci) => {
-    let nci = parseInt(ci, 10);
-    if (nci >= sci) nci += n;
-    return nci;
-  });
-}
+  len(v) {
+    const { _, settings } = this;
+    if (v) {
+      _.len = this.len() + v;
+      return _.len;
+    }
+    return _.len || settings.len;
+  }
 
-function remove(data, sci, eci) {
-  const n = eci - sci + 1;
-  update(data, -n, (ci) => {
-    const nci = parseInt(ci, 10);
-    if (nci < sci) return nci;
-    if (nci > eci) return nci - n;
-    return -1;
-  });
-}
+  endIndex(si, threshold) {
+    return helper.rangeIf(si, this.len(), i => this.width(i), total => total > threshold);
+  }
 
-export default {
-  width,
-  len,
-  sumWidth,
-  totalWidth,
-  endIndex,
-  add,
-  remove,
-};
+  sumWidth(min, max) {
+    return helper.rangeSum(min, max, i => this.width(i));
+  }
+
+  totalWidth() {
+    return this.sumWidth(0, this.len());
+  }
+
+  widths(min, max, cb) {
+    helper.rangeEach(min, max, i => this.width(i), cb);
+  }
+}

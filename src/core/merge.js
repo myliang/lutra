@@ -1,33 +1,35 @@
-function deleteWithin({ _ }, cellRange) {
-  _.merges.filter(it => !it.within(cellRange));
-}
+import CellRange from './cell-range';
 
-function add(data, cellRange) {
-  deleteWithin(data, cellRange);
-  data.merges.push(cellRange);
-}
-
-function intersects({ _ }, cellRange) {
-  for (let i = 0; i < _.merges.length; i += 1) {
-    const it = _.merges[i];
-    if (it.intersects(cellRange)) return true;
+export default class Merges {
+  constructor({ merges }) {
+    this._ = merges;
   }
-  return false;
-}
 
-function union({ _ }, cellRange) {
-  let ncr = cellRange;
-  _.merges.forEach((it) => {
-    if (it.intersects(ncr)) {
-      ncr = it.union(ncr);
-    }
-  });
-  return ncr;
-}
+  deleteWithin(merge) {
+    return this._.merges.filter(it => !CellRange.valueOf(it).within(merge));
+  }
 
-export default {
-  deleteWithin,
-  add,
-  intersects,
-  union,
-};
+  add(merge) {
+    this.deleteWithin(merge);
+    this._.push(merge);
+  }
+
+  intersects(merge) {
+    return this._.merges.some(it => CellRange.valueOf(it).intersects(merge));
+  }
+
+  includes(ri, ci) {
+    return this._.merges.some(it => CellRange.valueOf(it).includes(ri, ci));
+  }
+
+  union(merge) {
+    let ncr = merge;
+    this._.merges.forEach((m) => {
+      const it = CellRange.valueOf(m);
+      if (it.intersects(ncr)) {
+        ncr = it.union(ncr);
+      }
+    });
+    return ncr;
+  }
+}

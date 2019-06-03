@@ -1,92 +1,110 @@
 import helper from './helper';
 
-function rows({ _ }, v) {
-  if (v) _.rows = v;
-  return _.rows;
-}
-
-function row(data, index) {
-  return undefined || rows(data)[index];
-}
-
-function nrow(data, index) {
-  rows(data)[index] = {};
-  return rows(data)[index];
-}
-
-function drow({ settings }) {
-  return settings.row;
-}
-
-function height(data, index, h) {
-  let r = row(data, index);
-  if (h) {
-    r = r || nrow(data, index);
-    r.height = h;
-    return h;
-  }
-  return (r && r.height) || drow(data).height;
-}
-
-function len(data, v) {
-  if (v) {
-    rows(data).len = len(data) + v;
-    return v;
-  }
-  return rows(data).len || drow(data).len;
-}
-
-function sumHeight(data, min, max) {
-  return helper.rangeSum(min, max, i => height(data, i));
-}
-
-function totalHeight(data) {
-  return sumHeight(data, 0, len(data));
-}
-
-function endIndex(data, si, threshold) {
-  return helper.rangeIf(si, len(data), i => height(data, i), total => total > threshold);
-}
-
-function each(data, cb) {
-  Object.entries(rows(data)).forEach(([i, r]) => cb(i, r));
-}
-
-function update(data, n, cb) {
-  const nrows = {};
-  each(data, (ri) => {
-    const nri = cb(ri, row);
-    if (nri > 0) nrows[nri] = row;
+function update(n, cb) {
+  const { _ } = this;
+  this.each((ri, r) => {
+    const nri = cb(ri, r);
+    if (nri > 0) {
+      if (nri !== ri) {
+        _[nri] = r;
+        delete _[ri];
+      }
+    }
   });
-  rows(data, nrows);
-  len(data, n);
+  this.len(n);
 }
 
-function add(data, sri, n = 1) {
-  update(data, n, (ri) => {
-    let nri = parseInt(ri, 10);
-    if (nri >= sri) nri += n;
-    return nri;
+function updateColumn(n, cb) {
+  this.each((ri, { cells }) => {
+    if (cells) {
+      Object.entries(cells).forEach(([ci, c]) => {
+        const nci = cb(ci, c, ri);
+        if (nci > 0) {
+          cells[nci] = c;
+          delete cells[ci];
+        }
+      });
+    }
   });
 }
 
-function remove(data, sri, eri) {
-  const n = eri - sri + 1;
-  update(data, -n, (ri) => {
-    const nri = parseInt(ri, 10);
-    if (nri < sri) return nri;
-    if (nri > eri) return nri - n;
+function add(si, n = 1, updateFunc) {
+  updateFunc.call(this, n, (i) => {
+    let ni = parseInt(i, 10);
+    if (ni >= si) ni += n;
+    return ni;
+  });
+}
+
+function remove(si, ei, updateFunc) {
+  const n = ei - si + 1;
+  updateFunc.call(this, -n, (i) => {
+    const ni = parseInt(i, 10);
+    if (ni < si) return ni;
+    if (ni > ei) return ni - n;
     return -1;
   });
 }
 
-Object.assign(row, {
-  height,
-  len,
-  sumHeight,
-  totalHeight,
-  endIndex,
-  add,
-  remove,
-});
-export default row;
+export default class Rows {
+  constructor({ rows }, { row }) {
+    this._ = rows;
+    this.settings = row;
+  }
+
+  get(i) {
+    return this._[i];
+  }
+
+  height(i, v) {
+    const { _, settings } = this;
+    const r = _[i];
+    if (v) {
+      if (r) {
+        r.height = v;
+      } else {
+        _[i] = {};
+      }
+      return v;
+    }
+    return (r && r.height) || settings.height;
+  }
+
+  heights(min, max, cb) {
+    helper.rangeEach(min, max, i => this.height(i), cb);
+  }
+
+  len(v) {
+    const { _, settings } = this;
+    if (v) {
+      _.len = this.len() + v;
+      return _.len;
+    }
+    return _.len || settings.len;
+  }
+
+  each(cb) {
+    Object.entries(this._).forEach(([i, r]) => cb(i, r));
+  }
+
+  endIndex(si, threshold) {
+    return helper.rangeIf(si, this.len(), i => this.height(i), total => total > threshold);
+  }
+
+  sumHeight(min, max) {
+    return helper.rangeSum(min, max, i => this.height(i));
+  }
+
+  totalHeight() {
+    return this.sumHeight(0, this.len());
+  }
+
+  // type: row | col
+  add(si, n = 1, type = 'row') {
+    add.call(this, si, n, type === 'row' ? update : updateColumn);
+  }
+
+  remove(si, ei, type = 'col') {
+    remove.call(this, si, ei, type === 'row' ? update : updateColumn);
+  }
+}

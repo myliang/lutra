@@ -41,6 +41,10 @@ export default class CanvasBase {
     return this;
   }
 
+  textWidth(txt) {
+    return this.ctx.measureText(txt).width;
+  }
+
   fill() {
     return invoke.call(this, 'fill');
   }

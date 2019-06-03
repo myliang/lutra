@@ -1,30 +1,46 @@
-import row from './row';
+import cellEval from './cell-evaluation';
+import formula from './formula';
 import helper from './helper';
 
-function styles({ _ }) {
-  return _.styles;
+function getCell(ri, ci) {
+  const { rows } = this;
+  return undefined || (rows[ri] && rows[ri].cells && rows[ri].cells[ci]);
 }
 
-function dstyle({ settings }) {
-  return settings.style;
-}
-
-function cell(data, ri, ci) {
-  const r = row(data, ri);
-  return undefined || (r && r.cells && r.cells[ci]);
-}
-
-function style(data, ri, ci) {
-  // console.log('data:', data);
-  const c = cell(data, ri, ci);
-  let s = {};
-  if (c) {
-    if (c.style) {
-      s = styles(data)[c.style];
-    }
+export default class Cell {
+  constructor({ rows, styles }, { style }, ri, ci) {
+    this.styles = styles;
+    this.dstyle = style;
+    this.rows = rows;
+    this._ = getCell.call(this, ri, ci);
   }
-  return helper.merge(dstyle(data), s);
-}
 
-cell.style = style;
-export default cell;
+  get value() {
+    let { text } = this._;
+    if (text) {
+      text = cellEval(text, formula.map, (x, y) => {
+        const c = getCell.call(this, y, x);
+        return '' || (c && c.text);
+      });
+      this._.value = text;
+    }
+    return text;
+  }
+
+  get() {
+    return this._;
+  }
+
+  get style() {
+    const { _, dstyle, styles } = this;
+    let s = {};
+    if (_ && _.style !== undefined) {
+      s = styles[_.style];
+    }
+    return helper.merge(dstyle, s);
+  }
+
+  get text() {
+    return this._.text;
+  }
+}

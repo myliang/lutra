@@ -3,7 +3,7 @@ import { expr2xy, xy2expr } from './alphabet';
 // Converting infix expression to a suffix expression
 // src: AVERAGE(SUM(A1,A2), B1) + 50 + B20
 // return: [A1, A2], SUM[, B1],AVERAGE,50,+,B20,+
-const infixExprToSuffixExpr = (src) => {
+function infixExprToSuffixExpr(src) {
   const operatorStack = [];
   const stack = [];
   let subStrs = []; // SUM, A1, B2, 50 ...
@@ -97,9 +97,9 @@ const infixExprToSuffixExpr = (src) => {
     stack.push(operatorStack.pop());
   }
   return stack;
-};
+}
 
-const evalSubExpr = (subExpr, cellRender) => {
+function evalSubExpr(subExpr, cellRender) {
   if (subExpr[0] >= '0' && subExpr[0] <= '9') {
     return Number(subExpr);
   }
@@ -108,13 +108,13 @@ const evalSubExpr = (subExpr, cellRender) => {
   }
   const [x, y] = expr2xy(subExpr);
   return cellRender(x, y);
-};
+}
 
 // evaluate the suffix expression
 // srcStack: <= infixExprToSufixExpr
 // formulaMap: {'SUM': {}, ...}
 // cellRender: (x, y) => {}
-const evalSuffixExpr = (srcStack, formulaMap, cellRender, cellList) => {
+function evalSuffixExpr(srcStack, formulaMap, cellRender, cellList) {
   const stack = [];
   // console.log(':::::formulaMap:', formulaMap);
   for (let i = 0; i < srcStack.length; i += 1) {
@@ -147,9 +147,9 @@ const evalSuffixExpr = (srcStack, formulaMap, cellRender, cellList) => {
     // console.log('stack:', stack);
   }
   return stack[0];
-};
+}
 
-const cellEval = (src, formulaMap, getCellText, cellList = []) => {
+function cellEval(src, formulaMap, getCellText, cellList = []) {
   if (src[0] === '=') {
     const stack = infixExprToSuffixExpr(src.substring(1));
     if (stack.length <= 0) return src;
@@ -161,11 +161,9 @@ const cellEval = (src, formulaMap, getCellText, cellList = []) => {
     );
   }
   return src;
-};
+}
 
-export default {
-  eval: cellEval,
-};
+export default cellEval;
 export {
   infixExprToSuffixExpr,
 };
