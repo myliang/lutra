@@ -12,35 +12,35 @@ export default class Cell {
     this.styles = styles;
     this.dstyle = style;
     this.rows = rows;
-    this._ = getCell.call(this, ri, ci);
+    this.$ = getCell.call(this, ri, ci);
   }
 
   get value() {
-    let { text } = this._;
+    let { text } = this.$;
     if (text) {
       text = cellEval(text, formula.map, (x, y) => {
         const c = getCell.call(this, y, x);
         return '' || (c && c.text);
       });
-      this._.value = text;
+      this.$.value = text;
     }
     return text;
   }
 
   get() {
-    return this._;
+    return this.$;
   }
 
   get style() {
-    const { _, dstyle, styles } = this;
+    const { $, dstyle, styles } = this;
     let s = {};
-    if (_ && _.style !== undefined) {
-      s = styles[_.style];
+    if ($ && $.style !== undefined) {
+      s = styles[$.style];
     }
     return helper.merge(dstyle, s);
   }
 
   get text() {
-    return this._.text;
+    return this.$.text;
   }
 }

@@ -33,7 +33,6 @@ function mousedownHandler() {
 
 export default class Resizer extends BaseComponent {
   moving = false;
-  type = 'row';
 
   // type: row | col
   // value: resize value

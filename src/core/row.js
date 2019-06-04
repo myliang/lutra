@@ -1,13 +1,13 @@
 import helper from './helper';
 
 function update(n, cb) {
-  const { _ } = this;
+  const { $ } = this;
   this.each((ri, r) => {
     const nri = cb(ri, r);
     if (nri > 0) {
       if (nri !== ri) {
-        _[nri] = r;
-        delete _[ri];
+        $[nri] = r;
+        delete $[ri];
       }
     }
   });
@@ -48,22 +48,22 @@ function remove(si, ei, updateFunc) {
 
 export default class Rows {
   constructor({ rows }, { row }) {
-    this._ = rows;
+    this.$ = rows;
     this.settings = row;
   }
 
   get(i) {
-    return this._[i];
+    return this.$[i];
   }
 
   height(i, v) {
-    const { _, settings } = this;
-    const r = _[i];
+    const { $, settings } = this;
+    const r = $[i];
     if (v) {
       if (r) {
         r.height = v;
       } else {
-        _[i] = {};
+        $[i] = {};
       }
       return v;
     }
@@ -75,16 +75,16 @@ export default class Rows {
   }
 
   len(v) {
-    const { _, settings } = this;
+    const { $, settings } = this;
     if (v) {
-      _.len = this.len() + v;
-      return _.len;
+      $.len = this.len() + v;
+      return $.len;
     }
-    return _.len || settings.len;
+    return $.len || settings.len;
   }
 
   each(cb) {
-    Object.entries(this._).forEach(([i, r]) => cb(i, r));
+    Object.entries(this.$).forEach(([i, r]) => cb(i, r));
   }
 
   // si: start-index

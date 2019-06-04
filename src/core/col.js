@@ -2,22 +2,22 @@ import helper from './helper';
 
 export default class Cols {
   constructor({ cols }, { col }) {
-    this._ = cols;
+    this.$ = cols;
     this.settings = col;
   }
 
   get(i) {
-    return this._[i];
+    return this.$[i];
   }
 
   width(i, v) {
-    const { _, settings } = this;
-    const c = _[i];
+    const { $, settings } = this;
+    const c = $[i];
     if (v) {
       if (c) {
         c.width = v;
       } else {
-        _[i] = { width: v };
+        $[i] = { width: v };
       }
       return v;
     }
@@ -25,12 +25,12 @@ export default class Cols {
   }
 
   len(v) {
-    const { _, settings } = this;
+    const { $, settings } = this;
     if (v) {
-      _.len = this.len() + v;
-      return _.len;
+      $.len = this.len() + v;
+      return $.len;
     }
-    return _.len || settings.len;
+    return $.len || settings.len;
   }
 
   // si: start-index
