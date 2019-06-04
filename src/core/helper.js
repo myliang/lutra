@@ -42,12 +42,14 @@ function rangeEach(min, max, getv, cb) {
 function rangeIf(min, max, getv, cb) {
   let total = 0;
   let lasti = 0;
+  let lastv = 0;
   for (let i = min; i < max; i += 1) {
-    total += getv(i);
+    lastv = getv(i);
     lasti = i;
     if (cb(total)) break;
+    total += lastv;
   }
-  return lasti;
+  return [lasti - 1, total - lastv, lastv];
 }
 
 export default {

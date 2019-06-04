@@ -33,7 +33,10 @@ export default class Cols {
     return _.len || settings.len;
   }
 
-  endIndex(si, threshold) {
+  // si: start-index
+  // threshold
+  // return: [index, total]
+  end(si, threshold) {
     return helper.rangeIf(si, this.len(), i => this.width(i), total => total > threshold);
   }
 

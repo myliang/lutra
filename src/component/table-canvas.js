@@ -128,8 +128,8 @@ export default class TableCanvas {
     if (design) {
       // canvas.translate(indexWidth, indexHeight);
       renderGrid.call(this, viewRange);
-      renderHeader.call(this, viewRange);
       renderContent.call(this, viewRange);
+      renderHeader.call(this, viewRange);
     }
   }
 }

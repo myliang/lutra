@@ -33,6 +33,7 @@ function mousedownHandler() {
 
 export default class Resizer extends BaseComponent {
   moving = false;
+  type = 'row';
 
   // type: row | col
   // value: resize value
@@ -44,7 +45,7 @@ export default class Resizer extends BaseComponent {
 
   render() {
     const { type } = this;
-    return h(`.${cssPrefix}-resizer ${type}`,
+    return h(`.${cssPrefix}-resizer.${type}`,
       h(`.${cssPrefix}-resizer-hover`)
         .on('mousedown.stop', evt => mousedownHandler.call(this, evt)),
       h(`.${cssPrefix}-resizer-line`).hide()).hide();
@@ -56,17 +57,21 @@ export default class Resizer extends BaseComponent {
 
   // value: the top or left of value
   // hv: the width or height of hovering element
-  update(value, hv) {
+  // lv: the width or height of line element
+  update(value, hv, lv) {
     const { el, minValue, type } = this;
+    // console.log('value:', value, minValue);
     if (value < minValue) return;
     super.update(value);
-    const [hoverEl] = el.children;
+    const [hoverEl, lineEl] = el.children;
     if (type === 'row') {
-      el.css('top', value);
-      if (hv) hoverEl.css('width', hv);
+      el.offset({ top: value - 5 });
+      if (hv) hoverEl.offset({ width: hv });
+      if (lv) lineEl.offset({ width: lv });
     } else if (type === 'col') {
-      el.css('left', value);
-      if (hv) hoverEl.css('height', hv);
+      el.offset({ left: value - 5 });
+      if (hv) hoverEl.offset({ height: hv });
+      if (lv) lineEl.offset({ height: lv });
     }
     el.show();
   }

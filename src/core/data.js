@@ -54,6 +54,7 @@ import Cols from './col';
 import Cell from './cell';
 import CellRange from './cell-range';
 import Merges from './merge';
+import Scroll from './scroll';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
@@ -121,6 +122,7 @@ export default class Data {
     this.merges = new Merges(_);
     this.rows = new Rows(_, settings);
     this.cols = new Cols(_, settings);
+    this.scroll = new Scroll(_);
   }
 
   get design() {
@@ -137,10 +139,6 @@ export default class Data {
 
   get defaultStyle() {
     return this.settings.style;
-  }
-
-  get scroll() {
-    return this._.scroll;
   }
 
   get selector() {
@@ -161,9 +159,18 @@ export default class Data {
     const {
       indexWidth, indexHeight, rows, cols,
     } = this;
-    const eri = rows.endIndex(ri, height + indexHeight);
-    const eci = cols.endIndex(ci, width + indexWidth);
+    const [eri] = rows.end(ri, height + indexHeight);
+    const [eci] = cols.end(ci, width + indexWidth);
+    // console.log('eri>>>:', eci, eri, width, this.scroll);
     return new CellRange(ri, ci, eri, eci, width, height);
+  }
+
+  scrollx(x) {
+    this.scroll.x(x, this.cols);
+  }
+
+  scrolly(y) {
+    this.scroll.y(y, this.rows);
   }
 
   cell(ri, ci) {
@@ -185,6 +192,32 @@ export default class Data {
     }
     return {
       x, y, w, h,
+    };
+  }
+
+  cellBoxAndIndex(x1, y1) {
+    const {
+      scroll, cols, rows, indexWidth, indexHeight,
+    } = this;
+    const [ri, top, height] = rows.end(scroll.ri, y1 - indexHeight);
+    const [ci, left, width] = cols.end(scroll.ci, x1 - indexWidth);
+    let x = left;
+    let y = top;
+    let w = width;
+    let h = height;
+    // console.log('ri:', ri, ':ci:', ci);
+    if (ri === -1) {
+      y = 0;
+      h = indexHeight;
+      x += indexWidth;
+    }
+    if (ci === -1) {
+      x = 0;
+      w = indexWidth;
+      y += indexHeight;
+    }
+    return {
+      ri, ci, x, y, w, h,
     };
   }
 }

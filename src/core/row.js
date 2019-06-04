@@ -87,7 +87,10 @@ export default class Rows {
     Object.entries(this._).forEach(([i, r]) => cb(i, r));
   }
 
-  endIndex(si, threshold) {
+  // si: start-index
+  // threshold
+  // return [index, total]
+  end(si, threshold) {
     return helper.rangeIf(si, this.len(), i => this.height(i), total => total > threshold);
   }
 

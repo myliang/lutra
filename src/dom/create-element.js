@@ -171,8 +171,8 @@ class CreateElement {
   }
 }
 
-function h(cssSelector, properties, children) {
-  return new CreateElement(cssSelector, properties, children);
+function h(cssSelector, ...children) {
+  return new CreateElement(cssSelector, ...children);
 }
 
 export default h;
