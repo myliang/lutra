@@ -243,20 +243,28 @@ body {
     position: absolute;
   }
 
-  &.horizontal {
+  &.row {
     cursor: row-resize;
+    .@{css-prefix}-resizer-hover {
+      height: 5px;
+    }
     .@{css-prefix}-resizer-line {
       border-bottom: 2px dashed rgb(75, 137, 255);
       left: 0;
       bottom: 0;
+      width: 100%;
     }
   }
-  &.vertical {
+  &.col {
     cursor: col-resize;
+    .@{css-prefix}-resizer-hover {
+      width: 5px;
+    }
     .@{css-prefix}-resizer-line {
       border-right: 2px dashed rgb(75, 137, 255);
       top: 0;
       right: 0;
+      height: 100%;
     }
   }
 }

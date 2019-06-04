@@ -2,6 +2,8 @@
 import h from './dom/create-element';
 import Data from './core/data';
 import TableCanvas from './component/table-canvas';
+import ScrollBar from './component/scrollbar';
+import Resizer from './component/resizer';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
 import './index.less';
@@ -14,12 +16,26 @@ class FormDesigner {
       targetEl = document.querySelector(selectors);
     }
     this.data = new Data(settings);
-    // console.log('data:', this.data);
+    const { indexWidth, indexHeight } = this.data;
 
+    // table
     const tableEl = h('canvas', `${cssPrefix}-table`);
     this.tableCanvas = new TableCanvas(tableEl.el, this.data);
 
-    const rootEl = h('div', `${cssPrefix}`, tableEl)
+    // scrollbar
+    this.vScrollbar = new ScrollBar('vertical');
+    this.hScrollbar = new ScrollBar('horizontal');
+
+    // resizer
+    this.rResizer = new Resizer('row', indexWidth);
+    this.cResizer = new Resizer('col', indexHeight);
+
+    const rootEl = h(`.${cssPrefix}`,
+      tableEl,
+      this.rResizer.el,
+      this.cResizer.el,
+      this.vScrollbar.el,
+      this.hScrollbar.el)
       .on('contextmenu.prevent', () => {});
 
     // create canvas element

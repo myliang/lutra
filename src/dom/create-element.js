@@ -16,7 +16,7 @@ class CreateElement {
     const [tag, ...classes] = cssSelector.split('.');
     if (!/^\s*$/.test(tag)) this.tag = tag;
     this.d = {};
-    this.el = document.createElement(tag);
+    this.el = document.createElement(this.tag);
     this.addClass(...classes);
     children.forEach(ele => this.child(ele));
   }
@@ -38,8 +38,9 @@ class CreateElement {
         ({ el } = t);
       }
       this.el.appendChild(el);
+      return this;
     }
-    return this;
+    return this.children[0];
   }
 
   on(eventNames, handler) {
@@ -101,6 +102,37 @@ class CreateElement {
     return this;
   }
 
+  offset(v) {
+    if (v) {
+      Object.keys(v).forEach((k) => {
+        this.css(k, `${v[k]}px`);
+      });
+      return this;
+    }
+    const {
+      offsetTop, offsetLeft, offsetHeight, offsetWidth,
+    } = this.el;
+    return {
+      top: offsetTop,
+      left: offsetLeft,
+      height: offsetHeight,
+      width: offsetWidth,
+    };
+  }
+
+  // get scroll()
+  // set scroll({left, top})
+  scroll(v) {
+    const { el } = this;
+    if (v !== undefined) {
+      const { left, top } = this;
+      if (left !== undefined) el.scrollLeft = left;
+      if (top !== undefined) el.scrollTop = top;
+      return this;
+    }
+    return { left: el.scrollLeft, top: el.scrollTop };
+  }
+
   data(key, value) {
     return getOrSetProperty.call(this, this.d, key, value);
   }
@@ -128,6 +160,14 @@ class CreateElement {
 
   toggleClass(name) {
     return this.classList.toggle(name);
+  }
+
+  show() {
+    return this.css('display', 'block');
+  }
+
+  hide() {
+    return this.css('display', 'none');
   }
 }
 
