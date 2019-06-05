@@ -14,7 +14,7 @@ export default class Scroll {
   x(v, cols) {
     const { $ } = this;
     const { ci, x } = $;
-    const [eci, left] = cols.end(ci, v);
+    const [eci, left] = cols.end(0, v);
     if (x !== left && ci !== eci) {
       $.ci = eci;
       $.x = left;
@@ -24,7 +24,7 @@ export default class Scroll {
   y(v, rows) {
     const { $ } = this;
     const { ri, y } = $;
-    const [eri, top] = rows.end(ri, v);
+    const [eri, top] = rows.end(0, v);
     if (y !== top && ri !== eri) {
       $.ri = eri;
       $.y = top;

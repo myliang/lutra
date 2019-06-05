@@ -9,6 +9,9 @@ function mergeDeep(object = {}, ...sources) {
       // console.log('k:', key, ', v:', source[key], typeof v, v instanceof Object);
       if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
         object[key] = v;
+      } else if (Array.isArray(v)) {
+        object[key] = object[key] || [];
+        object[key].push(...v);
       } else if (typeof v !== 'function' && !Array.isArray(v) && v instanceof Object) {
         object[key] = object[key] || {};
         mergeDeep(object[key], v);
@@ -44,9 +47,9 @@ function rangeIf(min, max, getv, cb) {
   let lasti = 0;
   let lastv = 0;
   for (let i = min; i < max; i += 1) {
-    lastv = getv(i);
     lasti = i;
     if (cb(total)) break;
+    lastv = getv(i);
     total += lastv;
   }
   return [lasti - 1, total - lastv, lastv];
@@ -54,6 +57,7 @@ function rangeIf(min, max, getv, cb) {
 
 export default {
   clone,
+  mergeDeep,
   merge: (...sources) => mergeDeep({}, ...sources),
   rangeSum,
   rangeEach,

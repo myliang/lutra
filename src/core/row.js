@@ -59,11 +59,11 @@ export default class Rows {
   height(i, v) {
     const { $, settings } = this;
     const r = $[i];
-    if (v) {
+    if (v !== undefined) {
       if (r) {
         r.height = v;
       } else {
-        $[i] = {};
+        $[i] = { height: v };
       }
       return v;
     }

@@ -6,38 +6,62 @@ import { cssPrefix } from '../config';
 
 function mousedownHandler() {
   // let sEvt = evt;
-  const {
-    el, type, value,
-  } = this;
+  const { el, type, offset, value } = this;
   const [, lineEl] = el.children;
   let distance = 0;
   lineEl.show();
   mouseMoveUp(window, (e) => {
     this.moving = true;
     const { buttons, movementX, movementY } = e;
+    // console.log('evt:', e, buttons);
     if (buttons === 1) {
       if (type === 'row') {
         distance += movementY;
       } else if (type === 'col') {
         distance += movementX;
       }
-      this.update(value + distance);
+      updateView.call(this, distance);
       // sEvt = e;
     }
   }, () => {
     this.moving = false;
     this.hide();
-    this.change(distance);
+    this.change(value[0], distance + value[2]);
   });
+}
+
+function updateView(distance = 0) {
+  const {
+    value, el, type, minValue,
+  } = this;
+  const [
+    , offset, length, hoverLength, lineLength,
+  ] = value;
+  const t = offset + length + distance;
+  // console.log(offset, length, distance, minValue);
+  if (t < offset + minValue) return;
+  const [hoverEl, lineEl] = el.children;
+  if (type === 'row') {
+    el.offset({ top: t - 5 });
+    hoverEl.offset({ width: hoverLength });
+    lineEl.offset({ width: lineLength });
+  } else if (type === 'col') {
+    el.offset({ left: t - 5 });
+    hoverEl.offset({ height: hoverLength });
+    lineEl.offset({ height: lineLength });
+  }
+  el.show();
 }
 
 export default class Resizer extends BaseComponent {
   moving = false;
 
   // type: row | col
-  // value: resize value
+  // minValue: row-min-height | col-min-width
   constructor(type, minValue) {
-    super(0);
+    // value: [index, offset, length(width|height), hoverLength, lineLength]
+    super([0, 0, 0, 0, 0]);
+    this.offset = 0;
     this.type = type;
     this.minValue = minValue;
   }
@@ -54,24 +78,8 @@ export default class Resizer extends BaseComponent {
     this.el.hide();
   }
 
-  // value: the top or left of value
-  // hv: the width or height of hovering element
-  // lv: the width or height of line element
-  update(value, hv, lv) {
-    const { el, minValue, type } = this;
-    // console.log('value:', value, minValue);
-    if (value < minValue) return;
+  update(value) {
     super.update(value);
-    const [hoverEl, lineEl] = el.children;
-    if (type === 'row') {
-      el.offset({ top: value - 5 });
-      if (hv) hoverEl.offset({ width: hv });
-      if (lv) lineEl.offset({ width: lv });
-    } else if (type === 'col') {
-      el.offset({ left: value - 5 });
-      if (hv) hoverEl.offset({ height: hv });
-      if (lv) lineEl.offset({ height: lv });
-    }
-    el.show();
+    updateView.call(this, 0);
   }
 }

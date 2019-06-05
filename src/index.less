@@ -241,10 +241,12 @@ body {
   }
   .@{css-prefix}-resizer-line {
     position: absolute;
+    pointer-events: none;
   }
 
   &.row {
     cursor: row-resize;
+    left: 0;
     .@{css-prefix}-resizer-hover {
       height: 5px;
     }
@@ -256,6 +258,7 @@ body {
     }
   }
   &.col {
+    top: 0;
     cursor: col-resize;
     .@{css-prefix}-resizer-hover {
       width: 5px;
@@ -274,20 +277,28 @@ body {
   bottom: 0;
   right: 0;
   background-color: #f4f5f8;
-  opacity: 0;
+  opacity: 0.9;
   z-index: 12;
   &.horizontal {
-    // right: 15px;
+    right: 16px;
     overflow-x: scroll;
     overflow-y: hidden;
+    > div {
+      height: 1px;
+      background: #ddd;
+    }
   }
   &.vertical {
-    // bottom: 15px;
+    bottom: 16px;
     overflow-x: hidden;
     overflow-y: scroll;
+    > div {
+      width: 1px;
+      background: #ddd;
+    }
   }
   &:hover {
-    opacity: .85;
+    // opacity: .85;
   }
 }
 

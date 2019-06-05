@@ -13,7 +13,7 @@ export default class Cols {
   width(i, v) {
     const { $, settings } = this;
     const c = $[i];
-    if (v) {
+    if (v !== undefined) {
       if (c) {
         c.width = v;
       } else {

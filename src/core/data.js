@@ -113,16 +113,15 @@ const toolbarHeight = 41;
 export default class Data {
   constructor(settings = {}) {
     this.settings = helper.merge(defaultSettings, settings);
-    this.load({});
+    this.$ = defaultData;
+    this.merges = new Merges(this.$);
+    this.rows = new Rows(this.$, this.settings);
+    this.cols = new Cols(this.$, this.settings);
+    this.scroll = new Scroll(this.$);
   }
 
   load(data) {
-    this._ = helper.merge(defaultData, data);
-    const { _, settings } = this;
-    this.merges = new Merges(_);
-    this.rows = new Rows(_, settings);
-    this.cols = new Cols(_, settings);
-    this.scroll = new Scroll(_);
+    helper.mergeDeep(this.$, data);
   }
 
   get design() {
@@ -142,14 +141,19 @@ export default class Data {
   }
 
   get selector() {
-    return this._.selector;
+    return this.$.selector;
   }
 
   get canvas() {
     const { view } = this.settings;
+    const { indexWidth, indexHeight } = this;
+    const width = view.width();
+    const height = view.height() - toolbarHeight;
     return {
-      width: view.width(),
-      height: view.height() - toolbarHeight,
+      width,
+      height,
+      cwidth: width - indexWidth,
+      cheight: height - indexHeight,
     };
   }
 
@@ -174,7 +178,7 @@ export default class Data {
   }
 
   cell(ri, ci) {
-    return new Cell(this._, this.settings, ri, ci);
+    return new Cell(this.$, this.settings, ri, ci);
   }
 
   // cellBox(ri, ci)
@@ -205,7 +209,7 @@ export default class Data {
     let y = top;
     let w = width;
     let h = height;
-    // console.log('ri:', ri, ':ci:', ci);
+    // console.log('ri:', ri, ':ci:', ci, x, y, w, h);
     if (ri === -1) {
       y = 0;
       h = indexHeight;
