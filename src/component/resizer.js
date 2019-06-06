@@ -4,9 +4,34 @@ import h from '../dom/create-element';
 import { mouseMoveUp } from '../dom/event';
 import { cssPrefix } from '../config';
 
+function updateView(distance = 0) {
+  const {
+    value, el, type, minValue,
+  } = this;
+  const [,
+    offset, length, hoverLength, lineLength,
+  ] = value;
+  const t = offset + length + distance;
+  // console.log(offset, length, distance, minValue);
+  if (t < offset + minValue) return;
+  const [hoverEl, lineEl] = el.children;
+  if (type === 'row') {
+    el.offset({ top: t - 5 });
+    hoverEl.offset({ width: hoverLength });
+    lineEl.offset({ width: lineLength });
+  } else if (type === 'col') {
+    el.offset({ left: t - 5 });
+    hoverEl.offset({ height: hoverLength });
+    lineEl.offset({ height: lineLength });
+  }
+  el.show();
+}
+
 function mousedownHandler() {
   // let sEvt = evt;
-  const { el, type, offset, value } = this;
+  const {
+    el, type, value,
+  } = this;
   const [, lineEl] = el.children;
   let distance = 0;
   lineEl.show();
@@ -28,29 +53,6 @@ function mousedownHandler() {
     this.hide();
     this.change(value[0], distance + value[2]);
   });
-}
-
-function updateView(distance = 0) {
-  const {
-    value, el, type, minValue,
-  } = this;
-  const [
-    , offset, length, hoverLength, lineLength,
-  ] = value;
-  const t = offset + length + distance;
-  // console.log(offset, length, distance, minValue);
-  if (t < offset + minValue) return;
-  const [hoverEl, lineEl] = el.children;
-  if (type === 'row') {
-    el.offset({ top: t - 5 });
-    hoverEl.offset({ width: hoverLength });
-    lineEl.offset({ width: lineLength });
-  } else if (type === 'col') {
-    el.offset({ left: t - 5 });
-    hoverEl.offset({ height: hoverLength });
-    lineEl.offset({ height: lineLength });
-  }
-  el.show();
 }
 
 export default class Resizer extends BaseComponent {

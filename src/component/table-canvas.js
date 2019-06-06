@@ -18,6 +18,7 @@ function renderGrid(viewRange) {
       lineWidth: thinLineWidth(),
       strokeStyle: '#e6e6e6',
     }).translate(indexWidth, indexHeight);
+    // console.log('sri:', sri, ', eri:', eri);
     rows.heights(sri, eri, (i, hh, total) => {
       canvas.line([0, total], [w, total]);
     });
@@ -49,6 +50,7 @@ function renderHeader(viewRange) {
       lineWidth: thinLineWidth(),
       strokeStyle: '#e6e6e6',
     });
+    // console.log('viewRange:', viewRange);
     rows.heights(sri, eri, (i, hh, total) => {
       const y = total + indexHeight;
       canvas.line([0, y], [indexWidth, y])

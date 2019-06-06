@@ -71,7 +71,7 @@ export default class Rows {
   }
 
   heights(min, max, cb) {
-    helper.rangeEach(min, max, i => this.height(i), cb);
+    helper.rangeEach(min, max + 1, i => this.height(i), cb);
   }
 
   len(v) {

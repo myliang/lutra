@@ -48,11 +48,12 @@ function rangeIf(min, max, getv, cb) {
   let lastv = 0;
   for (let i = min; i < max; i += 1) {
     lasti = i;
-    if (cb(total)) break;
     lastv = getv(i);
     total += lastv;
+    if (cb(total)) break;
   }
-  return [lasti - 1, total - lastv, lastv];
+  // console.log(lasti, total, lastv);
+  return [lasti, total - lastv, lastv];
 }
 
 export default {

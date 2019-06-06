@@ -1,5 +1,5 @@
 /* global window, document */
-import h from './dom/create-element';
+import hh from './dom/create-element';
 import Data from './core/data';
 import TableCanvas from './component/table-canvas';
 import ScrollBar from './component/scrollbar';
@@ -35,7 +35,7 @@ function overlayerMousemove(evt) {
   }
 
   const {
-    ri, ci, x, y, h, w,
+    ri, ci, x, y, w, h,
   } = data.cellBoxAndIndex(offsetX, offsetY);
   // console.log('cellBoxAndIndex:', ri, ci, x, y, w, h);
   if (ri >= 0 && ci === -1) {
@@ -75,8 +75,7 @@ function initEvents() {
     } else {
       // click the left mouse button
     }
-  }).on('mousewheel.stop', (evt) => {
-  });
+  }).on('mousewheel.stop', () => {});
 
   rResizer.change = (i, v) => {
     rows.height(i, v);
@@ -103,7 +102,6 @@ function reset() {
   const {
     tableCanvas,
     overlayerEl,
-    tableEl,
     data,
   } = this;
   const { indexWidth, indexHeight } = data;
@@ -132,7 +130,7 @@ class FormDesigner {
     const { indexWidth, indexHeight } = this.data;
 
     // table
-    const tableEl = h(`canvas.${cssPrefix}-table`);
+    const tableEl = hh(`canvas.${cssPrefix}-table`);
     this.tableCanvas = new TableCanvas(tableEl.el, this.data);
 
     // scrollbar
@@ -144,12 +142,11 @@ class FormDesigner {
     this.cResizer = new Resizer('col', indexWidth);
 
     // overlayer
-    this.overlayerEl = h(`.${cssPrefix}-overlayer`,
-      h(`.${cssPrefix}-overlayer-content`),
-    );
+    this.overlayerEl = hh(`.${cssPrefix}-overlayer`,
+      hh(`.${cssPrefix}-overlayer-content`));
 
     // console.log(':::::', this.overlayerEl, this.rResizer.el);
-    const rootEl = h(`.${cssPrefix}`,
+    const rootEl = hh(`.${cssPrefix}`,
       tableEl,
       this.overlayerEl,
       this.rResizer.el,

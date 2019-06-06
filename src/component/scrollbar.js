@@ -15,7 +15,7 @@ export default class Scrollbar extends BaseComponent {
     const { type, el } = this;
     if (contentd > d) {
       const cssKey = type === 'vertical' ? 'height' : 'width';
-      el.css(cssKey, `${d - 15}px`).show();
+      el.css(cssKey, `${d - 16}px`).show();
       el.child().css(cssKey, `${contentd}px`);
     } else {
       el.hide();

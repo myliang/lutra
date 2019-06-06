@@ -101,7 +101,7 @@ const defaultData = {
   rows: {},
   cols: {},
   scroll: {
-    ri: 0, ci: 0, x: 0, y: 100,
+    ri: 0, ci: 0, x: 0, y: 0,
   },
   selector: {
     sri: 0, sci: 0, eri: 0, eci: 0,
@@ -165,7 +165,6 @@ export default class Data {
     } = this;
     const [eri] = rows.end(ri, height + indexHeight);
     const [eci] = cols.end(ci, width + indexWidth);
-    // console.log('eri>>>:', eci, eri, width, this.scroll);
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
@@ -174,6 +173,7 @@ export default class Data {
   }
 
   scrolly(y) {
+    // console.log('yyyyy:', y);
     this.scroll.y(y, this.rows);
   }
 
@@ -203,20 +203,23 @@ export default class Data {
     const {
       scroll, cols, rows, indexWidth, indexHeight,
     } = this;
-    const [ri, top, height] = rows.end(scroll.ri, y1 - indexHeight);
-    const [ci, left, width] = cols.end(scroll.ci, x1 - indexWidth);
-    let x = left;
-    let y = top;
-    let w = width;
-    let h = height;
-    // console.log('ri:', ri, ':ci:', ci, x, y, w, h);
+    let [ri, y, h] = [0, 0, 0];
+    let [ci, x, w] = [0, 0, 0];
+    if (y1 <= indexHeight) {
+      [ri, y] = [-1, 0];
+    } else {
+      [ri, y, h] = rows.end(scroll.ri, y1 - indexHeight);
+    }
+    if (x1 <= indexWidth) {
+      [ci, x] = [-1, 0];
+    } else {
+      [ci, x, w] = cols.end(scroll.ci, x1 - indexWidth);
+    }
     if (ri === -1) {
-      y = 0;
       h = indexHeight;
       x += indexWidth;
     }
     if (ci === -1) {
-      x = 0;
       w = indexWidth;
       y += indexHeight;
     }
