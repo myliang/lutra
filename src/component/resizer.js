@@ -6,14 +6,14 @@ import { cssPrefix } from '../config';
 
 function updateView(distance = 0) {
   const {
-    value, el, type, minValue,
+    value, el, type,
   } = this;
   const [,
     offset, length, hoverLength, lineLength,
   ] = value;
   const t = offset + length + distance;
   // console.log(offset, length, distance, minValue);
-  if (t < offset + minValue) return;
+  // if (t < offset + minValue) return;
   const [hoverEl, lineEl] = el.children;
   if (type === 'row') {
     el.offset({ top: t - 5 });
@@ -30,10 +30,13 @@ function updateView(distance = 0) {
 function mousedownHandler() {
   // let sEvt = evt;
   const {
-    el, type, value,
+    el, type, value, minValue,
   } = this;
+  const [,, length] = value;
   const [, lineEl] = el.children;
   let distance = 0;
+
+  const canUpdate = () => length + distance > minValue;
   lineEl.show();
   mouseMoveUp(window, (e) => {
     this.moving = true;
@@ -45,13 +48,20 @@ function mousedownHandler() {
       } else if (type === 'col') {
         distance += movementX;
       }
-      updateView.call(this, distance);
+      // console.log(':::', value, length, distance, minValue);
+      if (canUpdate()) {
+        updateView.call(this, distance);
+      }
       // sEvt = e;
     }
   }, () => {
     this.moving = false;
     this.hide();
-    this.change(value[0], distance + value[2]);
+    let v = minValue;
+    if (canUpdate()) {
+      v = distance + value[2];
+    }
+    this.change(value[0], v);
   });
 }
 
@@ -78,6 +88,7 @@ export default class Resizer extends BaseComponent {
 
   hide() {
     this.el.hide();
+    this.el.children[1].hide();
   }
 
   update(value) {
