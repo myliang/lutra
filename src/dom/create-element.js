@@ -36,6 +36,9 @@ class CreateElement {
         el = document.createTextNode(t);
       } else {
         ({ el } = t);
+        if (el instanceof CreateElement) {
+          ({ el } = el);
+        }
       }
       this.el.appendChild(el);
       return this;
@@ -162,6 +165,16 @@ class CreateElement {
     return this.classList.toggle(name);
   }
 
+  toggle(cls = 'active') {
+    return this.toggleClass(cls);
+  }
+
+  active(flag = true) {
+    if (flag) this.addClass('active');
+    else this.removeClass('active');
+    return this;
+  }
+
   show() {
     return this.css('display', 'block');
   }
@@ -176,3 +189,6 @@ function h(cssSelector, ...children) {
 }
 
 export default h;
+export {
+  CreateElement,
+};

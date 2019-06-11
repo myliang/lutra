@@ -72,7 +72,7 @@ body {
   }
 }
 
-.@{css-prefix}-sheet {
+.@{css-prefix}-content {
   position: relative;
   overflow: hidden;
 }
@@ -174,7 +174,7 @@ body {
   .@{css-prefix}-border-palette-right {
     padding-left: 6px;
 
-    .@{css-prefix}-toolbar-btn {
+    .@{css-prefix}-toolbar-item {
       margin-top: 0;
       margin-bottom: 3px;
     }
@@ -435,9 +435,8 @@ body {
   }
 }
 
-.x-spreadsheet-item,
-.x-spreadsheet-header,
-{
+.@{css-prefix}-item,
+.@{css-prefix}-header {
 
   &.state {
     padding-left: 35px!important;
@@ -474,7 +473,6 @@ body {
     // transform: rotate(45deg);
     // -webkit-transform: rotate(45deg);
   }
-
 }
 
 .@{css-prefix}-checkbox {
@@ -555,7 +553,7 @@ body {
 .@{css-prefix}-toolbar {
   border-bottom: 1px solid #e0e2e4;
 
-  .@{css-prefix}-toolbar-btns {
+  .@{css-prefix}-toolbar-menu {
     display: inline-flex;
   }
 
@@ -567,7 +565,7 @@ body {
     }
   }
 
-  .@{css-prefix}-toolbar-btn {
+  .@{css-prefix}-toolbar-item {
     flex: 0 0 auto;
     display: inline-block;
     border: 1px solid transparent;

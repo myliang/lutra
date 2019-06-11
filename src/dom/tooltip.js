@@ -1,6 +1,6 @@
 /* global document */
-import h from '../dom/create-element';
-import { bind } from '../dom/event';
+import h from './create-element';
+import { bind } from './event';
 import { cssPrefix } from '../config';
 
 export default function tooltip(html, target) {
@@ -10,7 +10,7 @@ export default function tooltip(html, target) {
   const {
     left, top, width, height,
   } = target.getBoundingClientRect();
-  const el = h('div', `${cssPrefix}-tooltip`).html(html).show();
+  const el = h(`.${cssPrefix}-tooltip`).html(html).show();
   document.body.appendChild(el.el);
   const elBox = el.box();
   // console.log('elBox:', elBox);

@@ -1,4 +1,4 @@
-const baseFonts = [
+const fonts = [
   { key: 'Arial', title: 'Arial' },
   { key: 'Helvetica', title: 'Helvetica' },
   { key: 'Source Sans Pro', title: 'Source Sans Pro' },
@@ -43,6 +43,6 @@ function pt2px(pt) {
 export default {};
 export {
   fontSizes,
-  baseFonts,
+  fonts,
   pt2px,
 };

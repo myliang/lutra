@@ -4,6 +4,7 @@ import Data from './core/data';
 import TableCanvas from './component/table-canvas';
 import ScrollBar from './component/scrollbar';
 import Resizer from './component/resizer';
+import Toolbar from './component/toolbar/index';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
 import './index.less';
@@ -145,15 +146,19 @@ class FormDesigner {
     this.overlayerEl = hh(`.${cssPrefix}-overlayer`,
       hh(`.${cssPrefix}-overlayer-content`));
 
+    // toolbar
+    this.toolbar = new Toolbar(this.data);
+
     // console.log(':::::', this.overlayerEl, this.rResizer.el);
     const rootEl = hh(`.${cssPrefix}`,
-      tableEl,
-      this.overlayerEl,
-      this.rResizer.el,
-      this.cResizer.el,
-      this.vScrollbar.el,
-      this.hScrollbar.el)
-      .on('contextmenu.prevent', () => {});
+      this.toolbar.el,
+      hh(`.${cssPrefix}-content`,
+        tableEl,
+        this.overlayerEl,
+        this.rResizer.el,
+        this.cResizer.el,
+        this.vScrollbar.el,
+        this.hScrollbar.el).on('contextmenu.prevent', () => {}));
 
     // create canvas element
     targetEl.appendChild(rootEl.el);
