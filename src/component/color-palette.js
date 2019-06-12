@@ -17,7 +17,7 @@ const standardColors = ['#c00000', '#fe0000', '#fdc101', '#ffff01', '#93d051', '
 function buildTd(color) {
   const { colorElementMap } = this;
   const el = h('td',
-    h(`div.${cssPrefix}-color-palette-cell`)
+    h(`.${cssPrefix}-color-palette-cell`)
       .on('click.stop', () => this.change(color))
       .css('background-color', color));
   colorElementMap.set(color, el);

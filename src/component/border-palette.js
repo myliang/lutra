@@ -10,7 +10,7 @@ const modes2 = ['left', 'top', 'right', 'bottom', 'none'];
 
 function buildTd(iconName) {
   return h('td',
-    h(`${cssPrefix}-border-palette-cell`,
+    h(`.${cssPrefix}-border-palette-cell`,
       new Icon(`border-${iconName}`))
       .on('click', () => {
         this.value.mode = iconName;

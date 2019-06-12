@@ -8,8 +8,10 @@ export default class Icon extends CreateElement {
   }
 
   update(name) {
-    const { el, iconName } = this;
-    el.child.removeClass(iconName).addClass(name);
-    this.iconName = name;
+    const { iconName } = this;
+    if (name !== iconName) {
+      this.child().addClass(name).removeClass(iconName);
+      this.iconName = name;
+    }
   }
 }

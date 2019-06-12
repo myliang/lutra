@@ -20,7 +20,6 @@ class CreateElement {
       this.el = document.createElement(this.tag);
       this.addClass(...classes);
     } else {
-      console.log('cssSelector:', cssSelector);
       this.tag = cssSelector.tagName;
       this.el = cssSelector;
     }

@@ -22,6 +22,6 @@ export default class Align extends Base {
   }
 
   updateTitle(value) {
-    this.title.update(`aling-${value}`);
+    this.title.update(`align-${value}`);
   }
 }
