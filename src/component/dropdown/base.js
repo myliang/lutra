@@ -63,14 +63,14 @@ export default class Base extends BaseComponent {
   show() {
     const { el } = this;
     el.children[1].show();
-    el.active();
-    bindClickoutside(el, () => this.hide());
+    el.parent().classList.add('active');
+    bindClickoutside(el.parent(), () => this.hide());
   }
 
   hide() {
     const { el } = this;
-    el.active(false);
+    el.parent().classList.remove('active');
     el.children[1].hide();
-    unbindClickoutside(el);
+    unbindClickoutside(el.parent());
   }
 }

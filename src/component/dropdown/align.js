@@ -14,7 +14,7 @@ export default class Align extends Base {
 
   content() {
     const values = this.vertical ? verticalAligns : horizontalAligns;
-    return values.map(it => h(`${cssPrefix}-item`, new Icon(`align-${it}`))
+    return values.map(it => h(`.${cssPrefix}-item`, new Icon(`align-${it}`))
       .on('click', () => {
         this.update(it);
         this.change(it);

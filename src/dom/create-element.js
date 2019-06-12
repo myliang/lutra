@@ -13,11 +13,17 @@ class CreateElement {
   constructor(cssSelector, ...children) {
     this.tag = 'div';
     this.children = children;
-    const [tag, ...classes] = cssSelector.split('.');
-    if (!/^\s*$/.test(tag)) this.tag = tag;
     this.d = {};
-    this.el = document.createElement(this.tag);
-    this.addClass(...classes);
+    if (typeof cssSelector === 'string') {
+      const [tag, ...classes] = cssSelector.split('.');
+      if (!/^\s*$/.test(tag)) this.tag = tag;
+      this.el = document.createElement(this.tag);
+      this.addClass(...classes);
+    } else {
+      console.log('cssSelector:', cssSelector);
+      this.tag = cssSelector.tagName;
+      this.el = cssSelector;
+    }
     children.forEach(ele => this.child(ele));
   }
 
@@ -44,6 +50,10 @@ class CreateElement {
       return this;
     }
     return this.children[0];
+  }
+
+  parent() {
+    return this.el.parentNode;
   }
 
   on(eventNames, handler) {

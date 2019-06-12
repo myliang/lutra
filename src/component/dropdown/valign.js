@@ -9,7 +9,7 @@ export default class Valign extends Base {
   }
 
   content() {
-    return ['left', 'center', 'right'].map(it => h(`${cssPrefix}-item`, new Icon(`align-${it}`))
+    return ['left', 'center', 'right'].map(it => h(`.${cssPrefix}-item`, new Icon(`align-${it}`))
       .on('click', () => {
         this.update(it);
         this.change(it);
