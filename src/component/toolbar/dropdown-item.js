@@ -9,13 +9,13 @@ export default class DropdownItem extends Item {
 
   render() {
     const { tag } = this;
-    const dd = this.dropdown();
-    dd.change = it => this.change(tag, this.getValue(it));
-    return super.render().child(dd.el);
+    this.dd = this.dropdown();
+    this.dd.change = it => this.change(tag, this.getValue(it));
+    return super.render().child(this.dd.el);
   }
 
   update(v) {
     super.update(v);
-    this.el.child.update(v);
+    this.dd.update(v);
   }
 }

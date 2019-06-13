@@ -27,6 +27,7 @@ export default class Toolbar extends BaseComponent {
     this.textColor = new TextColor(style.color);
     this.fillColor = new FillColor(style.bgcolor);
     this.border = new Border();
+    this.merge = new ToggleItem('merge');
     this.align = new Align(style.align);
     this.valign = new Valign(style.valign);
     this.textwrap = new ToggleItem('textwrap');
@@ -45,6 +46,7 @@ export default class Toolbar extends BaseComponent {
         buildDivider(),
         this.fillColor.el,
         this.border.el,
+        this.merge.el,
         buildDivider(),
         this.align.el,
         this.valign.el,
@@ -52,5 +54,21 @@ export default class Toolbar extends BaseComponent {
   }
 
   update() {
+    const cell = this.value.selectedCell();
+    const { style } = cell;
+    const {
+      font, underline, color, bgcolor, align, valign, textwrap,
+    } = style;
+    this.font.update(font.name);
+    this.fontSize.update(font.size);
+    this.bold.update(font.bold);
+    this.italic.update(font.italic);
+    this.underline.update(underline);
+    this.textColor.update(color);
+    this.fillColor.update(bgcolor);
+    // this.merge.update();
+    this.align.update(align);
+    this.valign.update(valign);
+    this.textwrap.update(textwrap);
   }
 }

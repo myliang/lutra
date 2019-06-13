@@ -55,6 +55,7 @@ import Cell from './cell';
 import CellRange from './cell-range';
 import Merges from './merge';
 import Scroll from './scroll';
+import Select from './select';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
@@ -103,7 +104,7 @@ const defaultData = {
   scroll: {
     ri: 0, ci: 0, x: 0, y: 0,
   },
-  selector: {
+  select: {
     sri: 0, sci: 0, eri: 0, eci: 0,
   },
 };
@@ -117,7 +118,8 @@ export default class Data {
     this.merges = new Merges(this.$);
     this.rows = new Rows(this.$, this.settings);
     this.cols = new Cols(this.$, this.settings);
-    this.scroll = new Scroll(this.$);
+    this.scroll = new Scroll(this.$, this.rows, this.cols);
+    this.select = new Select(this.$, this.merges);
   }
 
   load(data) {
@@ -138,10 +140,6 @@ export default class Data {
 
   get defaultStyle() {
     return this.settings.style;
-  }
-
-  get selector() {
-    return this.$.selector;
   }
 
   get canvas() {
@@ -168,17 +166,20 @@ export default class Data {
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
-  scrollx(x) {
-    this.scroll.x(x, this.cols);
-  }
-
-  scrolly(y) {
-    // console.log('yyyyy:', y);
-    this.scroll.y(y, this.rows);
+  selectedCell() {
+    const { ri, ci } = this.select;
+    return this.cell(ri, ci);
   }
 
   cell(ri, ci) {
     return new Cell(this.$, this.settings, ri, ci);
+  }
+
+  selectedCellBox() {
+    const {
+      sri, sci, eri, eci,
+    } = this.select.range;
+    return this.cellBox(sri, sci, eri, eci);
   }
 
   // cellBox(ri, ci)

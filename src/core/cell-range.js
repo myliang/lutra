@@ -207,4 +207,10 @@ export default class CellRange {
     }
     return new CellRange(sri, sci, eri, eci);
   }
+
+  static create({
+    sri, sci, eri, eci,
+  }) {
+    return new CellRange(sri, sci, eri, eci);
+  }
 }

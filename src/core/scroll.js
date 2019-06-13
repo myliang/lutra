@@ -1,6 +1,8 @@
 export default class Scroll {
-  constructor({ scroll }) {
+  constructor({ scroll }, rows, cols) {
     this.$ = scroll;
+    this.rows = rows;
+    this.cols = cols;
   }
 
   get ri() {
@@ -11,8 +13,8 @@ export default class Scroll {
     return this.$.ci;
   }
 
-  x(v, cols) {
-    const { $ } = this;
+  x(v) {
+    const { $, cols } = this;
     const { ci, x } = $;
     const [eci, left] = cols.end(0, v);
     if (x !== left && ci !== eci) {
@@ -21,8 +23,8 @@ export default class Scroll {
     }
   }
 
-  y(v, rows) {
-    const { $ } = this;
+  y(v) {
+    const { $, rows } = this;
     const { ri, y } = $;
     const [eri, top] = rows.end(0, v);
     if (y !== top && ri !== eri) {

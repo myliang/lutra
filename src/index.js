@@ -5,8 +5,10 @@ import TableCanvas from './component/table-canvas';
 import ScrollBar from './component/scrollbar';
 import Resizer from './component/resizer';
 import Toolbar from './component/toolbar/index';
+import Selector from './component/selector';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
+import { mouseMoveUp } from './dom/event';
 import './index.less';
 
 function vScrollbarReset() {
@@ -51,6 +53,38 @@ function overlayerMousemove(evt) {
   }
 }
 
+function updateSelector() {
+  const { data, selector } = this;
+  const {
+    x, y, w, h,
+  } = data.selectedCellBox();
+  selector.update(x, y, w, h);
+}
+
+function overlayerClickLeftMouseButton(evt) {
+  const {
+    shiftKey, offsetX, offsetY, buttons,
+  } = evt;
+  const { toolbar, data } = this;
+  let { ri, ci } = data.cellBoxAndIndex(offsetX, offsetY);
+
+  if (!shiftKey) {
+    data.select.s(ri, ci);
+    updateSelector.call(this);
+    toolbar.update();
+    mouseMoveUp(window, (e) => {
+      if (e.buttons === 1 && !e.shiftKey) {
+        ({ ri, ci } = data.cellBoxAndIndex(e.offsetX, e.offsetY));
+        data.select.e(ri, ci);
+        updateSelector.call(this);
+      }
+    }, () => {});
+  } else if (buttons === 1) {
+    data.select.e(ri, ci);
+    updateSelector.call(this);
+  }
+}
+
 function initEvents() {
   const {
     overlayerEl,
@@ -75,6 +109,7 @@ function initEvents() {
       // double click the left mouse button
     } else {
       // click the left mouse button
+      overlayerClickLeftMouseButton.call(this, evt);
     }
   }).on('mousewheel.stop', () => {});
 
@@ -90,11 +125,11 @@ function initEvents() {
   };
 
   vScrollbar.change = (v) => {
-    data.scrolly(v);
+    data.scroll.y(v);
     tableCanvas.render();
   };
   hScrollbar.change = (v) => {
-    data.scrollx(v);
+    data.scroll.x(v);
     tableCanvas.render();
   };
 }
@@ -142,9 +177,13 @@ class FormDesigner {
     this.rResizer = new Resizer('row', indexHeight);
     this.cResizer = new Resizer('col', indexWidth);
 
+    // selector
+    this.selector = new Selector();
+
     // overlayer
     this.overlayerEl = hh(`.${cssPrefix}-overlayer`,
-      hh(`.${cssPrefix}-overlayer-content`));
+      hh(`.${cssPrefix}-overlayer-content`,
+        this.selector.el));
 
     // toolbar
     this.toolbar = new Toolbar(this.data);
