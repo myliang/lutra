@@ -105,10 +105,8 @@ function renderContent(viewRange) {
       renderCell.call(this, ri, ci, () => data.cellBox(ri, ci));
     });
     // 2 render merge
-    merges.each(viewRange, ({
-      sri, sci, eri, eci,
-    }) => {
-      renderCell.call(this, sri, sci, () => data.cellBox(sri, sci, eri, eci));
+    merges.each(viewRange, (it) => {
+      renderCell.call(this, it.sri, it.sci, () => data.cellBox(it));
     });
   });
 }

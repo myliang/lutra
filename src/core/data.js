@@ -176,24 +176,25 @@ export default class Data {
   }
 
   selectedCellBox() {
-    const {
-      sri, sci, eri, eci,
-    } = this.select.range;
-    return this.cellBox(sri, sci, eri, eci);
+    return this.cellBox(this.select.range);
   }
 
+  // cellBox(range)
   // cellBox(ri, ci)
-  // cellBox(sri, sci, eri, eci);
-  cellBox(ri, ci, ...args) {
+  cellBox(...args) {
     const { scroll, cols, rows } = this;
-    const x = cols.sumWidth(scroll.ci, ci);
-    const y = rows.sumHeight(scroll.ri, ri);
-    let w = cols.width(ci);
-    let h = rows.height(ri);
-    if (arguments.length === 4) {
-      const [eri, eci] = args;
-      w = cols.sumWidth(ci, eci + 1);
-      h = rows.sumHeight(ri, eri + 1);
+    let [sri, sci] = args;
+    if (args.length === 1) {
+      ([{ sri, sci }] = args);
+    }
+    const x = cols.sumWidth(scroll.ci, sci);
+    const y = rows.sumHeight(scroll.ri, sri);
+    let w = cols.width(sci);
+    let h = rows.height(sri);
+    if (arguments.length === 1) {
+      const { eri, eci } = args[0];
+      w = cols.sumWidth(sci, eci + 1);
+      h = rows.sumHeight(sri, eri + 1);
     }
     return {
       x, y, w, h,
@@ -202,7 +203,7 @@ export default class Data {
 
   cellBoxAndIndex(x1, y1) {
     const {
-      scroll, cols, rows, indexWidth, indexHeight,
+      scroll, cols, rows, indexWidth, indexHeight, merges,
     } = this;
     let [ri, y, h] = [0, 0, 0];
     let [ci, x, w] = [0, 0, 0];
@@ -215,6 +216,12 @@ export default class Data {
       [ci, x] = [-1, 0];
     } else {
       [ci, x, w] = cols.end(scroll.ci, x1 - indexWidth);
+    }
+    const merge = merges.find(ri, ci);
+    if (merge) {
+      ({
+        x, y, w, h,
+      } = this.cellBox(merge));
     }
     if (ri === -1) {
       h = indexHeight;

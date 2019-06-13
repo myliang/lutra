@@ -22,6 +22,10 @@ export default class Merges {
     return this.$.some(it => CellRange.valueOf(it).includes(ri, ci));
   }
 
+  find(ri, ci) {
+    return this.$.find(it => CellRange.valueOf(it).includes(ri, ci));
+  }
+
   union(merge) {
     let ncr = merge;
     this.$.forEach((m) => {
