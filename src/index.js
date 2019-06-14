@@ -8,7 +8,7 @@ import Toolbar from './component/toolbar/index';
 import Selector from './component/selector';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
-import { mouseMoveUp } from './dom/event';
+import { bind, mouseMoveUp } from './dom/event';
 import './index.less';
 
 function vScrollbarReset() {
@@ -54,35 +54,62 @@ function overlayerMousemove(evt) {
 }
 
 function updateSelector() {
-  const { data, selector } = this;
   const {
-    x, y, w, h,
-  } = data.selectedCellBox();
-  selector.update(x, y, w, h);
+    data, selector, toolbar, tableCanvas,
+  } = this;
+  selector.update(data.selectedCellBox);
+  toolbar.update();
+  tableCanvas.render();
 }
 
 function overlayerClickLeftMouseButton(evt) {
   const {
     shiftKey, offsetX, offsetY, buttons,
   } = evt;
-  const { toolbar, data } = this;
+  const { data } = this;
   let { ri, ci } = data.cellBoxAndIndex(offsetX, offsetY);
+  const last = { ri, ci };
 
   if (!shiftKey) {
     data.select.s(ri, ci);
     updateSelector.call(this);
-    toolbar.update();
     mouseMoveUp(window, (e) => {
       if (e.buttons === 1 && !e.shiftKey) {
         ({ ri, ci } = data.cellBoxAndIndex(e.offsetX, e.offsetY));
-        data.select.e(ri, ci);
-        updateSelector.call(this);
+        if (last.ri !== ri || last.ci !== ci) {
+          data.select.e(ri, ci);
+          updateSelector.call(this);
+          last.ri = ri;
+          last.ci = ci;
+        }
       }
     }, () => {});
   } else if (buttons === 1) {
     data.select.e(ri, ci);
     updateSelector.call(this);
   }
+}
+
+function reset() {
+  const {
+    tableCanvas,
+    overlayerEl,
+    data,
+  } = this;
+  const { indexWidth, indexHeight } = data;
+  const {
+    width, height, cwidth, cheight,
+  } = data.canvas;
+  overlayerEl.offset({ width, height });
+  overlayerEl.children[0].offset({
+    left: indexWidth,
+    top: indexHeight,
+    width: cwidth,
+    height: cheight,
+  });
+  tableCanvas.render();
+  vScrollbarReset.call(this);
+  hScrollbarReset.call(this);
 }
 
 function initEvents() {
@@ -94,6 +121,7 @@ function initEvents() {
     hScrollbar,
     data,
     tableCanvas,
+    toolbar,
   } = this;
   const { rows, cols } = data;
   // overlayer
@@ -132,28 +160,14 @@ function initEvents() {
     data.scroll.x(v);
     tableCanvas.render();
   };
-}
 
-function reset() {
-  const {
-    tableCanvas,
-    overlayerEl,
-    data,
-  } = this;
-  const { indexWidth, indexHeight } = data;
-  const {
-    width, height, cwidth, cheight,
-  } = data.canvas;
-  overlayerEl.offset({ width, height });
-  overlayerEl.children[0].offset({
-    left: indexWidth,
-    top: indexHeight,
-    width: cwidth,
-    height: cheight,
-  });
-  tableCanvas.render();
-  vScrollbarReset.call(this);
-  hScrollbarReset.call(this);
+  toolbar.change = (attr, value) => {
+    data.update(attr, value);
+    tableCanvas.render();
+  };
+
+  // bind window
+  bind(window, 'resize', () => reset.call(this));
 }
 
 class FormDesigner {

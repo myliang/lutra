@@ -21,6 +21,14 @@ export default class CellRange {
     return this.eri - this.sri > 0 || this.eci - this.sci > 0;
   }
 
+  inRow(ri) {
+    return this.sri <= ri && ri <= this.eri;
+  }
+
+  inCol(ci) {
+    return this.sci <= ci && ci <= this.eci;
+  }
+
   // cell-index: ri, ci
   // cell-ref: A10
   includes(...args) {

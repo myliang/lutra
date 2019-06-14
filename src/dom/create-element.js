@@ -174,14 +174,22 @@ class CreateElement {
     return this.classList.toggle(name);
   }
 
+  updateClass(cls, flag) {
+    if (flag) this.addClass(cls);
+    else this.removeClass(cls);
+    return this;
+  }
+
   toggle(cls = 'active') {
     return this.toggleClass(cls);
   }
 
   active(flag = true) {
-    if (flag) this.addClass('active');
-    else this.removeClass('active');
-    return this;
+    return this.updateClass('active', flag);
+  }
+
+  disabled(flag = true) {
+    return this.updateClass('disabled', flag);
   }
 
   show() {

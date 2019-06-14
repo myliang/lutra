@@ -11,6 +11,17 @@ import Valign from './valign';
 import Align from './align';
 import Border from './border';
 
+class Merge extends ToggleItem {
+  constructor() {
+    super('merge');
+  }
+
+  update(active, disabled) {
+    super.update(active);
+    this.el.disabled(disabled);
+  }
+}
+
 function buildDivider() {
   return h(`.${cssPrefix}-toolbar-divider`);
 }
@@ -19,18 +30,22 @@ export default class Toolbar extends BaseComponent {
   constructor(data) {
     super(data);
     const style = data.defaultStyle;
-    this.font = new Font();
-    this.fontSize = new FontSize();
-    this.bold = new ToggleItem('font-bold', 'Ctrl+B');
-    this.italic = new ToggleItem('font-italic', 'Ctrl+I');
-    this.underline = new ToggleItem('underline', 'Ctrl+U');
-    this.textColor = new TextColor(style.color);
-    this.fillColor = new FillColor(style.bgcolor);
-    this.border = new Border();
-    this.merge = new ToggleItem('merge');
-    this.align = new Align(style.align);
-    this.valign = new Valign(style.valign);
-    this.textwrap = new ToggleItem('textwrap');
+    [
+      this.font = new Font(),
+      this.fontSize = new FontSize(),
+      this.bold = new ToggleItem('font-bold', 'Ctrl+B'),
+      this.italic = new ToggleItem('font-italic', 'Ctrl+I'),
+      this.underline = new ToggleItem('underline', 'Ctrl+U'),
+      this.textColor = new TextColor(style.color),
+      this.fillColor = new FillColor(style.bgcolor),
+      this.border = new Border(),
+      this.merge = new Merge(),
+      this.align = new Align(style.align),
+      this.valign = new Valign(style.valign),
+      this.textwrap = new ToggleItem('textwrap'),
+    ].forEach((it) => {
+      it.change = (...args) => this.change(...args);
+    });
   }
 
   render() {
@@ -54,8 +69,8 @@ export default class Toolbar extends BaseComponent {
   }
 
   update() {
-    const cell = this.value.selectedCell();
-    const { style } = cell;
+    const { selectedCell, select } = this.value;
+    const { style } = selectedCell;
     const {
       font, underline, color, bgcolor, align, valign, textwrap,
     } = style;
@@ -66,7 +81,7 @@ export default class Toolbar extends BaseComponent {
     this.underline.update(underline);
     this.textColor.update(color);
     this.fillColor.update(bgcolor);
-    // this.merge.update();
+    this.merge.update(select.merged, !select.multiple);
     this.align.update(align);
     this.valign.update(valign);
     this.textwrap.update(textwrap);

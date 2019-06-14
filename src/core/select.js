@@ -9,9 +9,25 @@ export default class Select {
   }
 
   get range() {
-    return this.$;
+    return CellRange.create(this.$);
   }
 
+  get multiple() {
+    return this.range.multiple();
+  }
+
+  get merged() {
+    const {
+      range, merges, ri, ci,
+    } = this;
+    if (range.multiple()) {
+      const merge = merges.find(ri, ci);
+      if (merge) return merge.equals(range);
+    }
+    return false;
+  }
+
+  // set sri, sci
   s(ri, ci) {
     this.ri = ri;
     this.ci = ci;
@@ -20,6 +36,7 @@ export default class Select {
     this.e(ri, ci);
   }
 
+  // set eri, eci, sri, sci
   e(ri, ci) {
     const { $, merges } = this;
     if (ri >= this.ri) {
@@ -38,7 +55,7 @@ export default class Select {
     }
     const {
       sri, sci, eri, eci,
-    } = merges.union(CellRange.create(this.$));
+    } = merges.union(this.range);
     Object.assign($, {
       sri, sci, eri, eci,
     });

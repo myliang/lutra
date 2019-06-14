@@ -49,6 +49,7 @@
  * }
  */
 import helper from './helper';
+import Styles from './style';
 import Rows from './row';
 import Cols from './col';
 import Cell from './cell';
@@ -116,6 +117,7 @@ export default class Data {
     this.settings = helper.merge(defaultSettings, settings);
     this.$ = defaultData;
     this.merges = new Merges(this.$);
+    this.styles = new Styles(this.$, this.settings);
     this.rows = new Rows(this.$, this.settings);
     this.cols = new Cols(this.$, this.settings);
     this.scroll = new Scroll(this.$, this.rows, this.cols);
@@ -166,17 +168,33 @@ export default class Data {
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
-  selectedCell() {
+  get selectedCell() {
     const { ri, ci } = this.select;
     return this.cell(ri, ci);
   }
 
-  cell(ri, ci) {
-    return new Cell(this.$, this.settings, ri, ci);
+  get selectedCellBox() {
+    return this.cellBox(this.select.range);
   }
 
-  selectedCellBox() {
-    return this.cellBox(this.select.range);
+  // attr: merge | border | style...
+  update(attr, value) {
+    const {
+      select, $, styles, merges,
+    } = this;
+    if (attr === 'merge') {
+      merges.update(select.range, value ? 'add' : 'remove');
+    } else if (attr === 'border') {
+      //
+    } else {
+      select.range.each((ri, ci) => {
+        new Cell($, styles, ri, ci, 'write').update(attr, value);
+      });
+    }
+  }
+
+  cell(ri, ci) {
+    return new Cell(this.$, this.styles, ri, ci);
   }
 
   // cellBox(range)

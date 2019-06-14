@@ -6,12 +6,22 @@ export default class Merges {
   }
 
   deleteWithin(merge) {
-    return this.$.filter(it => !CellRange.valueOf(it).within(merge));
+    const { $ } = this;
+    for (let i = 0; i < $.length;) {
+      const it = CellRange.valueOf($[i]);
+      if (it.within(merge)) $.splice(i, 1);
+      else i += 1;
+    }
   }
 
   add(merge) {
+    this.$.push(merge.toString());
+  }
+
+  // type: add | remove
+  update(merge, type = 'add') {
     this.deleteWithin(merge);
-    this.$.push(merge);
+    if (type === 'add') this.add(merge);
   }
 
   intersects(merge) {
@@ -23,7 +33,8 @@ export default class Merges {
   }
 
   find(ri, ci) {
-    return this.$.find(it => CellRange.valueOf(it).includes(ri, ci));
+    const ref = this.$.find(it => CellRange.valueOf(it).includes(ri, ci));
+    return undefined || (ref && CellRange.valueOf(ref));
   }
 
   union(merge) {
