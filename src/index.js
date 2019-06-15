@@ -154,11 +154,11 @@ function initEvents() {
 
   vScrollbar.change = (v) => {
     data.scroll.y(v);
-    tableCanvas.render();
+    updateSelector.call(this);
   };
   hScrollbar.change = (v) => {
     data.scroll.x(v);
-    tableCanvas.render();
+    updateSelector.call(this);
   };
 
   toolbar.change = (attr, value) => {
