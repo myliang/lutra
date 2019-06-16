@@ -61,12 +61,6 @@ import Select from './select';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
-  scroll: {
-    ri: 0,
-    ci: 0,
-    x: 0,
-    y: 0,
-  },
   view: {
     height: () => document.documentElement.clientHeight,
     width: () => document.documentElement.clientWidth,
@@ -103,12 +97,8 @@ const defaultData = {
   merges: [],
   rows: {},
   cols: {},
-  scroll: {
-    ri: 0, ci: 0, x: 0, y: 0,
-  },
-  select: {
-    sri: 0, sci: 0, eri: 0, eci: 0,
-  },
+  scroll: ['A1', 0, 0],
+  select: ['A1', 'A1:A1'],
 };
 
 const toolbarHeight = 41;
@@ -159,7 +149,7 @@ export default class Data {
   }
 
   get viewRange() {
-    const { ri, ci } = this.scroll;
+    const [ri, ci] = this.scroll.indexes;
     const { width, height } = this.canvas;
     const {
       indexWidth, indexHeight, rows, cols,
@@ -170,8 +160,7 @@ export default class Data {
   }
 
   get selectedCell() {
-    const { ri, ci } = this.select;
-    return this.cell(ri, ci);
+    return this.cell(...this.select.indexes);
   }
 
   get selectedCellBox() {
@@ -206,12 +195,13 @@ export default class Data {
   // cellBox(ri, ci)
   cellBox(...args) {
     const { scroll, cols, rows } = this;
+    const [ri, ci] = scroll.indexes;
     let [sri, sci] = args;
     if (args.length === 1) {
       ([{ sri, sci }] = args);
     }
-    const x = cols.sumWidth(scroll.ci, sci);
-    const y = rows.sumHeight(scroll.ri, sri);
+    const x = cols.sumWidth(ci, sci);
+    const y = rows.sumHeight(ri, sri);
     let w = cols.width(sci);
     let h = rows.height(sri);
     if (arguments.length === 1) {
@@ -228,17 +218,18 @@ export default class Data {
     const {
       scroll, cols, rows, indexWidth, indexHeight, merges,
     } = this;
+    const s = scroll.indexes;
     let [ri, y, h] = [0, 0, 0];
     let [ci, x, w] = [0, 0, 0];
     if (y1 <= indexHeight) {
       [ri, y] = [-1, 0];
     } else {
-      [ri, y, h] = rows.end(scroll.ri, y1 - indexHeight);
+      [ri, y, h] = rows.end(s[0], y1 - indexHeight);
     }
     if (x1 <= indexWidth) {
       [ci, x] = [-1, 0];
     } else {
-      [ci, x, w] = cols.end(scroll.ci, x1 - indexWidth);
+      [ci, x, w] = cols.end(s[1], x1 - indexWidth);
     }
     const merge = merges.find(ri, ci);
     if (merge) {

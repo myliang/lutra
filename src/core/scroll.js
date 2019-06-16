@@ -1,35 +1,30 @@
+import { expr2xy, xy2expr } from './alphabet';
+
 export default class Scroll {
+  // scroll: [ref, x, y]
   constructor({ scroll }, rows, cols) {
     this.$ = scroll;
     this.rows = rows;
     this.cols = cols;
   }
 
-  get ri() {
-    return this.$.ri;
-  }
-
-  get ci() {
-    return this.$.ci;
+  get indexes() {
+    return expr2xy(this.$[0]).reverse();
   }
 
   x(v) {
-    const { $, cols } = this;
-    const { ci, x } = $;
-    const [eci, left] = cols.end(0, v);
-    if (x !== left && ci !== eci) {
-      $.ci = eci;
-      $.x = left;
+    const [ri, ci] = this.indexes;
+    const [eci] = this.cols.end(0, v);
+    if (ci !== eci) {
+      this.$[0] = xy2expr(eci, ri);
     }
   }
 
   y(v) {
-    const { $, rows } = this;
-    const { ri, y } = $;
-    const [eri, top] = rows.end(0, v);
-    if (y !== top && ri !== eri) {
-      $.ri = eri;
-      $.y = top;
+    const [ri, ci] = this.indexes;
+    const [eri] = this.rows.end(0, v);
+    if (ri !== eri) {
+      this.$[0] = xy2expr(ci, eri);
     }
   }
 }

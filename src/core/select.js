@@ -1,15 +1,19 @@
 import CellRange from './cell-range';
+import { expr2xy, xy2expr } from './alphabet';
 
 export default class Select {
+  // select: [ref, refRange]
   constructor({ select }, merges) {
     this.$ = select;
-    this.ri = 0;
-    this.ci = 0;
     this.merges = merges;
   }
 
+  get indexes() {
+    return expr2xy(this.$[0]).reverse();
+  }
+
   get range() {
-    return CellRange.create(this.$);
+    return CellRange.valueOf(this.$[1]);
   }
 
   get multiple() {
@@ -32,10 +36,11 @@ export default class Select {
   }
 
   each(cb) {
+    const { range } = this;
     const {
       sri, sci, eri, eci,
-    } = this.$;
-    const nmerges = this.merges.filter(this.range);
+    } = range;
+    const nmerges = this.merges.filter(range);
     for (let i = sri; i <= eri; i += 1) {
       for (let j = sci; j <= eci; j += 1) {
         const merge = nmerges.find(it => it.includes(i, j));
@@ -54,35 +59,29 @@ export default class Select {
 
   // set sri, sci
   s(ri, ci) {
-    this.ri = ri;
-    this.ci = ci;
-    this.$.sri = ri;
-    this.$.sci = ci;
+    this.$[0] = xy2expr(ci, ri);
+    // this.$[1] = `${this.$[0]}:${this.$[0]}`
     this.e(ri, ci);
   }
 
   // set eri, eci, sri, sci
-  e(ri, ci) {
-    const { $, merges } = this;
-    if (ri >= this.ri) {
-      $.sri = this.ri;
-      $.eri = ri;
+  e(eri, eci) {
+    const { range, merges, indexes } = this;
+    const [ri, ci] = indexes;
+    if (eri >= ri) {
+      range.sri = ri;
+      range.eri = eri;
     } else {
-      $.sri = ri;
-      $.eri = this.ri;
+      range.sri = eri;
+      range.eri = ri;
     }
-    if (ci >= this.ci) {
-      $.sci = this.ci;
-      $.eci = ci;
+    if (eci >= ci) {
+      range.sci = ci;
+      range.eci = eci;
     } else {
-      $.sci = ci;
-      $.eci = this.ci;
+      range.sci = eci;
+      range.eci = ci;
     }
-    const {
-      sri, sci, eri, eci,
-    } = merges.union(this.range);
-    Object.assign($, {
-      sri, sci, eri, eci,
-    });
+    this.$[1] = merges.union(range).toString();
   }
 }
