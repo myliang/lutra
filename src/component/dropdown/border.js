@@ -7,6 +7,7 @@ export default class Border extends Base {
     super({}, new Icon('border-all'));
     this.palette = new BorderPalette();
     this.palette.change = (v) => {
+      this.update(v);
       this.change(v);
     };
   }

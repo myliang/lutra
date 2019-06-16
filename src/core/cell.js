@@ -53,7 +53,7 @@ export default class Cell {
   }
 
   // attr: font-name | font-italic | font-bold | font-size
-  // textwrap | underline | align | valign | color | bgcolor
+  // textwrap | underline | align | valign | color | bgcolor | border
   update(attr, value) {
     const { $, styles } = this;
     let nstyle = {};
@@ -63,9 +63,25 @@ export default class Cell {
     if (attr.startsWith('font')) {
       nstyle.font = nstyle.font || {};
       nstyle.font[attr.split('-')[1]] = value;
+    } else if (attr === 'border') {
+      if (value) {
+        nstyle[attr] = Object.assign(nstyle[attr] || {}, value);
+      } else {
+        delete nstyle[attr];
+      }
     } else {
       nstyle[attr] = value;
     }
-    $.style = styles.add(nstyle);
+    if (Object.keys(nstyle).length > 0) {
+      $.style = styles.add(nstyle);
+    }
+  }
+
+  static read(data, styles, ri, ci) {
+    return new Cell(data, styles, ri, ci, 'read');
+  }
+
+  static write(data, styles, ri, ci) {
+    return new Cell(data, styles, ri, ci, 'write');
   }
 }

@@ -100,7 +100,7 @@ export default class CanvasBase {
     ctx.lineWidth = thinLineWidth;
     ctx.strokeStyle = color;
     if (style === 'medium') {
-      ctx.lineWidth = npx(2) - 0.5;
+      ctx.lineWidth = npx(2);
     } else if (style === 'thick') {
       ctx.lineWidth = npx(3);
     } else if (style === 'dashed') {

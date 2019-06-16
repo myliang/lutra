@@ -37,6 +37,17 @@ export default class Merges {
     return undefined || (ref && CellRange.valueOf(ref));
   }
 
+  filter(merge) {
+    const ret = [];
+    this.$.forEach((m) => {
+      const it = CellRange.valueOf(m);
+      if (it.intersects(merge)) {
+        ret.push(it);
+      }
+    });
+    return ret;
+  }
+
   union(merge) {
     let ncr = merge;
     this.$.forEach((m) => {

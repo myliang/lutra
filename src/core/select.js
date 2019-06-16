@@ -27,6 +27,31 @@ export default class Select {
     return false;
   }
 
+  get single() {
+    return this.merged || !this.multiple;
+  }
+
+  each(cb) {
+    const {
+      sri, sci, eri, eci,
+    } = this.$;
+    const nmerges = this.merges.filter(this.range);
+    for (let i = sri; i <= eri; i += 1) {
+      for (let j = sci; j <= eci; j += 1) {
+        const merge = nmerges.find(it => it.includes(i, j));
+        if (merge) {
+          if (merge.sri === i && merge.sci === j) {
+            cb(i, j);
+          }
+          const [, cn] = merge.size();
+          j += cn - 1;
+        } else {
+          cb(i, j);
+        }
+      }
+    }
+  }
+
   // set sri, sci
   s(ri, ci) {
     this.ri = ri;

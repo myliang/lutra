@@ -50,6 +50,7 @@
  */
 import helper from './helper';
 import Styles from './style';
+import border from './border';
 import Rows from './row';
 import Cols from './col';
 import Cell from './cell';
@@ -185,16 +186,20 @@ export default class Data {
     if (attr === 'merge') {
       merges.update(select.range, value ? 'add' : 'remove');
     } else if (attr === 'border') {
-      //
+      border.parse(this, value, (
+        ri, ci, v,
+      ) => {
+        Cell.write($, styles, ri, ci).update(attr, v);
+      });
     } else {
-      select.range.each((ri, ci) => {
-        new Cell($, styles, ri, ci, 'write').update(attr, value);
+      select.each((ri, ci) => {
+        Cell.write($, styles, ri, ci).update(attr, value);
       });
     }
   }
 
   cell(ri, ci) {
-    return new Cell(this.$, this.styles, ri, ci);
+    return Cell.read(this.$, this.styles, ri, ci);
   }
 
   // cellBox(range)

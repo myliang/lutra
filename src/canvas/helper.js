@@ -8,7 +8,7 @@ export function npx(px) {
 }
 
 export function thinLineWidth() {
-  return dpr() - 0.5;
+  return dpr();
 }
 
 export default {};
