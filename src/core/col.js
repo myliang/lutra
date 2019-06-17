@@ -50,6 +50,6 @@ export default class Cols extends Base {
   }
 
   widths(min, max, cb) {
-    helper.rangeEach(min, max, i => this.width(i), cb);
+    helper.rangeEach(min, max + 1, i => this.width(i), cb);
   }
 }

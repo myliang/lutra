@@ -60,6 +60,7 @@ function renderHeader(viewRange) {
       strokeStyle: '#e6e6e6',
     });
     // console.log('viewRange:', viewRange);
+    // console.log('sri:', sri, ', eri:', eri);
     rows.heights(sri, eri, (i, hh, total) => {
       const y = total + indexHeight;
       if (range.inRow(i)) {
