@@ -6,6 +6,7 @@ import ScrollBar from './component/scrollbar';
 import Resizer from './component/resizer';
 import Toolbar from './component/toolbar/index';
 import Selector from './component/selector';
+import Editor from './component/editor';
 import { cssPrefix } from './config';
 import { locale } from './locale/locale';
 import { bind, mouseMoveUp } from './dom/event';
@@ -62,6 +63,11 @@ function updateSelector() {
   tableCanvas.render();
 }
 
+function moveSelector(direction) {
+  this.data.select.move(direction);
+  updateSelector.call(this);
+}
+
 function overlayerClickLeftMouseButton(evt) {
   const {
     shiftKey, offsetX, offsetY, buttons,
@@ -110,6 +116,7 @@ function reset() {
   tableCanvas.render();
   vScrollbarReset.call(this);
   hScrollbarReset.call(this);
+  updateSelector.call(this);
 }
 
 function initEvents() {
@@ -122,6 +129,7 @@ function initEvents() {
     data,
     tableCanvas,
     toolbar,
+    editor,
   } = this;
   const { rows, cols } = data;
   // overlayer
@@ -135,7 +143,9 @@ function initEvents() {
       // click the right mouse button
     } else if (detail === 2) {
       // double click the left mouse button
+      editor.update(data.selectedCellBox, data.selectedCell);
     } else {
+      editor.finished();
       // click the left mouse button
       overlayerClickLeftMouseButton.call(this, evt);
     }
@@ -166,8 +176,72 @@ function initEvents() {
     tableCanvas.render();
   };
 
+  editor.change = (value) => {
+    data.update('text', value);
+  };
+
   // bind window
   bind(window, 'resize', () => reset.call(this));
+
+  let focusing = false;
+  bind(window, 'click', (evt) => {
+    focusing = overlayerEl.contains(evt.target);
+  });
+
+  // bind window.keydown
+  bind(window, 'keydown', (evt) => {
+    if (!focusing) return;
+    const keyCode = evt.keyCode || evt.which;
+    const {
+      ctrlKey, shiftKey, metaKey,
+    } = evt;
+    if (ctrlKey || metaKey) {
+      // nothing
+    } else {
+      switch (keyCode) {
+        case 32: // space
+          break;
+        case 27: // esc
+          // contextMenu.hide();
+          break;
+        case 37: // left
+          moveSelector.call(this, 'left');
+          evt.preventDefault();
+          break;
+        case 38: // up
+          moveSelector.call(this, 'up');
+          evt.preventDefault();
+          break;
+        case 39: // right
+          moveSelector.call(this, 'right');
+          evt.preventDefault();
+          break;
+        case 40: // down
+          moveSelector.call(this, 'down');
+          evt.preventDefault();
+          break;
+        case 9: // tab
+          editor.finished();
+          // shift + tab => move left
+          // tab => move right
+          moveSelector.call(this, shiftKey ? 'left' : 'right');
+          evt.preventDefault();
+          break;
+        case 13: // enter
+          editor.finished();
+          // shift + enter => move up
+          // enter => move down
+          moveSelector.call(this, shiftKey ? 'up' : 'down');
+          evt.preventDefault();
+          break;
+        case 8: // backspace
+          evt.preventDefault();
+          break;
+        default:
+          break;
+      }
+    }
+  });
 }
 
 class FormDesigner {
@@ -194,10 +268,14 @@ class FormDesigner {
     // selector
     this.selector = new Selector();
 
+    // editor
+    this.editor = new Editor();
+
     // overlayer
     this.overlayerEl = hh(`.${cssPrefix}-overlayer`,
       hh(`.${cssPrefix}-overlayer-content`,
-        this.selector.el));
+        this.selector.el,
+        this.editor.el));
 
     // toolbar
     this.toolbar = new Toolbar(this.data);

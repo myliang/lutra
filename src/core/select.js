@@ -4,9 +4,11 @@ import { expr2xy, xy2expr } from './alphabet';
 
 export default class Select extends Base {
   // select: [ref, refRange]
-  constructor(merges) {
+  constructor({ rows, cols, merges }) {
     super(['A1', 'A1:A1']);
     this.merges = merges;
+    this.rows = rows;
+    this.cols = cols;
   }
 
   get indexes() {
@@ -56,6 +58,29 @@ export default class Select extends Base {
         }
       }
     }
+  }
+
+  // direction: left | right | up | down
+  move(direction) {
+    const { rows, cols } = this;
+    let [ri, ci] = this.indexes;
+    switch (direction) {
+      case 'left':
+        if (ci > 0) ci -= 1;
+        break;
+      case 'right':
+        if (ci < cols.len() - 1) ci += 1;
+        break;
+      case 'up':
+        if (ri > 0) ri -= 1;
+        break;
+      case 'down':
+        if (ri < rows.len() - 1) ri += 1;
+        break;
+      default:
+        break;
+    }
+    this.s(ri, ci);
   }
 
   // set sri, sci

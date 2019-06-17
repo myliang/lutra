@@ -2,7 +2,7 @@
 /* global window */
 
 function getOrSetProperty(target, property, value) {
-  if (value) {
+  if (value !== undefined) {
     target[property] = value;
     return this;
   }
@@ -49,6 +49,10 @@ class CreateElement {
       return this;
     }
     return this.children[0];
+  }
+
+  contains(ele) {
+    return this.el.contains(ele);
   }
 
   parent() {
@@ -154,7 +158,7 @@ class CreateElement {
   }
 
   val(v) {
-    return this.property('value', v);
+    return getOrSetProperty.call(this, this.el, 'value', v);
   }
 
   addClass(...names) {

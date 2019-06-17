@@ -3,7 +3,7 @@ import Base from './base';
 
 export default class Scroll extends Base {
   // scroll: [ref, x, y]
-  constructor(rows, cols) {
+  constructor({ rows, cols }) {
     super(['A1', 0, 0]);
     this.rows = rows;
     this.cols = cols;

@@ -111,8 +111,8 @@ export default class Data {
     this.styles = new Styles(this.settings);
     this.rows = new Rows(this.settings);
     this.cols = new Cols(this.settings);
-    this.scroll = new Scroll(this.rows, this.cols);
-    this.select = new Select(this.merges);
+    this.scroll = new Scroll(this);
+    this.select = new Select(this);
   }
 
   load(data) {

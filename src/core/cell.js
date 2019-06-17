@@ -49,13 +49,18 @@ export default class Cell {
   }
 
   get text() {
-    return this.$.text;
+    const { $ } = this;
+    return $ ? $.text : '';
   }
 
   // attr: font-name | font-italic | font-bold | font-size
-  // textwrap | underline | align | valign | color | bgcolor | border
+  // textwrap | underline | align | valign | color | bgcolor | border | text
   update(attr, value) {
     const { $, styles } = this;
+    if (attr === 'text') {
+      $.text = value;
+      return;
+    }
     let nstyle = {};
     if ($.style !== undefined) {
       nstyle = helper.clone(styles.get($.style));
