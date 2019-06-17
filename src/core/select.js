@@ -1,10 +1,11 @@
 import CellRange from './cell-range';
+import Base from './base';
 import { expr2xy, xy2expr } from './alphabet';
 
-export default class Select {
+export default class Select extends Base {
   // select: [ref, refRange]
-  constructor({ select }, merges) {
-    this.$ = select;
+  constructor(merges) {
+    super(['A1', 'A1:A1']);
     this.merges = merges;
   }
 
@@ -22,10 +23,10 @@ export default class Select {
 
   get merged() {
     const {
-      range, merges, ri, ci,
+      range, merges, indexes,
     } = this;
     if (range.multiple()) {
-      const merge = merges.find(ri, ci);
+      const merge = merges.find(...indexes);
       if (merge) return merge.equals(range);
     }
     return false;

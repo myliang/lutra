@@ -1,8 +1,9 @@
 import helper from './helper';
+import Base from './base';
 
-export default class Styles {
-  constructor({ styles }, { style }) {
-    this.$ = styles;
+export default class Styles extends Base {
+  constructor({ style }) {
+    super([]);
     this.settings = style;
   }
 

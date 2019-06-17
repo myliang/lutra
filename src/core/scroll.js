@@ -1,9 +1,10 @@
 import { expr2xy, xy2expr } from './alphabet';
+import Base from './base';
 
-export default class Scroll {
+export default class Scroll extends Base {
   // scroll: [ref, x, y]
-  constructor({ scroll }, rows, cols) {
-    this.$ = scroll;
+  constructor(rows, cols) {
+    super(['A1', 0, 0]);
     this.rows = rows;
     this.cols = cols;
   }

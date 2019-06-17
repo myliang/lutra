@@ -1,4 +1,5 @@
 import helper from './helper';
+import Base from './base';
 
 function update(n, cb) {
   const { $ } = this;
@@ -46,9 +47,9 @@ function remove(si, ei, updateFunc) {
   });
 }
 
-export default class Rows {
-  constructor({ rows }, { row }) {
-    this.$ = rows;
+export default class Rows extends Base {
+  constructor({ row }) {
+    super({});
     this.settings = row;
   }
 

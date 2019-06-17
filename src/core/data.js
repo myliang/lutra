@@ -107,16 +107,19 @@ export default class Data {
   constructor(settings = {}) {
     this.settings = helper.merge(defaultSettings, settings);
     this.$ = defaultData;
-    this.merges = new Merges(this.$);
-    this.styles = new Styles(this.$, this.settings);
-    this.rows = new Rows(this.$, this.settings);
-    this.cols = new Cols(this.$, this.settings);
-    this.scroll = new Scroll(this.$, this.rows, this.cols);
-    this.select = new Select(this.$, this.merges);
+    this.merges = new Merges();
+    this.styles = new Styles(this.settings);
+    this.rows = new Rows(this.settings);
+    this.cols = new Cols(this.settings);
+    this.scroll = new Scroll(this.rows, this.cols);
+    this.select = new Select(this.merges);
   }
 
   load(data) {
-    helper.mergeDeep(this.$, data);
+    this.$ = Object.assign(defaultData, data);
+    ['merges', 'styles', 'rows', 'cols', 'scroll', 'select'].forEach((it) => {
+      this[it].load(data[it]);
+    });
   }
 
   get design() {

@@ -1,8 +1,9 @@
 import CellRange from './cell-range';
+import Base from './base';
 
-export default class Merges {
-  constructor({ merges }) {
-    this.$ = merges;
+export default class Merges extends Base {
+  constructor() {
+    super([]);
   }
 
   deleteWithin(merge) {

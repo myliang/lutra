@@ -1,8 +1,9 @@
 import helper from './helper';
+import Base from './base';
 
-export default class Cols {
-  constructor({ cols }, { col }) {
-    this.$ = cols;
+export default class Cols extends Base {
+  constructor({ col }) {
+    super({});
     this.settings = col;
   }
 
