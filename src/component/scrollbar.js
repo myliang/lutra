@@ -27,7 +27,7 @@ export default class Scrollbar extends BaseComponent {
     const { type } = this;
     return h(`.${cssPrefix}-scrollbar.${type}`, h('div'))
       .on('mousemove.stop', () => {})
-      .on('scroll.top', (evt) => {
+      .on('scroll.stop', (evt) => {
         const { scrollTop, scrollLeft } = evt.target;
         this.change(type === 'vertical' ? scrollTop : scrollLeft, evt);
       }).hide();
@@ -37,6 +37,6 @@ export default class Scrollbar extends BaseComponent {
     super.update(value);
     const { type, el } = this;
     const scrollKey = type === 'vertical' ? 'top' : 'left';
-    el.scroll(scrollKey, value);
+    el.scroll({ [scrollKey]: value });
   }
 }

@@ -63,8 +63,18 @@ function updateSelector() {
   tableCanvas.render();
 }
 
+function updateScrollbar(direction) {
+  const { data } = this;
+  data.scrollMove(direction);
+  const { x, y } = data.scroll;
+  this.hScrollbar.update(x);
+  this.vScrollbar.update(y);
+}
+
 function moveSelector(direction) {
-  this.data.select.move(direction);
+  const { select } = this.data;
+  select.move(direction);
+  updateScrollbar.call(this, direction);
   updateSelector.call(this);
 }
 
@@ -163,11 +173,11 @@ function initEvents() {
   };
 
   vScrollbar.change = (v) => {
-    data.scroll.y(v);
+    data.scroll.movey(v);
     updateSelector.call(this);
   };
   hScrollbar.change = (v) => {
-    data.scroll.x(v);
+    data.scroll.movex(v);
     updateSelector.call(this);
   };
 

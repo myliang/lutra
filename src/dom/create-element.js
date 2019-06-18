@@ -141,7 +141,7 @@ class CreateElement {
   scroll(v) {
     const { el } = this;
     if (v !== undefined) {
-      const { left, top } = this;
+      const { left, top } = v;
       if (left !== undefined) el.scrollLeft = left;
       if (top !== undefined) el.scrollTop = top;
       return this;

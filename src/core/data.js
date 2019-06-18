@@ -157,8 +157,8 @@ export default class Data {
     const {
       indexWidth, indexHeight, rows, cols,
     } = this;
-    const [eri] = rows.end(ri, height + indexHeight);
-    const [eci] = cols.end(ci, width + indexWidth);
+    const [eri] = rows.end(ri, height - indexHeight);
+    const [eci] = cols.end(ci, width - indexWidth);
     return new CellRange(ri, ci, eri, eci, width, height);
   }
 
@@ -187,6 +187,35 @@ export default class Data {
       select.each((ri, ci) => {
         Cell.write($, styles, ri, ci).update(attr, value);
       });
+    }
+  }
+
+  scrollMove(direction) {
+    const {
+      select, viewRange, scroll,
+    } = this;
+    const [ri, ci] = select.indexes;
+    if (!viewRange.includes(ri, ci)) {
+      const {
+        sri, sci, eri, eci,
+      } = viewRange;
+      // console.log('direction:', direction);
+      switch (direction) {
+        case 'up':
+          scroll.move(ri - sri, 0);
+          break;
+        case 'down':
+          scroll.move(ri - eri, 0);
+          break;
+        case 'left':
+          scroll.move(0, ci - sci);
+          break;
+        case 'right':
+          scroll.move(0, ci - eci);
+          break;
+        default:
+          break;
+      }
     }
   }
 
