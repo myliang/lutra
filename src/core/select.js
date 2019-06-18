@@ -62,20 +62,28 @@ export default class Select extends Base {
 
   // direction: left | right | up | down
   move(direction) {
-    const { rows, cols } = this;
+    const { rows, cols, merges } = this;
     let [ri, ci] = this.indexes;
+    let [rn, cn] = [1, 1];
+    const r = merges.find(ri, ci);
+    if (r) {
+      ri = r.sri;
+      ci = r.sci;
+      ([rn, cn] = r.size());
+    }
+    // console.log('rn:', ri, ci, rn, cn);
     switch (direction) {
       case 'left':
         if (ci > 0) ci -= 1;
         break;
       case 'right':
-        if (ci < cols.len() - 1) ci += 1;
+        if (ci < cols.len() - 1) ci += cn;
         break;
       case 'up':
         if (ri > 0) ri -= 1;
         break;
       case 'down':
-        if (ri < rows.len() - 1) ri += 1;
+        if (ri < rows.len() - 1) ri += rn;
         break;
       default:
         break;
