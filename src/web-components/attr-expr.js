@@ -12,6 +12,7 @@ export default class AttrExpr extends Expr {
     const {
       v, el, name, vPattern,
     } = this;
+    // console.log('name:', name, v, value, vPattern);
     if (value !== v) {
       // console.log('el:', el, ',value:', value);
       el.setAttribute(name, vPattern.replace('{}', value));

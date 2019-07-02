@@ -48,7 +48,7 @@ export default class TemplateExpr extends Expr {
     while (walker.nextNode()) {
       const node = walker.currentNode;
       const { nodeType } = node;
-      // console.log('node:', node);
+      // console.log('node:', node, nodeType);
       if (nodeType === 1) {
         // Node.ELEMENT_NODE
         if (node.hasAttributes()) {

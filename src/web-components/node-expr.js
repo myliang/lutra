@@ -21,7 +21,7 @@ export default class NodeExpr extends Expr {
   update(value) {
     const { v } = this;
     const vtype = typeof value;
-    // console.log('vtype:', vtype, value instanceof Template);
+    // console.log('vtype:', vtype, value, value instanceof Template);
     if (vtype !== 'function' && vtype !== 'object') {
       if (value !== v) {
         this.updateText(value);
