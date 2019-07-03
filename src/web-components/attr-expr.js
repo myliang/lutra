@@ -14,8 +14,12 @@ export default class AttrExpr extends Expr {
     } = this;
     // console.log('name:', name, v, value, vPattern);
     if (value !== v) {
-      // console.log('el:', el, ',value:', value);
-      el.setAttribute(name, vPattern.replace('{}', value));
+      // console.log('el:', el, name, ',value:', value);
+      if (name === 'show') {
+        el.style.display = value === true ? 'block' : 'none';
+      } else {
+        el.setAttribute(name, vPattern.replace('{}', value));
+      }
       super.update(value);
     }
   }

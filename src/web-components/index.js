@@ -1,4 +1,4 @@
-/* global window, CSSStyleSheet, HTMLElement */
+/* global window, CSSStyleSheet, HTMLElement, CustomEvent */
 import Template from './template';
 import NodeExpr from './node-expr';
 import TemplateExpr from './template-expr';
@@ -26,10 +26,9 @@ export function render(template, container) {
 // customElements.define('xfd-color-palette', ColorPalette);
 export function component(name, style, attrs = []) {
   return (target) => {
-    // console.log('target::::::', target);
-    window.customElements.define(name, target);
     target.$style = style;
     target.$attrs = attrs;
+    // console.log('target::::::', target.$attrs);
     attrs.forEach((attr) => {
       // console.log('::::', target.prototype);
       Object.defineProperty(target.prototype, attr, {
@@ -41,45 +40,31 @@ export function component(name, style, attrs = []) {
         enumerable: true,
       });
     });
+    // in last line
+    window.customElements.define(name, target);
   };
 }
 
-/*
-export function attr(target, name, descriptor) {
-  // console.log('target:>', target, descriptor);
-  const clazz = target.constructor;
-  if (!clazz.hasOwnProperty('_attrs')) {
-    clazz._attrs = [];
-  }
-  clazz._attrs.push(name);
-  // descriptor.get = () => target.getAttribute(name);
-  // target.constructor.attrs.push(name);
-  // console.log('name:', target, name);
-  Object.defineProperty(target, name, {
-    get() {
-      // console.log('name.value:', this.getAttribute(name));
-      return this.getAttribute(name);
-    },
-    configurable: true,
-    enumerable: true,
-  });
-}
-*/
-
 export class BaseElement extends HTMLElement {
+  onChange = (e, v) => {
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: [e, v],
+    }));
+  };
+
   constructor() {
     super();
-    this.change = () => {};
-    // console.log('constructor:', this.constructor.style);
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.shadow.adoptedStyleSheets = this.constructor.getStyleSheets();
+    // this.change = () => {};
+    // console.log('constructor:', this);
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = this.constructor.getStyleSheets();
     this.update();
   }
 
   update() {
     const r = this.render();
     // console.log('r:', r);
-    render(r, this.shadow);
+    render(r, this.shadowRoot);
   }
 
   render() {}
@@ -89,13 +74,15 @@ export class BaseElement extends HTMLElement {
   // adoptedCallback
 
   // name, oldValue, newValue
-  attributeChangedCallback() {
-    // console.log('name:', name, ', oldValue:', oval, ', newValue:', nval);
-    this.update();
+  attributeChangedCallback(name, oval, nval) {
+    // console.log(this, 'attributeChangedCallback:', oval, nval);
+    if (nval !== null && nval !== '{}') {
+      this.update();
+    }
   }
 
   static get observedAttributes() {
-    // console.log(':attrs:', this, this._attrs);
+    // console.log(':attrs:', this, this.$attrs);
     return this.$attrs || [];
   }
 

@@ -38,6 +38,7 @@ export default class TemplateExpr extends Expr {
   }
 
   update(values) {
+    // console.log('exprs:', this.exprs, values);
     this.exprs.forEach((expr, i) => expr.update(values[i]));
   }
 
@@ -84,6 +85,7 @@ export default class TemplateExpr extends Expr {
         }
       }
     }
+    // console.log('content:', content, this.exprs);
     return content;
   }
 }

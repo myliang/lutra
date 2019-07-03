@@ -1,28 +1,9 @@
+/* global window */
 import Expr from './expr';
 
 export default class EventExpr extends Expr {
-  // name: eventName.stop | prevent
-  constructor(element, name) {
-    super();
-    const { ename, ...actions } = name.split('.');
-    this.el = element;
-    this.name = ename;
-    this.actions = actions;
-  }
-
-  update(value) {
-    const { v, el, name } = this;
-    if (v && v !== value) {
-      el.removeEventListener(name, this.bindHandler);
-    }
-    if (v === undefined || v !== value) {
-      el.addEventListener(name, this.bindHandler);
-      super.update(value);
-    }
-  }
-
-  bindHandler(e) {
-    const { v, actions } = this;
+  bindHandler = (e) => {
+    const { v, actions, el } = this;
     actions.forEach((action) => {
       if (action === 'stop') {
         e.stopPropagation();
@@ -30,6 +11,45 @@ export default class EventExpr extends Expr {
         e.preventDefault();
       }
     });
-    v(e);
+    if (this.isClickoutside) {
+      // console.log('::::::::::el:', el, e);
+      if (el.style.display === 'block') {
+        v(e, e.detail);
+      }
+    } else {
+      v(e, e.detail);
+    }
+  };
+
+  // name: eventName.stop | prevent
+  constructor(element, name) {
+    super();
+    const [ename, ...actions] = name.split('.');
+    this.el = element;
+    this.name = ename;
+    this.actions = actions;
+  }
+
+  get isClickoutside() {
+    return this.name === 'clickoutside';
+  }
+
+  get evtName() {
+    return this.isClickoutside ? 'click' : this.name;
+  }
+
+  update(value) {
+    const { v, el, evtName } = this;
+    const target = this.isClickoutside ? window : el;
+    if (v && v !== value) {
+      target.removeEventListener(evtName, this.bindHandler);
+    }
+    if (v === undefined || v !== value) {
+      target.addEventListener(evtName, this.bindHandler);
+      if (this.isClickoutside) {
+        el.addEventListener('click', e => e.stopPropagation());
+      }
+      super.update(value);
+    }
   }
 }
