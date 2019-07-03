@@ -16,7 +16,7 @@ function buildTds(colors) {
   return colors.map(color => html`
     <td>
       <div class="cell"
-        @click="${() => this.change(color)}"
+        @click="${e => this.onChange(e, color)}"
         style="background-color: ${color}"></div>
     </td>
     `);

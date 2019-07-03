@@ -208,7 +208,7 @@ export default @component(
 )
 class Icon extends BaseElement {
   render() {
-    // console.log('type:', this.getAttribute('type'), this.type);
+    // console.log('icon.type:', this.type);
     return html`
     <div class="img ${this.type}"></div>
     `;
