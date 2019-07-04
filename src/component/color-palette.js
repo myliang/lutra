@@ -1,4 +1,6 @@
-import { html, BaseElement, component } from '../web-components';
+import BaseComponent from './base-component';
+import { cssPrefix } from '../config';
+import h from '../dom/create-element';
 
 const themeColorPlaceHolders = ['#ffffff', '#000100', '#e7e5e6', '#445569', '#5b9cd6', '#ed7d31', '#a5a5a5', '#ffc001', '#4371c6', '#71ae47'];
 
@@ -12,60 +14,28 @@ const themeColors = [
 
 const standardColors = ['#c00000', '#fe0000', '#fdc101', '#ffff01', '#93d051', '#00b04e', '#01b0f1', '#0170c1', '#012060', '#7030a0'];
 
-function buildTds(colors) {
-  return colors.map(color => html`
-    <td>
-      <div class="cell"
-        @click="${e => this.onChange(e, color)}"
-        style="background-color: ${color}"></div>
-    </td>
-    `);
+function buildTd(color) {
+  const { colorElementMap } = this;
+  const el = h('td',
+    h(`.${cssPrefix}-color-palette-cell`)
+      .on('click.stop', () => this.change(color))
+      .css('background-color', color));
+  colorElementMap.set(color, el);
+  return el;
 }
 
-function buildThemeColors() {
-  return themeColors.map(colors => html`<tr>${buildTds.call(this, colors)}</tr>`);
-}
+export default class ColorPalette extends BaseComponent {
+  colorElementMap = new Map();
 
-export default @component(
-  'xfd-color-palette',
-  `
-  :host {
-    padding: 5px;
-    display: block;
-  }
-  table {
-    margin: 0;
-    padding: 0;
-    border-collapse: separate;
-    border-spacing: 2;
-    background: #fff;
-  }
-  table td {
-    margin: 0;
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-  table td:hover {
-    border-color: #ddd;
-  }
-  .cell {
-    width: 16px;
-    height: 16px;
-  }
-`,
-)
-class ColorPalette extends BaseElement {
   render() {
-    return html`
-    <table>
-      <tr>
-        ${buildTds.call(this, themeColorPlaceHolders)}
-      </tr>
-      ${buildThemeColors.call(this)}
-      <tr>
-        ${buildTds.call(this, standardColors)}
-      </tr>
-    </table>
-    `;
+    return h(`.${cssPrefix}-color-palette`,
+      h('table',
+        h('tbody',
+          h(`tr.${cssPrefix}-theme-color-placeholders`,
+            ...themeColorPlaceHolders.map(color => buildTd.call(this, color))),
+          ...themeColors.map(it => h(`tr.${cssPrefix}-theme-colors`,
+            ...it.map(color => buildTd.call(this, color)))),
+          h(`tr.${cssPrefix}-standard-colors`,
+            ...standardColors.map(color => buildTd.call(this, color))))));
   }
 }
