@@ -1,0 +1,32 @@
+@import './base.less';
+
+@{css-prefix}-scrollbar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #f4f5f8;
+  opacity: 0.9;
+  z-index: 12;
+
+  &.horizontal {
+    right: 16px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+
+    .content {
+      height: 1px;
+      background: #ddd;
+    }
+  }
+
+  &.vertical {
+    bottom: 16px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    .content {
+      width: 1px;
+      background: #ddd;
+    }
+  }
+}

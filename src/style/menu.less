@@ -1,0 +1,40 @@
+@import './base.less';
+
+.@{css-prefix}-menu {
+  display: inline-flex;
+
+  .divider {
+    display: inline-block;
+    border-right: 1px solid #e0e2e4;
+    width: 0;
+    vertical-align: middle;
+    height: 18px;
+    margin: 12px 3px 0;
+  }
+
+  .item {
+    flex: 0 0 auto;
+    display: inline-block;
+    border: 1px solid transparent;
+    height: 26px;
+    line-height: 26px;
+    min-width: 26px;
+    margin: 6px 1px 0;
+    padding: 0;
+    text-align: center;
+    border-radius: 2px;
+
+    &.only-text {
+      padding: 0 5px;
+    }
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    &:hover, &.active {
+      background: rgba(0, 0, 0, .08);
+    }
+  }
+}

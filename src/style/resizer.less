@@ -1,0 +1,48 @@
+@import './base.less';
+
+@{css-prefix}-resizer {
+  position: absolute;
+  z-index: 11;
+  display: none;
+
+  .hover {
+    background-color: rgba(75, 137, 255, .25);
+  }
+
+  .line {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &.row {
+    cursor: row-resize;
+    left: 0;
+
+    .hover {
+      height: 5px;
+    }
+
+    .line {
+      border-bottom: 2px dashed rgb(75, 137, 255);
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  }
+
+  &.col {
+    cursor: col-resize;
+    top: 0;
+
+    .hover {
+      width: 5px;
+    }
+
+    .line {
+      border-right: 2px dashed rgb(75, 137, 255);
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  }
+}

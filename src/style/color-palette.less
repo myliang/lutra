@@ -1,0 +1,30 @@
+@import './base.less';
+
+@{css-prefix}-color-palette {
+  padding: 5px;
+  display: block;
+
+  table {
+    margin: 0;
+    padding: 0;
+    border-collapse: separate;
+    border-spacing: 2;
+    background: #fff;
+    
+    td {
+      margin: 0;
+      cursor: pointer;
+      border: 1px solid transparent;
+
+      &:hover {
+        border-color: #ddd;
+      }
+
+      .cell {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
