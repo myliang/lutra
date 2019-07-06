@@ -35,7 +35,7 @@ class Toolbar extends BaseElement {
     const valign = 'middle';
 
     return html`
-    <div class="xfd-menu">
+    <div class="xfd-menu horizontal">
       <div class="item only-text" @mouseenter="${bindTooltip('font')}">
         ${fonts[0].title}
         <ul .show="${fontShow}">

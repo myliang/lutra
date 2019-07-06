@@ -16,7 +16,9 @@ function buildItems() {
   return lineTypes.map(([type, svg]) => {
     const stateChecked = type === checked ? 'checked' : '';
     return html`
-      <li class="state ${stateChecked}" @click.stop="${onChange.call(this)}" .html="${svg}">
+      <li class="state ${stateChecked}"
+        @click.stop="${onChange.call(this)}"
+        .html="${svg}">
       </li>`;
   });
 }

@@ -1,0 +1,27 @@
+@import './base.less';
+
+@{css-prefix}-border-picker {
+  > .content {
+    padding: 6px;
+  }
+  table {
+    margin: 0;
+    padding: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    table-layout: fixed;
+
+    td {
+      margin: 0;
+
+      &.left {
+        border-right: 1px solid #eee;
+        padding-right: 6px;
+      }
+      &.right {
+        padding-left: 6px;
+      }
+    }
+  }
+}

@@ -1,7 +1,9 @@
 @import './base.less';
 
 .@{css-prefix}-menu {
-  display: inline-flex;
+  &.horizontal {
+    display: flex;
+  }
 
   .divider {
     display: inline-block;
