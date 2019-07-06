@@ -1,9 +1,16 @@
 /* global window */
 import Expr from './expr';
 
+function eventCallback(e, cb) {
+  const { v } = e.detail;
+  if (v) cb(v, e);
+  else cb(e);
+}
+
 export default class EventExpr extends Expr {
   bindHandler = (e) => {
     const { v, actions, el } = this;
+    // console.log('>>>evt:', e, v, this.isClickoutside, this);
     actions.forEach((action) => {
       if (action === 'stop') {
         e.stopPropagation();
@@ -14,10 +21,10 @@ export default class EventExpr extends Expr {
     if (this.isClickoutside) {
       // console.log('::::::::::el:', el, e);
       if (el.style.display === 'block') {
-        v(e, e.detail);
+        eventCallback(e, v);
       }
     } else {
-      v(e, e.detail);
+      eventCallback(e, v);
     }
   };
 

@@ -91,17 +91,10 @@ export function component(name, style) {
 }
 
 export class BaseElement extends HTMLElement {
-  $props = new Proxy({}, {
-    set(obj, prop, value) {
-      obj[prop] = value;
-      return true;
-    },
-  });
+  $props = {};
 
-  change = (e, v) => {
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: [e, v],
-    }));
+  change = (v) => {
+    this.dispatchEvent(new CustomEvent('change', { detail: { v } }));
   };
 
   update() {

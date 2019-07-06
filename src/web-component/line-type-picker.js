@@ -12,12 +12,12 @@ const lineTypes = [
 ];
 
 function buildItems() {
-  const { checked } = this.$props;
+  const { value } = this.$props;
   return lineTypes.map(([type, svg]) => {
-    const stateChecked = type === checked ? 'checked' : '';
+    const stateChecked = type === value ? 'checked' : '';
     return html`
       <li class="state ${stateChecked}"
-        @click.stop="${onChange.call(this)}"
+        @click="${onChange.bind(this, type)}"
         .html="${svg}">
       </li>`;
   });
@@ -28,7 +28,7 @@ class LineTypePicker extends Dropdown {
   render() {
     const { $visible } = this;
     return html`
-    <xfd-icon .type="line-type" @click.stop="${onShow.call(this)}"></xfd-icon>
+    <xfd-icon .type="line-type" @click="${onShow.bind(this)}"></xfd-icon>
     <ul class="xfd-list" .show="${$visible}">
       ${buildItems.call(this)}
     </ul>

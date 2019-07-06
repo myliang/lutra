@@ -9,11 +9,26 @@ import { onShow, onChange, Dropdown } from './dropdown';
 const modes1 = ['all', 'inside', 'horizontal', 'vertical', 'outside'];
 const modes2 = ['left', 'top', 'right', 'bottom', 'none'];
 
+function modeChange(mode, evt) {
+  const { color, style } = this.$state;
+  onChange.call(this, { mode, color, style }, evt);
+}
+
+function colorChange(v) {
+  this.$state.color = v;
+  this.update();
+}
+
+function lineTypeChange(v) {
+  this.$state.style = v;
+  this.update();
+}
+
 function buildItems(items) {
   return items.map(it => html`
     <div class="item">
       <xfd-icon .type="${`border-${it}`}"
-        @click="${onChange.call(this, it)}"></xfd-icon>
+        @click="${modeChange.bind(this, it)}"></xfd-icon>
     </div>
     `);
 }
@@ -21,16 +36,16 @@ function buildItems(items) {
 export default @component('xfd-border-picker')
 class BorderPicker extends Dropdown {
   $state = {
-    lineColor: '#000000',
-    lineStyle: 'thin',
+    color: '#000000',
+    style: 'thin',
   }
 
   render() {
-    const { lineColor, lineStyle } = this.$state;
+    const { color, style } = this.$state;
     const { $visible } = this;
     return html`
-    <xfd-icon .type="border-all" @click="${onShow.call(this)}"></xfd-icon>
-    <div class="content" .show="${$visible}">
+    <xfd-icon .type="border-all" @click="${onShow.bind(this)}"></xfd-icon>
+    <div class="content bottom left" .show="${$visible}">
       <table>
         <tbody>
           <tr>
@@ -46,9 +61,13 @@ class BorderPicker extends Dropdown {
               <div class="xfd-menu">
                 <xfd-color-picker class="item bottom left" 
                   .icon="line-color"
-                  .color="${lineColor}"></xfd-color-picker>
+                  .value="${color}"
+                  @change="${colorChange.bind(this)}"
+                  ></xfd-color-picker>
                 <xfd-line-type-picker class="item"
-                  .checked="${lineStyle}"></xfd-line-type-picker>
+                  .value="${style}"
+                  @change="${lineTypeChange.bind(this)}"
+                  ></xfd-line-type-picker>
               </div>
             </td>
           </tr>

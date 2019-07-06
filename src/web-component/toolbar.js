@@ -2,10 +2,11 @@ import {
   html, BaseElement, component,
 } from './core';
 import { t } from '../locale/locale';
-import tooltip from './tooltip';
-import './color-picker';
-import './icon';
 import { fonts, fontSizes } from '../core/font';
+import tooltip from './tooltip';
+import './icon';
+import './color-picker';
+import './border-picker';
 
 const aligns = ['left', 'center', 'right'];
 const valigns = ['top', 'middle', 'bottom'];
@@ -36,7 +37,7 @@ class Toolbar extends BaseElement {
 
     return html`
     <div class="xfd-menu horizontal">
-      <div class="item only-text" @mouseenter="${bindTooltip('font')}">
+      <div class="item only-text" @mouseenter="${bindTooltip('fontName')}">
         ${fonts[0].title}
         <ul .show="${fontShow}">
           ${fonts.map(it => html`<li>${it.title}</li>`)}
@@ -65,9 +66,9 @@ class Toolbar extends BaseElement {
       <xfd-color-picker class="item bottom left"
          @mouseenter="${bindTooltip('fillColor')}"
         .icon="fill-color" .color="${fillColor}"></xfd-color-picker>
-      <div class="item" @mouseenter="${bindTooltip('border')}">
-        <xfd-icon .type="border-all"></xfd-icon>
-      </div>
+      <xfd-border-picker class="item bottom left"
+        @mouseenter="${bindTooltip('border')}">
+      </xfd-border-picker>
       <div class="item" @mouseenter="${bindTooltip('merge')}">
         <xfd-icon .type="merge"></xfd-icon>
       </div>
