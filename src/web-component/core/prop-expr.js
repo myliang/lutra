@@ -14,12 +14,17 @@ export default class PropExpr extends Expr {
 
   update(value) {
     const { v, el, name } = this;
-    if (name === 'show') {
-      el.style.display = value === true ? 'block' : 'none';
-    } else if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {
-      if (value) el.value = value;
-    } else if (v !== value) {
-      setElementProp(el, name, value);
+    // console.log(name, ' oldValue:', v, ', newValue:', value, v !== value);
+    if (value !== undefined && v !== value) {
+      if (name === 'show') {
+        el.style.display = value === true ? 'block' : 'none';
+      } else if (name === 'html') {
+        el.innerHTML = value;
+      } else if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {
+        el.value = value;
+      } else if (v !== value) {
+        setElementProp(el, name, value);
+      }
       super.update(value);
     }
   }

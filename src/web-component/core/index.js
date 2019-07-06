@@ -29,6 +29,29 @@ export function bind(target, name, fn) {
 export function unbind(target, name, fn) {
   target.removeEventListener(name, fn);
 }
+export function unbindClickoutside(el) {
+  if (el.onClickoutside) {
+    unbind(window, 'click', el.onClickoutside);
+    delete el.onClickoutside;
+  }
+}
+// the left mouse button: mousedown → mouseup → click
+// the right mouse button: mousedown → contenxtmenu → mouseup
+// the right mouse button in firefox(>65.0): mousedown → contenxtmenu → mouseup → click on window
+export function bindClickoutside(el, cb) {
+  el.onClickoutside = (evt) => {
+    // ignore double click
+    // console.log('evt:', evt);
+    if (evt.detail === 2 || el.contains(evt.target)) return;
+    if (cb) cb(el);
+    else {
+      el.hide();
+      unbindClickoutside(el);
+    }
+  };
+  bind(window, 'click', el.onClickoutside);
+}
+
 export function mouseMoveUp(target, movefunc, upfunc) {
   bind(target, 'mousemove', movefunc);
   const t = target;
