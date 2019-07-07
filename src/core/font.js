@@ -1,11 +1,11 @@
 const fonts = [
-  { key: 'Arial', title: 'Arial' },
-  { key: 'Helvetica', title: 'Helvetica' },
-  { key: 'Source Sans Pro', title: 'Source Sans Pro' },
-  { key: 'Comic Sans MS', title: 'Comic Sans MS' },
-  { key: 'Courier New', title: 'Courier New' },
-  { key: 'Verdana', title: 'Verdana' },
-  { key: 'Lato', title: 'Lato' },
+  'Arial',
+  'Helvetica',
+  'Source Sans Pro',
+  'Comic Sans MS',
+  'Courier New',
+  'Verdana',
+  'Lato',
 ];
 
 const fontSizes = [
@@ -30,6 +30,8 @@ const fontSizes = [
   // { pt: 72, px: 95.6 },
 ];
 
+const fontSizePts = fontSizes.map(it => it.pt);
+
 function pt2px(pt) {
   for (let i = 0; i < fontSizes.length; i += 1) {
     const fontSize = fontSizes[i];
@@ -42,7 +44,7 @@ function pt2px(pt) {
 
 export default {};
 export {
-  fontSizes,
+  fontSizePts,
   fonts,
   pt2px,
 };

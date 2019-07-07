@@ -2,9 +2,10 @@ import {
   html, BaseElement, component,
 } from './core';
 import { t } from '../locale/locale';
-import { fonts, fontSizes } from '../core/font';
+import { fonts, fontSizePts } from '../core/font';
 import tooltip from './tooltip';
 import './icon';
+import './dropdown';
 import './color-picker';
 import './border-picker';
 
@@ -28,27 +29,23 @@ class Toolbar extends BaseElement {
 
   render() {
     const {
-      fontShow, fontSizeShow, alignShow, valignShow,
+      alignShow, valignShow,
     } = this.$state;
     const textColor = '#7030a0';
     const fillColor = '#000000';
     const align = 'left';
     const valign = 'middle';
+    const fontName = 'Lato';
+    const fontSize = 9;
 
     return html`
     <div class="xfd-menu horizontal">
-      <div class="item only-text" @mouseenter="${bindTooltip('fontName')}">
-        ${fonts[0].title}
-        <ul .show="${fontShow}">
-          ${fonts.map(it => html`<li>${it.title}</li>`)}
-        </ul>
-      </div>
-      <div class="item only-text" @mouseenter="${bindTooltip('fontSize')}">
-        ${fontSizes[0].pt}
-        <ul .show="${fontSizeShow}">
-          ${fontSizes.map(it => html`<li>${it.pt}</li>`)}
-        </ul>
-      </div>
+      <xfd-dropdown class="item only-text"
+        .value="${fontName}" .items="${fonts}" .width="160px"
+        @mouseenter="${bindTooltip('fontName')}"></xfd-dropdown>
+      <xfd-dropdown class="item only-text"
+        .value="${fontSize}" .items="${fontSizePts}" .width="60px"
+        @mouseenter="${bindTooltip('fontSize')}"></xfd-dropdown>
       <div class="divider"></div>
       <div class="item" @mouseenter="${bindTooltip('fontBold')}">
         <xfd-icon .type="font-bold"></xfd-icon>

@@ -1,5 +1,5 @@
 import {
-  BaseElement, bindClickoutside, unbindClickoutside,
+  component, html, BaseElement, bindClickoutside, unbindClickoutside,
 } from './core';
 
 export function onShow() {
@@ -19,6 +19,25 @@ export function onChange(...args) {
   onShow.call(this);
 }
 
-export class Dropdown extends BaseElement {
-  $visible = false;
+export function renderContent() {
+  const { $visible } = this;
+  const { value, items, width } = this.$props;
+  // console.log('$visible:', $visible);
+  return html`
+  <div @click="${onShow.bind(this)}">${value}</div>
+  <ul class="xfd-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
+    ${items.map(it => html`<li @click="${onChange.bind(this, it)}">${it}</li>`)}
+  </ul>
+  `;
 }
+
+export @component('xfd-dropdown')
+class Dropdown extends BaseElement {
+  $visible = false;
+
+  render() {
+    return renderContent.call(this);
+  }
+}
+
+export default Dropdown;
