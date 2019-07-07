@@ -58,11 +58,11 @@ class Toolbar extends BaseElement {
       </div>
       <xfd-color-picker class="item bottom left"
          @mouseenter="${bindTooltip('textColor')}"
-        .icon="text-color" .color="${textColor}"></xfd-color-picker>
+        .icon="text-color" .value="${textColor}"></xfd-color-picker>
       <div class="divider"></div>
       <xfd-color-picker class="item bottom left"
          @mouseenter="${bindTooltip('fillColor')}"
-        .icon="fill-color" .color="${fillColor}"></xfd-color-picker>
+        .icon="fill-color" .value="${fillColor}"></xfd-color-picker>
       <xfd-border-picker class="item bottom left"
         @mouseenter="${bindTooltip('border')}">
       </xfd-border-picker>

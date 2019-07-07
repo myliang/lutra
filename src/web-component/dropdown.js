@@ -2,7 +2,7 @@ import {
   component, html, BaseElement, bindClickoutside, unbindClickoutside,
 } from './core';
 
-export function onShow() {
+function onShow() {
   this.$visible = !this.$visible;
   if (this.$visible) {
     bindClickoutside(this, onShow.bind(this));
@@ -14,12 +14,12 @@ export function onShow() {
   this.update();
 }
 
-export function onChange(...args) {
+function onChange(...args) {
   this.change(...args);
   onShow.call(this);
 }
 
-export function renderContent() {
+function renderContent() {
   const { $visible } = this;
   const { value, items, width } = this.$props;
   // console.log('$visible:', $visible);
@@ -31,7 +31,7 @@ export function renderContent() {
   `;
 }
 
-export @component('xfd-dropdown')
+@component('xfd-dropdown')
 class Dropdown extends BaseElement {
   $visible = false;
 
@@ -40,4 +40,9 @@ class Dropdown extends BaseElement {
   }
 }
 
+export {
+  onShow,
+  onChange,
+  Dropdown,
+};
 export default Dropdown;
