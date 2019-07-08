@@ -29,7 +29,7 @@ class LineTypePicker extends Dropdown {
     const { $visible } = this;
     return html`
     <xfd-icon .type="line-type" @click="${onShow.bind(this)}"></xfd-icon>
-    <ul class="xfd-list" .show="${$visible}">
+    <ul class="content xfd-list" .show="${$visible}">
       ${buildItems.call(this)}
     </ul>
     `;

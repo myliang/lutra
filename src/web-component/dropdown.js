@@ -24,8 +24,8 @@ function renderContent() {
   const { value, items, width } = this.$props;
   // console.log('$visible:', $visible);
   return html`
-  <div @click="${onShow.bind(this)}">${value}</div>
-  <ul class="xfd-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
+  <div class="only-text" @click="${onShow.bind(this)}">${value}</div>
+  <ul class="content xfd-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
     ${items.map(it => html`<li @click="${onChange.bind(this, it)}">${it}</li>`)}
   </ul>
   `;

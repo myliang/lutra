@@ -39,7 +39,18 @@ export default class TemplateExpr extends Expr {
   }
 
   update(values) {
-    this.exprs.forEach((expr, i) => expr.update(values[i]));
+    const nodeSet = new Set();
+    this.exprs.forEach((expr, i) => {
+      if (expr.update(values[i])) {
+        nodeSet.add(expr.el);
+      }
+    });
+    nodeSet.forEach((node) => {
+      if (node.update) {
+        node.update();
+      }
+    });
+    return nodeSet.size > 0;
   }
 
   clone() {

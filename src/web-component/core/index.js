@@ -2,6 +2,14 @@
 import Template from './template';
 import NodeExpr from './node-expr';
 import TemplateExpr from './template-expr';
+import {
+  bind,
+  unbind,
+  bindClickoutside,
+  unbindClickoutside,
+  mouseMoveUp,
+  offset,
+} from './helper';
 
 // const stringsCache = new Map();
 NodeExpr.getTemplateExpr = strings => new TemplateExpr(strings);
@@ -22,72 +30,23 @@ export function render(template, container) {
   root.update(template);
 }
 
-// event methods
-export function bind(target, name, fn) {
-  target.addEventListener(name, fn);
-}
-export function unbind(target, name, fn) {
-  target.removeEventListener(name, fn);
-}
-export function unbindClickoutside(el) {
-  if (el.onClickoutside) {
-    unbind(window, 'click', el.onClickoutside);
-    delete el.onClickoutside;
-  }
-}
-// the left mouse button: mousedown → mouseup → click
-// the right mouse button: mousedown → contenxtmenu → mouseup
-// the right mouse button in firefox(>65.0): mousedown → contenxtmenu → mouseup → click on window
-export function bindClickoutside(el, cb) {
-  el.onClickoutside = (evt) => {
-    // ignore double click
-    // console.log('evt:', evt);
-    if (evt.detail === 2 || el.contains(evt.target)) return;
-    if (cb) cb(el);
-    else {
-      el.hide();
-      unbindClickoutside(el);
-    }
-  };
-  bind(window, 'click', el.onClickoutside);
-}
-
-export function mouseMoveUp(target, movefunc, upfunc) {
-  bind(target, 'mousemove', movefunc);
-  const t = target;
-  t.xEvtUp = (evt) => {
-    // console.log('mouseup>>>');
-    unbind(target, 'mousemove', movefunc);
-    unbind(target, 'mouseup', target.xEvtUp);
-    upfunc(evt);
-  };
-  bind(target, 'mouseup', target.xEvtUp);
-}
-
-
 // decorators
 // customElements.define('xfd-color-palette', ColorPalette);
-export function component(name, style) {
+export function component(name) {
   return (target) => {
-    target.$style = style;
-    // target.$attrs = attrs;
-    // console.log('target::::::', target.$attrs);
-    /*
-    attrs.forEach((attr) => {
-      // console.log('::::', target.prototype);
-      Object.defineProperty(target.prototype, attr.replace(/-[a-z]/g, c => c[1].toUpperCase()), {
-        get() {
-          // console.log('name.value:', this.getAttribute(attr));
-          return this.getAttribute(attr);
-        },
-        configurable: true,
-        enumerable: true,
-      });
-    });
-    */
     // in last line
     window.customElements.define(name, target);
   };
+}
+
+export function element(cssSelector) {
+  if (this.$refs === undefined) {
+    this.$refs = {};
+  }
+  if (this.$refs[cssSelector] === undefined) {
+    this.$refs[cssSelector] = this.querySelector(cssSelector);
+  }
+  return this.$refs[cssSelector];
 }
 
 export class BaseElement extends HTMLElement {
@@ -102,12 +61,8 @@ export class BaseElement extends HTMLElement {
     render(r, this);
   }
 
-  setOffset(offset) {
-    ['left', 'top', 'width', 'height'].forEach((key) => {
-      if (offset[key]) {
-        this.style[key] = `${offset[key]}px`;
-      }
-    });
+  setOffset(v) {
+    offset.call(this, v);
   }
 
   render() {}
@@ -117,32 +72,16 @@ export class BaseElement extends HTMLElement {
     this.update();
   }
   // disconnectedCallback
-  // adoptedCallback
+  // adoptedCallback() { }
 
   // name, oldValue, newValue
-  attributeChangedCallback(name, oval, nval) {
-    // console.log(this, 'attributeChangedCallback:', oval, nval);
-    if (nval !== null && nval !== '{}') {
-      this.update();
-    }
-  }
-
-  // static get observedAttributes() {
-  //   console.log(':attrs:', this, this.$attrs);
-  //   return this.$attrs || [];
-  // }
-
-  /*
-  static getStyleSheets() {
-    const { $style } = this;
-    if ($style) {
-      // console.log('style:', style);
-      const cssStyle = new CSSStyleSheet();
-      cssStyle.replaceSync($style);
-      // console.log('css:style', cssStyle);
-      return [cssStyle];
-    }
-    return [];
-  }
-  */
+  // attributeChangedCallback(name, oval, nval) {}
 }
+
+export {
+  bind,
+  unbind,
+  bindClickoutside,
+  unbindClickoutside,
+  mouseMoveUp,
+};

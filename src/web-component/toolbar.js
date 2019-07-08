@@ -8,6 +8,7 @@ import './icon';
 import './dropdown';
 import './color-picker';
 import './border-picker';
+import './align-picker';
 
 const aligns = ['left', 'center', 'right'];
 const valigns = ['top', 'middle', 'bottom'];
@@ -20,30 +21,20 @@ function bindTooltip(tip) {
 
 export default @component('xfd-toolbar')
 class Toolbar extends BaseElement {
-  $state = {
-    fontShow: false,
-    fontSizeShow: false,
-    alignShow: false,
-    valignShow: false,
-  };
-
   render() {
-    const {
-      alignShow, valignShow,
-    } = this.$state;
     const textColor = '#7030a0';
     const fillColor = '#000000';
     const align = 'left';
     const valign = 'middle';
     const fontName = 'Lato';
-    const fontSize = 9;
+    const fontSize = 10.5;
 
     return html`
     <div class="xfd-menu horizontal">
-      <xfd-dropdown class="item only-text"
+      <xfd-dropdown class="item bottom left"
         .value="${fontName}" .items="${fonts}" .width="160px"
         @mouseenter="${bindTooltip('fontName')}"></xfd-dropdown>
-      <xfd-dropdown class="item only-text"
+      <xfd-dropdown class="item bottom left"
         .value="${fontSize}" .items="${fontSizePts}" .width="60px"
         @mouseenter="${bindTooltip('fontSize')}"></xfd-dropdown>
       <div class="divider"></div>
@@ -70,18 +61,12 @@ class Toolbar extends BaseElement {
         <xfd-icon .type="merge"></xfd-icon>
       </div>
       <div class="divider"></div>
-      <div class="item" @mouseenter="${bindTooltip('align')}">
-        <xfd-icon .type="${`align-${align}`}"></xfd-icon>
-        <ul class="xfd-list" .show="${alignShow}">
-          ${aligns.map(it => html`<li><xfd-icon .type="${it}"></xfd-icon></li>`)}
-        </ul>
-      </div>
-      <div class="item" @mouseenter="${bindTooltip('valign')}">
-        <xfd-icon .type="${`align-${valign}`}"></xfd-icon>
-        <ul class="xfd-list" .show="${valignShow}">
-          ${valigns.map(it => html`<li><xfd-icon .type="${it}"></xfd-icon></li>`)}
-        </ul>
-      </div>
+      <xfd-align-picker class="item bottom left"
+        .value="${align}" .items="${aligns}"
+        @mouseenter="${bindTooltip('align')}"></xfd-align-picker>
+      <xfd-align-picker class="item bottom left"
+        .value="${valign}" .items="${valigns}"
+        @mouseenter="${bindTooltip('valign')}"></xfd-align-picker>
       <div class="item" @mouseenter="${bindTooltip('textwrap')}">
         <xfd-icon .type="textwrap"></xfd-icon>
       </div>

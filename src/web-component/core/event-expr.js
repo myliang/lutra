@@ -59,5 +59,6 @@ export default class EventExpr extends Expr {
       }
       super.update(value);
     }
+    return false;
   }
 }

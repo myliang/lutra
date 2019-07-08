@@ -63,7 +63,7 @@ class Resizer extends BaseElement {
     // console.log('style:', this.style);
     this.style.display = visible ? 'block' : 'none';
     // console.log('cssKey:', cssKey);
-    const styleFunc = v => ({ [cssKey]: `${v}px` });
+    const styleFunc = v => ({ [cssKey]: v });
     return html`
     <div class="hover" 
       style="${styleFunc(hoverLength)}"
