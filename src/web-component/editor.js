@@ -4,10 +4,8 @@ import {
 
 function loop() {}
 
-function inputHandler() {
-  return (evt) => {
-    this.change(evt.target.value);
-  };
+function inputHandler({ target }) {
+  this.change(target.value, 'changed');
 }
 
 export default @component('xfd-editor')
@@ -21,8 +19,8 @@ class Editor extends BaseElement {
     return html`
       <textarea
         style="${{ width: width - 9, height: height - 3 }}"
+        @input="${inputHandler.bind(this)}"
         .value="${content}"
-        @input="${inputHandler.call(this)}"
         @mousedown.stop="${loop}"
         @mousemove.stop="${loop}"></textarea>
       <div class="textline"></div>

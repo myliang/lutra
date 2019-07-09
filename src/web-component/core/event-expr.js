@@ -2,7 +2,8 @@
 import Expr from './expr';
 
 function eventCallback(e, cb) {
-  const { v } = e.detail;
+  // console.log('e:', e);
+  const { v } = e.detail || {};
   if (v !== undefined) cb(v, e);
   else cb(e);
 }

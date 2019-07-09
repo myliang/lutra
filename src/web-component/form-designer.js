@@ -79,13 +79,17 @@ function overlayerClickLeftMouseButton(evt) {
 
 function overlayerMousedown(evt) {
   const { buttons, detail } = evt;
+  const { editor } = this.$state;
   // the left mouse button: mousedown → mouseup → click
   // the right mouse button: mousedown → contenxtmenu → mouseup
   if (buttons === 2) {
     // click the right mouse button
   } else if (detail === 2) {
     // double click the left mouse button
+    editor.show = true;
+    this.update();
   } else {
+    editor.show = false;
     // click the left mouse button
     overlayerClickLeftMouseButton.call(this, evt);
   }
@@ -118,8 +122,14 @@ function toolbarChange([name, value]) {
   this.update();
 }
 
+function editorChange(v) {
+  // console.log(':::editor.change:', v);
+  this.$data.update('text', v);
+}
+
 function moveSelector(direction) {
-  const { $data } = this;
+  const { $data, $state } = this;
+  $state.editor.show = false;
   $data.select.move(direction);
   $data.scrollMove(direction);
   this.update();
@@ -192,11 +202,8 @@ function bindWindowEvents() {
 export default @component('x-form-designer')
 class FormDesigner extends BaseElement {
   $state = {
-    selectorOffset: {
-      left: 0, top: 0, width: 0, height: 0,
-    },
-    editorOffset: {
-      left: 0, top: 0, width: 0, height: 0,
+    editor: {
+      show: false,
     },
     rResizer: {
       show: false,
@@ -218,9 +225,10 @@ class FormDesigner extends BaseElement {
   render() {
     const { $state, $data } = this;
     const {
-      indexWidth, indexHeight, selectedCellBox, rows, cols, canvas, scroll, select,
+      indexWidth, indexHeight, selectedCellBox, selectedCell,
+      rows, cols, canvas, scroll, select,
     } = $data;
-    const { rResizer, cResizer } = $state;
+    const { rResizer, cResizer, editor } = $state;
     // console.log(':::selectedCellbox:', selectedCellBox);
     // console.log('rResizer:', rResizer, ',cResizer:', cResizer);
     const {
@@ -255,8 +263,10 @@ class FormDesigner extends BaseElement {
         <div class="content" style="${olcstyle}">
           <xfd-selector .show="${true}"
             .offset="${selectedCellBox}"></xfd-selector>
-          <xfd-editor .show="${false}"
-            .offset="${$state.editorOffset}" .content="hello"></xfd-editor>
+          <xfd-editor .show="${editor.show}"
+            .offset="${selectedCellBox}"
+            .content="${selectedCell.text || ''}"
+            @change="${editorChange.bind(this)}"></xfd-editor>
         </div>
       </div>
       <xfd-resizer .type="row"

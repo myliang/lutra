@@ -20,7 +20,6 @@ function bindTooltip(tip) {
 }
 
 function change(name, value) {
-  // console.log('name:', name, ', value:', value);
   this.change([name, value]);
 }
 
