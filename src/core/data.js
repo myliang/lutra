@@ -232,17 +232,17 @@ export default class Data {
     if (args.length === 1) {
       ([{ sri, sci }] = args);
     }
-    const x = cols.sumWidth(ci, sci);
-    const y = rows.sumHeight(ri, sri);
-    let w = cols.width(sci);
-    let h = rows.height(sri);
-    if (arguments.length === 1) {
-      const { eri, eci } = args[0];
-      w = cols.sumWidth(sci, eci + 1);
-      h = rows.sumHeight(sri, eri + 1);
+    const left = cols.sumWidth(ci, sci);
+    const top = rows.sumHeight(ri, sri);
+    let width = cols.width(sci);
+    let height = rows.height(sri);
+    if (args.length === 1) {
+      const [{ eri, eci }] = args;
+      width = cols.sumWidth(sci, eci + 1);
+      height = rows.sumHeight(sri, eri + 1);
     }
     return {
-      x, y, w, h,
+      left, top, width, height,
     };
   }
 
@@ -278,7 +278,7 @@ export default class Data {
       y += indexHeight;
     }
     return {
-      ri, ci, x, y, w, h,
+      ri, ci, left: x, top: y, width: w, height: h,
     };
   }
 }

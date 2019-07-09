@@ -38,10 +38,7 @@ export default class CellRange {
     } else if (args.length === 2) {
       [ri, ci] = args;
     }
-    const {
-      sri, sci, eri, eci,
-    } = this;
-    return sri <= ri && ri <= eri && sci <= ci && ci <= eci;
+    return this.sri <= ri && ri <= this.eri && this.sci <= ci && ci <= this.eci;
   }
 
   each(cb) {
