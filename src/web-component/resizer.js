@@ -4,7 +4,6 @@ import {
 } from './core';
 
 function initState(state) {
-  state.visible = false;
   state.lineVisible = false;
   state.distance = 0;
   return state;
@@ -37,7 +36,7 @@ function mousedownHandler() {
       if (canUpdate()) {
         v = distance + value[2];
       }
-      this.change(value[0], v);
+      this.change([value[0], v]);
       this.update();
     });
   };
@@ -50,8 +49,7 @@ class Resizer extends BaseElement {
     const { classList, $state } = this;
     const { type, value } = this.$props;
     const [, offset, length, hoverLength, lineLength] = value;
-    if (length > 0) $state.visible = true;
-    const { distance, visible, lineVisible } = $state;
+    const { distance, lineVisible } = $state;
     // console.log('value:', value);
     const cssKey = type === 'row' ? 'width' : 'height';
     const hostCssKey = type === 'row' ? 'top' : 'left';
@@ -61,7 +59,6 @@ class Resizer extends BaseElement {
     // console.log('distance:', distance, hostCssKey);
     this.style[hostCssKey] = `${offset + length + distance - 5}px`;
     // console.log('style:', this.style);
-    this.style.display = visible ? 'block' : 'none';
     // console.log('cssKey:', cssKey);
     const styleFunc = v => ({ [cssKey]: v });
     return html`
@@ -71,13 +68,5 @@ class Resizer extends BaseElement {
     <div class="line" .show="${lineVisible}"
       style="${styleFunc(lineLength)}"></div>
     `;
-  }
-
-  hide() {
-    initState(this.$state);
-  }
-
-  show() {
-    this.$state.visible = true;
   }
 }

@@ -13,7 +13,7 @@ class AlignPicker extends Dropdown {
     <xfd-icon .type="${`align-${value}`}" @click="${onShow.bind(this)}"></xfd-icon>
     </xfd-icon>
     <ul class="content xfd-list" .show="${$visible}">
-      ${items.map(it => html`<li @click="${onChange.call(this, it)}"><xfd-icon .type="${`align-${it}`}"></xfd-icon></li>`)}
+      ${items.map(it => html`<li @click="${onChange.bind(this, it)}"><xfd-icon .type="${`align-${it}`}"></xfd-icon></li>`)}
     </ul>
     `;
   }

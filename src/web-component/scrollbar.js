@@ -6,7 +6,7 @@ class Scrollbar extends BaseElement {
     evt.stopPropagation();
     // console.log('::::::::', evt);
     const { scrollTop, scrollLeft } = evt.target;
-    this.change(evt, this.isVertical() ? scrollTop : scrollLeft);
+    this.change(this.isVertical() ? scrollTop : scrollLeft, evt);
   };
 
   onmousemove = evt => evt.stopPropagation();
@@ -19,7 +19,7 @@ class Scrollbar extends BaseElement {
     // console.log('this:', this);
     const { type } = this.$props;
     const cssKey = this.isVertical() ? 'height' : 'width';
-    const { contentLength, viewLength } = this.$props;
+    const [contentLength, viewLength] = this.$props.value;
     // const vstyle = { [cssKey]: `${this.viewLength - 16}px` };
     const cstyle = { [cssKey]: contentLength };
     this.style[cssKey] = `${viewLength - 16}px`;

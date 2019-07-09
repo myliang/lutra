@@ -17,8 +17,13 @@ export default class PropExpr extends Expr {
   update(value) {
     const { v, el, name } = this;
     if (value !== undefined && !equals(v, value)) {
+      // console.log('name:', name, value, el);
       if (name === 'show') {
         el.style.display = value === true ? 'block' : 'none';
+      } else if (name === 'scroll') {
+        const { left, top } = value;
+        if (left !== undefined) el.scrollLeft = left;
+        if (top !== undefined) el.scrollTop = top;
       } else if (name === 'html') {
         el.innerHTML = value;
       } else if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {

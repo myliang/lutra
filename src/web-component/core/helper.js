@@ -46,7 +46,7 @@ export function mouseMoveUp(target, movefunc, upfunc) {
 
 export function offset(v) {
   ['left', 'top', 'width', 'height'].forEach((key) => {
-    if (v[key]) this.style[key] = `${v[key]}px`;
+    if (v[key] !== undefined) this.style[key] = `${v[key]}px`;
   });
 }
 

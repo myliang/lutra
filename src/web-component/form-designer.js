@@ -1,5 +1,6 @@
+/* global window */
 import {
-  html, component, BaseElement, element,
+  html, component, BaseElement, element, mouseMoveUp, bind,
 } from './core';
 import './toolbar';
 import './selector';
@@ -8,6 +9,180 @@ import './scrollbar';
 import './resizer';
 import Table from '../canvas/table';
 import Data from '../core/data';
+
+function overlayerMousemove(evt) {
+  const { buttons, offsetX, offsetY } = evt;
+  // console.log('buttons:', buttons);
+  if (buttons !== 0) return;
+  const { indexWidth, indexHeight, canvas } = this.$data;
+  const { rResizer, cResizer } = this.$state;
+  // console.log('offsetX:', offsetX, ', offsetY:', offsetY);
+  if (offsetX > indexWidth && offsetY > indexHeight) {
+    // console.log('rResizer.show:', rResizer.show);
+    if (rResizer.show || cResizer.show) {
+      rResizer.show = false;
+      cResizer.show = false;
+      this.update();
+    }
+  } else {
+    const {
+      ri, ci, left, top, width, height,
+    } = this.$data.cellBoxAndIndex(offsetX, offsetY);
+    if (ri >= 0 && ci === -1) {
+      rResizer.show = true;
+      rResizer.value = [ri, top, height, width, canvas.width];
+    } else {
+      rResizer.show = false;
+    }
+    if (ri === -1 && ci >= 0) {
+      cResizer.show = true;
+      cResizer.value = [ci, left, width, height, canvas.height];
+    } else {
+      cResizer.show = false;
+    }
+    // console.log('rResizer:', rResizer, ', cResizer:', cResizer);
+    this.update();
+  }
+}
+
+function overlayerClickLeftMouseButton(evt) {
+  const {
+    shiftKey, offsetX, offsetY, buttons,
+  } = evt;
+  const { $data } = this;
+  let { ri, ci } = $data.cellBoxAndIndex(offsetX, offsetY);
+  const last = { ri, ci };
+  // console.log('ri:', ri, ', ci:', ci);
+
+  if (!shiftKey) {
+    $data.select.s(ri, ci);
+    // updateSelector.call(this);
+    this.update();
+    mouseMoveUp(window, (e) => {
+      if (e.buttons === 1 && !e.shiftKey) {
+        ({ ri, ci } = $data.cellBoxAndIndex(e.offsetX, e.offsetY));
+        if (last.ri !== ri || last.ci !== ci) {
+          $data.select.e(ri, ci);
+          // updateSelector.call(this);
+          this.update();
+          last.ri = ri;
+          last.ci = ci;
+        }
+      }
+    }, () => {});
+  } else if (buttons === 1) {
+    $data.select.e(ri, ci);
+    // updateSelector.call(this);
+    this.update();
+  }
+}
+
+function overlayerMousedown(evt) {
+  const { buttons, detail } = evt;
+  // the left mouse button: mousedown → mouseup → click
+  // the right mouse button: mousedown → contenxtmenu → mouseup
+  if (buttons === 2) {
+    // click the right mouse button
+  } else if (detail === 2) {
+    // double click the left mouse button
+  } else {
+    // click the left mouse button
+    overlayerClickLeftMouseButton.call(this, evt);
+  }
+}
+
+function vScrollbarChange(v) {
+  this.$data.scroll.movey(v);
+  this.update();
+}
+
+function hScrollbarChange(v) {
+  this.$data.scroll.movex(v);
+  this.update();
+}
+
+function rResizerChange([ri, v]) {
+  this.$data.rows.height(ri, v);
+  this.$state.rResizer.show = false;
+  this.update();
+}
+
+function cResizerChange([ci, v]) {
+  this.$data.cols.width(ci, v);
+  this.$state.cResizer.show = false;
+  this.update();
+}
+
+function moveSelector(direction) {
+  const { $data } = this;
+  $data.select.move(direction);
+  $data.scrollMove(direction);
+  this.update();
+}
+
+function bindWindowEvents() {
+  // bind window event
+  bind(window, 'resizer', () => this.update());
+  let focusing = false;
+  bind(window, 'click', ({ target }) => {
+    focusing = element.call(this, '.overlayer').contains(target);
+  });
+
+  // bind window.keydown
+  bind(window, 'keydown', (evt) => {
+    if (!focusing) return;
+    const keyCode = evt.keyCode || evt.which;
+    const {
+      ctrlKey, shiftKey, metaKey,
+    } = evt;
+    if (ctrlKey || metaKey) {
+      // nothing
+    } else {
+      switch (keyCode) {
+        case 32: // space
+          break;
+        case 27: // esc
+          // contextMenu.hide();
+          break;
+        case 37: // left
+          moveSelector.call(this, 'left');
+          evt.preventDefault();
+          break;
+        case 38: // up
+          moveSelector.call(this, 'up');
+          evt.preventDefault();
+          break;
+        case 39: // right
+          moveSelector.call(this, 'right');
+          evt.preventDefault();
+          break;
+        case 40: // down
+          moveSelector.call(this, 'down');
+          evt.preventDefault();
+          break;
+        case 9: // tab
+          // editor.finished();
+          // shift + tab => move left
+          // tab => move right
+          moveSelector.call(this, shiftKey ? 'left' : 'right');
+          evt.preventDefault();
+          break;
+        case 13: // enter
+          // editor.finished();
+          // shift + enter => move up
+          // enter => move down
+          moveSelector.call(this, shiftKey ? 'up' : 'down');
+          evt.preventDefault();
+          break;
+        case 8: // backspace
+          evt.preventDefault();
+          break;
+        default:
+          break;
+      }
+    }
+  });
+}
 
 export default @component('x-form-designer')
 class FormDesigner extends BaseElement {
@@ -18,40 +193,56 @@ class FormDesigner extends BaseElement {
     editorOffset: {
       left: 0, top: 0, width: 0, height: 0,
     },
-    rResizerValue: [0, 0, 0, 0, 0],
-    rResizerMinValue: 25,
-    cResizerValue: [0, 0, 0, 0, 0],
-    cResizerMinValue: 25,
-    vScrollbarVHeight: 500,
-    vScrollbarCHeight: 1000,
-    hScrollbarVWidth: 500,
-    hScrollbarCWidth: 1000,
+    rResizer: {
+      show: false,
+      value: [0, 0, 0, 0, 0],
+    },
+    cResizer: {
+      show: false,
+      value: [0, 0, 0, 0, 0],
+    },
   };
 
   constructor() {
     super();
     const { settings } = this.$props;
     this.$data = new Data(settings || {});
+    bindWindowEvents.call(this);
   }
 
   render() {
     const { $state, $data } = this;
-    const { indexWidth, indexHeight, selectedCellBox } = $data;
+    const {
+      indexWidth, indexHeight, selectedCellBox, rows, cols, canvas, scroll,
+    } = $data;
+    const { rResizer, cResizer } = $state;
     // console.log(':::selectedCellbox:', selectedCellBox);
+    // console.log('rResizer:', rResizer, ',cResizer:', cResizer);
     const {
       width, height, cwidth, cheight,
-    } = $data.canvas;
+    } = canvas;
     const olcstyle = {
       left: indexWidth,
       top: indexHeight,
       width: cwidth,
       height: cheight,
     };
+    // console.log('scroll:', scroll.x);
+    const vScrollbar = {
+      value: [rows.totalHeight(), cheight],
+      scroll: { top: scroll.y },
+    };
+    const hScrollbar = {
+      value: [cols.totalWidth(), cwidth],
+      scroll: { left: scroll.x },
+    };
     return html`
     <xfd-toolbar></xfd-toolbar>
     <div class="content">
       <canvas></canvas>
-      <div class="overlayer" style="${{ width, height }}">
+      <div class="overlayer" style="${{ width, height }}"
+        @mousemove="${overlayerMousemove.bind(this)}"
+        @mousedown="${overlayerMousedown.bind(this)}">
         <div class="content" style="${olcstyle}">
           <xfd-selector .show="${true}"
             .offset="${selectedCellBox}"></xfd-selector>
@@ -60,17 +251,23 @@ class FormDesigner extends BaseElement {
         </div>
       </div>
       <xfd-resizer .type="row"
-        .value="${$state.rResizerValue}"
-        .min-value="${$state.rResizerMinValue}"></xfd-resizer>
+        .show="${rResizer.show}"
+        .value="${rResizer.value}"
+        .min-value="${indexHeight}"
+        @change="${rResizerChange.bind(this)}"></xfd-resizer>
       <xfd-resizer .type="col"
-        .value="${$state.cResizerValue}"
-        .min-value="${$state.cResizerMinValue}"></xfd-resizer>
+        .show="${cResizer.show}"
+        .value="${cResizer.value}"
+        .min-value="${indexWidth}"
+        @change="${cResizerChange.bind(this)}"></xfd-resizer>
       <xfd-scrollbar .type="vertical"
-        .view-length="${$state.vScrollbarVHeight}"
-        .content-length="${$state.vScrollbarCHeight}"></xfd-scrollbar>
+        .value="${vScrollbar.value}"
+        .scroll="${vScrollbar.scroll}"
+        @change="${vScrollbarChange.bind(this)}"></xfd-scrollbar>
       <xfd-scrollbar .type="horizontal"
-        .view-length="${$state.hScrollbarVWidth}"
-        .content-length="${$state.hScrollbarCWidth}"></xfd-scrollbar>
+        .value="${hScrollbar.value}"
+        .scroll="${hScrollbar.scroll}"
+        @change="${hScrollbarChange.bind(this)}"></xfd-scrollbar>
     </div>
     `;
   }
