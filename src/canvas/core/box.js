@@ -73,8 +73,8 @@ export default class Box {
   }
 
   static create({
-    x, y, w, h,
+    left, top, width, height,
   }) {
-    return new Box(x, y, w, h);
+    return new Box(left, top, width, height);
   }
 }

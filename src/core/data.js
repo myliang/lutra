@@ -103,6 +103,12 @@ const defaultData = {
 
 const toolbarHeight = 41;
 
+function loads() {
+  ['merges', 'styles', 'rows', 'cols', 'scroll', 'select'].forEach((it) => {
+    this[it].load(this.$[it]);
+  });
+}
+
 export default class Data {
   constructor(settings = {}) {
     this.settings = helper.merge(defaultSettings, settings);
@@ -113,13 +119,12 @@ export default class Data {
     this.cols = new Cols(this.settings);
     this.scroll = new Scroll(this);
     this.select = new Select(this);
+    loads.call(this);
   }
 
   load(data) {
     this.$ = Object.assign(defaultData, data);
-    ['merges', 'styles', 'rows', 'cols', 'scroll', 'select'].forEach((it) => {
-      this[it].load(data[it]);
-    });
+    loads.call(this);
   }
 
   get design() {

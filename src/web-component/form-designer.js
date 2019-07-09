@@ -113,6 +113,11 @@ function cResizerChange([ci, v]) {
   this.update();
 }
 
+function toolbarChange([name, value]) {
+  this.$data.update(name, value);
+  this.update();
+}
+
 function moveSelector(direction) {
   const { $data } = this;
   $data.select.move(direction);
@@ -213,7 +218,7 @@ class FormDesigner extends BaseElement {
   render() {
     const { $state, $data } = this;
     const {
-      indexWidth, indexHeight, selectedCellBox, rows, cols, canvas, scroll,
+      indexWidth, indexHeight, selectedCellBox, rows, cols, canvas, scroll, select,
     } = $data;
     const { rResizer, cResizer } = $state;
     // console.log(':::selectedCellbox:', selectedCellBox);
@@ -236,8 +241,12 @@ class FormDesigner extends BaseElement {
       value: [cols.totalWidth(), cwidth],
       scroll: { left: scroll.x },
     };
+    const toolbarValue = {
+      style: $data.selectedCell.style,
+      merge: [select.merged, !select.multiple],
+    };
     return html`
-    <xfd-toolbar></xfd-toolbar>
+    <xfd-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></xfd-toolbar>
     <div class="content">
       <canvas></canvas>
       <div class="overlayer" style="${{ width, height }}"

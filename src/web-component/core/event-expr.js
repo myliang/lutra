@@ -48,11 +48,11 @@ export default class EventExpr extends Expr {
   update(value) {
     const { v, el, evtName } = this;
     const target = this.isClickoutside ? window : el;
-    // console.log('value:', value, ', v:', v);
     if (v && v !== value) {
       target.removeEventListener(evtName, this.bindHandler);
     }
-    if (v === undefined || v !== value) {
+    if (v === undefined || value !== v) {
+      // console.log('value:', value, ', v:', v);
       target.addEventListener(evtName, this.bindHandler);
       if (this.isClickoutside) {
         el.addEventListener('click', e => e.stopPropagation());
