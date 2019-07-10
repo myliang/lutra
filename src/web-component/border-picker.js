@@ -4,7 +4,7 @@ import {
 import './icon';
 import './line-type-picker';
 import './color-picker';
-import { onShow, onChange, Dropdown } from './dropdown';
+import { onChange, Dropdown } from './dropdown';
 
 const modes1 = ['all', 'inside', 'horizontal', 'vertical', 'outside'];
 const modes2 = ['left', 'top', 'right', 'bottom', 'none'];
@@ -28,10 +28,12 @@ function buildItems(items) {
   return items.map(it => html`
     <div class="item">
       <x-icon .type="${`border-${it}`}"
-        @click="${modeChange.bind(this, it)}"></x-icon>
+        @click.stop="${modeChange.bind(this, it)}"></x-icon>
     </div>
     `);
 }
+
+const loop = () => {};
 
 export default @component('x-border-picker')
 class BorderPicker extends Dropdown {
@@ -44,8 +46,8 @@ class BorderPicker extends Dropdown {
     const { color, style } = this.$state;
     const { $visible } = this;
     return html`
-    <x-icon .type="border-all" @click="${onShow.bind(this)}"></x-icon>
-    <div class="content bottom left" .show="${$visible}">
+    <x-icon .type="border-all"></x-icon>
+    <div class="content bottom left" .show="${$visible}" @click.stop="${loop}">
       <table>
         <tbody>
           <tr>

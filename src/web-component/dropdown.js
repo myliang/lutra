@@ -24,9 +24,9 @@ function renderContent() {
   const { value, items, width } = this.$props;
   // console.log('$visible:', $visible);
   return html`
-  <div class="only-text" @click="${onShow.bind(this)}">${value}</div>
+  <div class="only-text">${value}</div>
   <ul class="content x-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
-    ${items.map(it => html`<li @click="${onChange.bind(this, it)}">${it}</li>`)}
+    ${items.map(it => html`<li @click.stop="${onChange.bind(this, it)}">${it}</li>`)}
   </ul>
   `;
 }
@@ -34,6 +34,8 @@ function renderContent() {
 @component('x-dropdown')
 class Dropdown extends BaseElement {
   $visible = false;
+
+  onclick = onShow.bind(this);
 
   render() {
     return renderContent.call(this);

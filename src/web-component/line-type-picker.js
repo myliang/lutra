@@ -1,7 +1,7 @@
 import {
   html, component,
 } from './core';
-import { onShow, onChange, Dropdown } from './dropdown';
+import { onChange, Dropdown } from './dropdown';
 
 const lineTypes = [
   ['thin', '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="1" style="user-select: none;"><line x1="0" y1="0.5" x2="50" y2="0.5" stroke-width="1" stroke="black" style="user-select: none;"></line></svg>'],
@@ -17,7 +17,7 @@ function buildItems() {
     const stateChecked = type === value ? 'checked' : '';
     return html`
       <li class="state ${stateChecked}"
-        @click="${onChange.bind(this, type)}"
+        @click.stop="${onChange.bind(this, type)}"
         .html="${svg}">
       </li>`;
   });
@@ -28,7 +28,7 @@ class LineTypePicker extends Dropdown {
   render() {
     const { $visible } = this;
     return html`
-    <x-icon .type="line-type" @click="${onShow.bind(this)}"></x-icon>
+    <x-icon .type="line-type"></x-icon>
     <ul class="content x-list" .show="${$visible}">
       ${buildItems.call(this)}
     </ul>

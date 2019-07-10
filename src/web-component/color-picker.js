@@ -1,7 +1,7 @@
 import {
   html, component,
 } from './core';
-import { onShow, onChange, Dropdown } from './dropdown';
+import { onChange, Dropdown } from './dropdown';
 import './color-palette';
 import './icon';
 
@@ -11,7 +11,7 @@ class ColorPicker extends Dropdown {
     const { icon, value } = this.$props;
     const { $visible } = this;
     return html`
-    <x-icon .type="${icon}" @click="${onShow.bind(this)}"
+    <x-icon .type="${icon}"
       style="border-bottom: 3px solid ${value}; height: 16px;">
     </x-icon>
     <x-color-palette class="content" .show="${$visible}"
