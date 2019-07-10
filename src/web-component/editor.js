@@ -8,6 +8,12 @@ function inputHandler({ target }) {
   this.change(target.value, 'changed');
 }
 
+function keydownHandler(evt) {
+  const { keyCode } = evt;
+  if (keyCode !== 13 && keyCode !== 9) evt.stopPropagation();
+  if (keyCode === 13) evt.preventDefault();
+}
+
 function setSelectionRange(position) {
   setTimeout(() => {
     const el = element.call(this, 'textarea');
@@ -19,18 +25,20 @@ function setSelectionRange(position) {
 export default @component('xfd-editor')
 class Editor extends BaseElement {
   render() {
-    const { offset, content } = this.$props;
+    const { offset, content, style } = this.$props;
     const {
       left, top, width, height,
     } = offset;
     this.setOffset({ left: left - 1, top: top - 1 });
+    const textStyle = Object.assign(style, { width: width - 9, height: height - 3 });
     setSelectionRange.call(this, content.length);
     return html`
       <textarea
-        style="${{ width: width - 9, height: height - 3 }}"
+        style="${textStyle}"
         @input="${inputHandler.bind(this)}"
         .value="${content}"
         @change.stop="${loop}"
+        @keydown="${keydownHandler.bind(this)}"
         @mousedown.stop="${loop}"
         @mousemove.stop="${loop}"></textarea>
       <div class="textline"></div>

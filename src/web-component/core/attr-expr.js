@@ -19,7 +19,12 @@ export default class AttrExpr extends Expr {
         Object.keys(value).forEach((key) => {
           if (el.style[key] !== value[key]) {
             const v1 = value[key];
-            el.style[key] = typeof v1 === 'string' ? v1 : `${v1}px`;
+            if (key === 'left' || key === 'top'
+              || key === 'width' || key === 'height') {
+              el.style[key] = typeof v1 === 'string' ? v1 : `${v1}px`;
+            } else {
+              el.style[key] = v1;
+            }
           }
         });
       } else {

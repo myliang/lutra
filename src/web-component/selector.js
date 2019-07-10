@@ -8,7 +8,6 @@ class Selector extends BaseElement {
     let {
       left, top, width, height,
     } = this.$props.offset;
-    // console.log('selector.offset:', offset);
     // const { visible } = this.$state;
     // this.style.display = visible ? 'block' : 'none';
     left -= 1;

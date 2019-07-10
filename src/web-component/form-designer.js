@@ -77,6 +77,11 @@ function overlayerClickLeftMouseButton(evt) {
   }
 }
 
+function editorShow() {
+  this.$state.editor.show = true;
+  this.update();
+}
+
 function overlayerMousedown(evt) {
   const { buttons, detail } = evt;
   const { editor } = this.$state;
@@ -86,8 +91,7 @@ function overlayerMousedown(evt) {
     // click the right mouse button
   } else if (detail === 2) {
     // double click the left mouse button
-    editor.show = true;
-    this.update();
+    editorShow.call(this);
   } else {
     editor.show = false;
     // click the left mouse button
@@ -148,7 +152,7 @@ function bindWindowEvents() {
     if (!focusing) return;
     const keyCode = evt.keyCode || evt.which;
     const {
-      ctrlKey, shiftKey, metaKey,
+      ctrlKey, shiftKey, metaKey, key,
     } = evt;
     if (ctrlKey || metaKey) {
       // nothing
@@ -190,10 +194,17 @@ function bindWindowEvents() {
           evt.preventDefault();
           break;
         case 8: // backspace
-          evt.preventDefault();
           break;
         default:
           break;
+      }
+
+      if ((keyCode >= 65 && keyCode <= 90)
+        || (keyCode >= 48 && keyCode <= 57)
+        || (keyCode >= 96 && keyCode <= 105)
+        || key === '=') {
+        // trigger editor
+        editorShow.call(this);
       }
     }
   });
@@ -250,7 +261,7 @@ class FormDesigner extends BaseElement {
       scroll: { left: scroll.x },
     };
     const toolbarValue = {
-      style: $data.selectedCell.style,
+      style: selectedCell.style,
       merge: [select.merged, !select.multiple],
     };
     return html`
@@ -266,6 +277,7 @@ class FormDesigner extends BaseElement {
           <xfd-editor .show="${editor.show}"
             .offset="${selectedCellBox}"
             .content="${selectedCell.text || ''}"
+            .style="${selectedCell.css}"
             @change="${editorChange.bind(this)}"></xfd-editor>
         </div>
       </div>
