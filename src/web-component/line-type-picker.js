@@ -23,13 +23,13 @@ function buildItems() {
   });
 }
 
-export default @component('xfd-line-type-picker')
+export default @component('x-line-type-picker')
 class LineTypePicker extends Dropdown {
   render() {
     const { $visible } = this;
     return html`
-    <xfd-icon .type="line-type" @click="${onShow.bind(this)}"></xfd-icon>
-    <ul class="content xfd-list" .show="${$visible}">
+    <x-icon .type="line-type" @click="${onShow.bind(this)}"></x-icon>
+    <ul class="content x-list" .show="${$visible}">
       ${buildItems.call(this)}
     </ul>
     `;

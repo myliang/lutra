@@ -2,6 +2,12 @@ import CellRange from './cell-range';
 import Base from './base';
 import { expr2xy, xy2expr } from './alphabet';
 
+function setByIndexes(ri, ci) {
+  const ref = xy2expr(ci, ri);
+  this.$[0] = ref;
+  this.$[1] = `${ref}:${ref}`;
+}
+
 export default class Select extends Base {
   // select: [ref, refRange]
   constructor({ rows, cols, merges }) {
@@ -20,14 +26,14 @@ export default class Select extends Base {
   }
 
   get multiple() {
-    return this.range.multiple();
+    return this.range.multiple;
   }
 
   get merged() {
     const {
       range, merges, indexes,
     } = this;
-    if (range.multiple()) {
+    if (range.multiple) {
       const merge = merges.find(...indexes);
       if (merge) return merge.equals(range);
     }
@@ -61,41 +67,65 @@ export default class Select extends Base {
   }
 
   // direction: left | right | up | down
-  move(direction) {
+  move(direction, multiple = false) {
     const { rows, cols, merges } = this;
     let [ri, ci] = this.indexes;
-    let [rn, cn] = [1, 1];
-    const r = merges.find(ri, ci);
-    if (r) {
-      ri = r.sri;
-      ci = r.sci;
-      ([rn, cn] = r.size());
+    if (multiple) {
+      // get diagonal coordinates[ri, ci]
+      const {
+        sri, sci, eri, eci,
+      } = this.range;
+      if (ri > sri) ri = sri;
+      else ri = eri;
+      if (ci > sci) ci = sci;
+      else ci = eci;
     }
-    // console.log('rn:', ri, ci, rn, cn);
+    // console.log(direction, multiple, 'rn:', ri, ci, rn, cn);
     switch (direction) {
       case 'left':
-        if (ci > 0) ci -= 1;
+        if (ci > 0) {
+          ci -= 1;
+          ci -= merges.nInCol(ci) - 1;
+        }
         break;
       case 'right':
-        if (ci < cols.len() - 1) ci += cn;
+        if (ci < cols.len() - 1) {
+          ci += 1;
+          ci += merges.nInCol(ci) - 1;
+        }
         break;
       case 'up':
-        if (ri > 0) ri -= 1;
+        if (ri > 0) {
+          ri -= 1;
+          ri -= merges.nInRow(ri) - 1;
+        }
         break;
       case 'down':
-        if (ri < rows.len() - 1) ri += rn;
+        if (ri < rows.len() - 1) {
+          ri += 1;
+          ri += merges.nInRow(ri) - 1;
+        }
         break;
       default:
         break;
     }
-    this.s(ri, ci);
+    if (multiple) {
+      this.e(ri, ci);
+    } else {
+      this.s(ri, ci);
+    }
   }
 
   // set sri, sci
   s(ri, ci) {
-    this.$[0] = xy2expr(ci, ri);
-    // this.$[1] = `${this.$[0]}:${this.$[0]}`
-    this.e(ri, ci);
+    const r = this.merges.find(ri, ci);
+    if (r) {
+      const { sri, sci } = r;
+      this.$[0] = xy2expr(sci, sri);
+      this.$[1] = r.toString();
+    } else {
+      setByIndexes.call(this, ri, ci);
+    }
   }
 
   // set eri, eci, sri, sci

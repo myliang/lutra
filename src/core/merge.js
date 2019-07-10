@@ -1,6 +1,11 @@
 import CellRange from './cell-range';
 import Base from './base';
 
+function find(cb) {
+  const ref = this.$.find(it => cb(CellRange.valueOf(it)));
+  return undefined || (ref && CellRange.valueOf(ref));
+}
+
 export default class Merges extends Base {
   constructor() {
     super([]);
@@ -34,8 +39,25 @@ export default class Merges extends Base {
   }
 
   find(ri, ci) {
-    const ref = this.$.find(it => CellRange.valueOf(it).includes(ri, ci));
-    return undefined || (ref && CellRange.valueOf(ref));
+    return find.call(this, it => it.includes(ri, ci));
+  }
+
+  findInRow(ri) {
+    return find.call(this, it => it.inRow(ri));
+  }
+
+  findInCol(ci) {
+    return find.call(this, it => it.inCol(ci));
+  }
+
+  nInRow(ri) {
+    const m = this.findInRow(ri);
+    return m ? m.rn : 1;
+  }
+
+  nInCol(ci) {
+    const m = this.findInCol(ci);
+    return m ? m.cn : 1;
   }
 
   filter(merge) {

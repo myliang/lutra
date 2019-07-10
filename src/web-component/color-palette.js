@@ -26,7 +26,7 @@ function buildThemeColors() {
   return themeColors.map(colors => html`<tr>${buildTds.call(this, colors)}</tr>`);
 }
 
-export default @component('xfd-color-palette')
+export default @component('x-color-palette')
 class ColorPalette extends BaseElement {
   render() {
     return html`

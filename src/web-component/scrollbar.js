@@ -1,6 +1,6 @@
 import { html, BaseElement, component } from './core';
 
-export default @component('xfd-scrollbar')
+export default @component('x-scrollbar')
 class Scrollbar extends BaseElement {
   onscroll = (evt) => {
     evt.stopPropagation();

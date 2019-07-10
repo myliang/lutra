@@ -10,15 +10,23 @@ export default class CellRange {
     this.h = h;
   }
 
+  get rn() {
+    return this.eri - this.sri + 1;
+  }
+
+  get cn() {
+    return this.eci - this.sci + 1;
+  }
+
+  get multiple() {
+    return this.eri - this.sri > 0 || this.eci - this.sci > 0;
+  }
+
   set(sri, sci, eri, eci) {
     this.sri = sri;
     this.sci = sci;
     this.eri = eri;
     this.eci = eci;
-  }
-
-  multiple() {
-    return this.eri - this.sri > 0 || this.eci - this.sci > 0;
   }
 
   inRow(ri) {
@@ -171,10 +179,7 @@ export default class CellRange {
   }
 
   size() {
-    return [
-      this.eri - this.sri + 1,
-      this.eci - this.sci + 1,
-    ];
+    return [this.rn, this.cn];
   }
 
   toString() {
@@ -182,7 +187,7 @@ export default class CellRange {
       sri, sci, eri, eci,
     } = this;
     let ref = xy2expr(sci, sri);
-    if (this.multiple()) {
+    if (this.multiple) {
       ref = `${ref}:${xy2expr(eci, eri)}`;
     }
     return ref;

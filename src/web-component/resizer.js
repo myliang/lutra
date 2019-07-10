@@ -41,7 +41,7 @@ function mousedownHandler() {
     });
   };
 }
-export default @component('xfd-resizer')
+export default @component('x-resizer')
 class Resizer extends BaseElement {
   $state = initState({});
 

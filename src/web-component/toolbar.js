@@ -23,7 +23,7 @@ function change(name, value) {
   this.change([name, value]);
 }
 
-export default @component('xfd-toolbar')
+export default @component('x-toolbar')
 class Toolbar extends BaseElement {
   render() {
     const { style, merge } = this.$props.value;
@@ -36,62 +36,62 @@ class Toolbar extends BaseElement {
     const merged = merge[1] ? 'disabled' : active(merge[0]);
 
     return html`
-    <div class="xfd-menu horizontal">
-      <xfd-dropdown class="item bottom left"
+    <div class="x-menu horizontal">
+      <x-dropdown class="item bottom left"
         .value="${font.name}" .items="${fonts}" .width="160px"
         @change="${change.bind(this, 'font-name')}"
-        @mouseenter="${bindTooltip('fontName')}"></xfd-dropdown>
-      <xfd-dropdown class="item bottom left"
+        @mouseenter="${bindTooltip('fontName')}"></x-dropdown>
+      <x-dropdown class="item bottom left"
         .value="${font.size}" .items="${fontSizePts}" .width="60px"
         @change="${change.bind(this, 'font-size')}"
-        @mouseenter="${bindTooltip('fontSize')}"></xfd-dropdown>
+        @mouseenter="${bindTooltip('fontSize')}"></x-dropdown>
       <div class="divider"></div>
       <div class="item ${active(font.bold)}"
         @click="${change.bind(this, 'font-bold', !font.bold)}"
         @mouseenter="${bindTooltip('fontBold')}">
-        <xfd-icon .type="font-bold"></xfd-icon>
+        <x-icon .type="font-bold"></x-icon>
       </div>
       <div class="item ${active(font.italic)}"
         @click="${change.bind(this, 'font-italic', !font.italic)}"
         @mouseenter="${bindTooltip('fontItalic')}">
-        <xfd-icon .type="font-italic"></xfd-icon>
+        <x-icon .type="font-italic"></x-icon>
       </div>
       <div class="item ${active(underline)}"
         @click="${change.bind(this, 'underline', !underline)}"
         @mouseenter="${bindTooltip('underline')}">
-        <xfd-icon .type="underline"></xfd-icon>
+        <x-icon .type="underline"></x-icon>
       </div>
-      <xfd-color-picker class="item bottom left"
+      <x-color-picker class="item bottom left"
         @change="${change.bind(this, 'color')}"
         @mouseenter="${bindTooltip('textColor')}"
-        .icon="text-color" .value="${color}"></xfd-color-picker>
+        .icon="text-color" .value="${color}"></x-color-picker>
       <div class="divider"></div>
-      <xfd-color-picker class="item bottom left"
+      <x-color-picker class="item bottom left"
         @change="${change.bind(this, 'bgcolor')}"
         @mouseenter="${bindTooltip('fillColor')}"
-        .icon="fill-color" .value="${bgcolor}"></xfd-color-picker>
-      <xfd-border-picker class="item bottom left"
+        .icon="fill-color" .value="${bgcolor}"></x-color-picker>
+      <x-border-picker class="item bottom left"
         @change="${change.bind(this, 'border')}"
         @mouseenter="${bindTooltip('border')}">
-      </xfd-border-picker>
+      </x-border-picker>
       <div class="item ${merged}"
         @click="${change.bind(this, 'merge', !merge[0])}"
         @mouseenter="${bindTooltip('merge')}">
-        <xfd-icon .type="merge"></xfd-icon>
+        <x-icon .type="merge"></x-icon>
       </div>
       <div class="divider"></div>
-      <xfd-align-picker class="item bottom left"
+      <x-align-picker class="item bottom left"
         .value="${align}" .items="${aligns}"
         @change="${change.bind(this, 'align')}"
-        @mouseenter="${bindTooltip('align')}"></xfd-align-picker>
-      <xfd-align-picker class="item bottom left"
+        @mouseenter="${bindTooltip('align')}"></x-align-picker>
+      <x-align-picker class="item bottom left"
         .value="${valign}" .items="${valigns}"
         @change="${change.bind(this, 'valign')}"
-        @mouseenter="${bindTooltip('valign')}"></xfd-align-picker>
+        @mouseenter="${bindTooltip('valign')}"></x-align-picker>
       <div class="item ${active(textwrap)}"
         @click="${change.bind(this, 'textwrap', !textwrap)}"
         @mouseenter="${bindTooltip('textwrap')}">
-        <xfd-icon .type="textwrap"></xfd-icon>
+        <x-icon .type="textwrap"></x-icon>
       </div>
     </div>
     `;

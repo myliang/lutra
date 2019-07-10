@@ -8,7 +8,7 @@ export default function tooltip(html, target) {
     left, top, width, height,
   } = target.getBoundingClientRect();
   const el = document.createElement('div');
-  el.className = 'xfd-tooltip';
+  el.className = 'x-tooltip';
   el.innerHTML = html;
   document.body.appendChild(el);
   const elBox = el.getBoundingClientRect();

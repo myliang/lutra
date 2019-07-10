@@ -56,14 +56,12 @@ function overlayerClickLeftMouseButton(evt) {
 
   if (!shiftKey) {
     $data.select.s(ri, ci);
-    // updateSelector.call(this);
     this.update();
     mouseMoveUp(window, (e) => {
       if (e.buttons === 1 && !e.shiftKey) {
         ({ ri, ci } = $data.cellBoxAndIndex(e.offsetX, e.offsetY));
         if (last.ri !== ri || last.ci !== ci) {
           $data.select.e(ri, ci);
-          // updateSelector.call(this);
           this.update();
           last.ri = ri;
           last.ci = ci;
@@ -72,13 +70,18 @@ function overlayerClickLeftMouseButton(evt) {
     }, () => {});
   } else if (buttons === 1) {
     $data.select.e(ri, ci);
-    // updateSelector.call(this);
     this.update();
   }
 }
 
 function editorShow() {
-  this.$state.editor.show = true;
+  const { selectedCell, selectedCellBox } = this.$data;
+  this.$state.editor = {
+    show: true,
+    offset: selectedCellBox,
+    content: selectedCell.text || '',
+    style: selectedCell.css,
+  };
   this.update();
 }
 
@@ -131,10 +134,10 @@ function editorChange(v) {
   this.$data.update('text', v);
 }
 
-function moveSelector(direction) {
+function moveSelector(direction, multiple) {
   const { $data, $state } = this;
   $state.editor.show = false;
-  $data.select.move(direction);
+  $data.select.move(direction, multiple);
   $data.scrollMove(direction);
   this.update();
 }
@@ -164,33 +167,33 @@ function bindWindowEvents() {
           // contextMenu.hide();
           break;
         case 37: // left
-          moveSelector.call(this, 'left');
+          moveSelector.call(this, 'left', shiftKey);
           evt.preventDefault();
           break;
         case 38: // up
-          moveSelector.call(this, 'up');
+          moveSelector.call(this, 'up', shiftKey);
           evt.preventDefault();
           break;
         case 39: // right
-          moveSelector.call(this, 'right');
+          moveSelector.call(this, 'right', shiftKey);
           evt.preventDefault();
           break;
         case 40: // down
-          moveSelector.call(this, 'down');
+          moveSelector.call(this, 'down', shiftKey);
           evt.preventDefault();
           break;
         case 9: // tab
           // editor.finished();
           // shift + tab => move left
           // tab => move right
-          moveSelector.call(this, shiftKey ? 'left' : 'right');
+          moveSelector.call(this, shiftKey ? 'left' : 'right', shiftKey);
           evt.preventDefault();
           break;
         case 13: // enter
           // editor.finished();
           // shift + enter => move up
           // enter => move down
-          moveSelector.call(this, shiftKey ? 'up' : 'down');
+          moveSelector.call(this, shiftKey ? 'up' : 'down', shiftKey);
           evt.preventDefault();
           break;
         case 8: // backspace
@@ -215,6 +218,11 @@ class FormDesigner extends BaseElement {
   $state = {
     editor: {
       show: false,
+      offset: {
+        left: 0, top: 0, width: 0, height: 0,
+      },
+      content: '',
+      style: {},
     },
     rResizer: {
       show: false,
@@ -265,40 +273,40 @@ class FormDesigner extends BaseElement {
       merge: [select.merged, !select.multiple],
     };
     return html`
-    <xfd-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></xfd-toolbar>
+    <x-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></x-toolbar>
     <div class="content">
       <canvas></canvas>
       <div class="overlayer" style="${{ width, height }}"
         @mousemove="${overlayerMousemove.bind(this)}"
         @mousedown="${overlayerMousedown.bind(this)}">
         <div class="content" style="${olcstyle}">
-          <xfd-selector .show="${true}"
-            .offset="${selectedCellBox}"></xfd-selector>
-          <xfd-editor .show="${editor.show}"
-            .offset="${selectedCellBox}"
-            .content="${selectedCell.text || ''}"
-            .style="${selectedCell.css}"
-            @change="${editorChange.bind(this)}"></xfd-editor>
+          <x-selector .show="${true}"
+            .offset="${selectedCellBox}"></x-selector>
+          <x-editor .show="${editor.show}"
+            .offset="${editor.offset}"
+            .content="${editor.content}"
+            .style="${editor.style}"
+            @change="${editorChange.bind(this)}"></x-editor>
         </div>
       </div>
-      <xfd-resizer .type="row"
+      <x-resizer .type="row"
         .show="${rResizer.show}"
         .value="${rResizer.value}"
         .min-value="${indexHeight}"
-        @change="${rResizerChange.bind(this)}"></xfd-resizer>
-      <xfd-resizer .type="col"
+        @change="${rResizerChange.bind(this)}"></x-resizer>
+      <x-resizer .type="col"
         .show="${cResizer.show}"
         .value="${cResizer.value}"
         .min-value="${indexWidth}"
-        @change="${cResizerChange.bind(this)}"></xfd-resizer>
-      <xfd-scrollbar .type="vertical"
+        @change="${cResizerChange.bind(this)}"></x-resizer>
+      <x-scrollbar .type="vertical"
         .value="${vScrollbar.value}"
         .scroll="${vScrollbar.scroll}"
-        @change="${vScrollbarChange.bind(this)}"></xfd-scrollbar>
-      <xfd-scrollbar .type="horizontal"
+        @change="${vScrollbarChange.bind(this)}"></x-scrollbar>
+      <x-scrollbar .type="horizontal"
         .value="${hScrollbar.value}"
         .scroll="${hScrollbar.scroll}"
-        @change="${hScrollbarChange.bind(this)}"></xfd-scrollbar>
+        @change="${hScrollbarChange.bind(this)}"></x-scrollbar>
     </div>
     `;
   }

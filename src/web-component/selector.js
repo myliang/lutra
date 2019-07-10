@@ -2,7 +2,7 @@ import {
   html, BaseElement, component,
 } from './core';
 
-export default @component('xfd-selector')
+export default @component('x-selector')
 class Selector extends BaseElement {
   render() {
     let {

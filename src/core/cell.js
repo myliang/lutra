@@ -1,6 +1,7 @@
 import cellEval from './cell-evaluation';
 import formula from './formula';
 import helper from './helper';
+import { pt2px } from './font';
 
 function getCell() {
   const { rows, ri, ci } = this;
@@ -10,7 +11,7 @@ function getCell() {
 function getCellOrNew() {
   const { rows, ri, ci } = this;
   rows[ri] = rows[ri] || { cells: {} };
-  // rows[ri].cells = rows[ri].cells || {};
+  rows[ri].cells = rows[ri].cells || {};
   rows[ri].cells[ci] = rows[ri].cells[ci] || {};
   this.$ = rows[ri].cells[ci];
   return this.$;
@@ -44,8 +45,28 @@ export default class Cell {
   }
 
   get style() {
-    const { $ } = this;
-    return this.styles.getOrDefault(undefined || ($ && $.style));
+    if (!this.$style) {
+      const { $ } = this;
+      this.$style = this.styles.getOrDefault(undefined || ($ && $.style));
+    }
+    return this.$style;
+  }
+
+  get css() {
+    const {
+      font, underline, color, bgcolor, align, valign,
+    } = this.style;
+    return {
+      color,
+      'background-color': bgcolor,
+      'font-family': font.name,
+      'font-size': `${pt2px(font.size)}px`,
+      'font-style': font.italic ? 'italic' : 'normal',
+      'font-weight': font.bold ? 'bold' : 'normal',
+      'text-decoration': underline ? 'underline' : 'none',
+      'text-align': align,
+      'vertical-align': valign,
+    };
   }
 
   get text() {
@@ -69,7 +90,7 @@ export default class Cell {
       nstyle.font = nstyle.font || {};
       nstyle.font[attr.split('-')[1]] = value;
     } else if (attr === 'border') {
-      if (value) {
+      if (value !== undefined) {
         nstyle[attr] = Object.assign(nstyle[attr] || {}, value);
       } else {
         delete nstyle[attr];
@@ -79,6 +100,8 @@ export default class Cell {
     }
     if (Object.keys(nstyle).length > 0) {
       $.style = styles.add(nstyle);
+    } else {
+      delete $.style;
     }
   }
 

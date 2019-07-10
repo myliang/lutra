@@ -15,7 +15,12 @@ export default class PropExpr extends Expr {
   }
 
   update(value) {
-    const { v, el, name } = this;
+    const { el, name } = this;
+    let { v } = this;
+    // reset old-value(v) in ['textarea']
+    if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {
+      v = el.value;
+    }
     if (value !== undefined && !equals(v, value)) {
       // console.log('name:', name, value, el);
       if (name === 'show') {

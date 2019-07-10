@@ -2,7 +2,7 @@ import {
   html, BaseElement, component,
 } from './core';
 
-export default @component('xfd-icon')
+export default @component('x-icon')
 class Icon extends BaseElement {
   render() {
     const { type } = this.$props;

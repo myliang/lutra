@@ -4,16 +4,16 @@ import {
 import { onShow, onChange, Dropdown } from './dropdown';
 import './icon';
 
-export default @component('xfd-align-picker')
+export default @component('x-align-picker')
 class AlignPicker extends Dropdown {
   render() {
     const { items, value } = this.$props;
     const { $visible } = this;
     return html`
-    <xfd-icon .type="${`align-${value}`}" @click="${onShow.bind(this)}"></xfd-icon>
-    </xfd-icon>
-    <ul class="content xfd-list" .show="${$visible}">
-      ${items.map(it => html`<li @click="${onChange.bind(this, it)}"><xfd-icon .type="${`align-${it}`}"></xfd-icon></li>`)}
+    <x-icon .type="${`align-${value}`}" @click="${onShow.bind(this)}"></x-icon>
+    </x-icon>
+    <ul class="content x-list" .show="${$visible}">
+      ${items.map(it => html`<li @click="${onChange.bind(this, it)}"><x-icon .type="${`align-${it}`}"></x-icon></li>`)}
     </ul>
     `;
   }
