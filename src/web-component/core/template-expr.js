@@ -86,6 +86,8 @@ export default class TemplateExpr extends Expr {
               i -= 1;
             } else if (name.startsWith('.')) {
               PropExpr.setElementProp(node, name.slice(1), value);
+              node.removeAttribute(name);
+              i -= 1;
             }
           }
         }
