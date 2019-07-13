@@ -23,8 +23,8 @@ function translate(key, messages) {
 
 function t(key) {
   let v = translate(key, $messages);
-  if (!v && window && window.x && window.x.spreadsheet && window.x.spreadsheet.$messages) {
-    v = translate(key, window.x.spreadsheet.$messages);
+  if (!v && window && window.x && window.x.form_designer && window.x.form_designer.$messages) {
+    v = translate(key, window.x.form_designer.$messages);
   }
   return v || '';
 }
