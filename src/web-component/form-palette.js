@@ -13,7 +13,7 @@ export default @component('x-form-palette')
 class FormPicker extends BaseElement {
   render() {
     return html`
-    <div class="header">Palette</div> 
+    <div class="header">${t('form.palette')}</div> 
     <ul class="x-list">
       ${buildItems.call(this)}
     </ul>

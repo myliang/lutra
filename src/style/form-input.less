@@ -35,5 +35,23 @@
     input {
       border-color: @red-color;
     }
+
+    .tip {
+      display: block;
+    }
+  }
+
+  .tip {
+    position: absolute;
+    display: none;
+    left: 0;
+    font-size: 8px;
+    color: red;
+    border: 1px solid #ccc;
+    z-index: 1;
+    padding: 2px;
+    border-top: none;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
   }
 }
