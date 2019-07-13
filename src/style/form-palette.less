@@ -1,0 +1,35 @@
+@import './base.less';
+
+@{css-prefix}-form-palette,
+@{css-prefix}-form-property-palette
+{
+  position: absolute;
+  z-index: 300;
+  background: #fff;
+  top: 30px;
+  right: 20px;
+  width: 160px;
+  border: 2px solid #ddd;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 1px 2px 2px rgba(51,51,51,.15);
+
+  .header {
+    background: #ddd;
+    padding: 5px 12px;
+    font-size: 12px;
+    position: relative;
+  }
+}
+
+@{css-prefix}-form-property-palette {
+  width: 200px;
+  right: 190px;
+
+  .header:after {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    content: '\2716';
+    opacity: .6;
+  }
+}

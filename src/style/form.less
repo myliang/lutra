@@ -1,0 +1,28 @@
+@import './base.less';
+
+.@{css-prefix}-form {
+  padding: 8px;
+
+  .fields {
+    display: flex;
+
+    .field {
+      margin-left: 8px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .field {
+    flex: 0 1 auto;
+    margin-bottom: 8px;
+    vertical-align: middle;
+
+    label {
+      display: inline-block;
+      margin: 0 8px 0 0;
+      text-align: right;
+    }
+  }
+}

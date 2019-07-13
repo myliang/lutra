@@ -7,8 +7,11 @@ import './selector';
 import './editor';
 import './scrollbar';
 import './resizer';
+import './form-palette';
+import './form-property-palette';
 import Table from '../canvas/table';
 import Data from '../core/data';
+import form from '../core/form';
 
 function overlayerMousemove(evt) {
   const { buttons, offsetX, offsetY } = evt;
@@ -272,6 +275,9 @@ class FormDesigner extends BaseElement {
       style: selectedCell.style,
       merge: [select.merged, !select.multiple],
     };
+    const formProperty = {
+      required: false,
+    };
     return html`
     <x-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></x-toolbar>
     <div class="content">
@@ -289,6 +295,8 @@ class FormDesigner extends BaseElement {
             @change="${editorChange.bind(this)}"></x-editor>
         </div>
       </div>
+      <x-form-palette .items="${form}"></x-form-palette>
+      <x-form-property-palette .value="${formProperty}"></x-form-property-palette>
       <x-resizer .type="row"
         .show="${rResizer.show}"
         .value="${rResizer.value}"
