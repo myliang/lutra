@@ -31,7 +31,6 @@ export function render(template, container) {
 }
 
 // decorators
-// customElements.define('x-color-palette', ColorPalette);
 export function component(name) {
   return (target) => {
     // in last line

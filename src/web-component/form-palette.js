@@ -9,12 +9,12 @@ function buildItems() {
   });
 }
 
-export default @component('x-form-palette')
+export default @component('lutra-form-palette')
 class FormPicker extends BaseElement {
   render() {
     return html`
     <div class="header">${t('form.palette')}</div> 
-    <ul class="x-list">
+    <ul class="lutra-list">
       ${buildItems.call(this)}
     </ul>
     `;

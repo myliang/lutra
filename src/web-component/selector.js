@@ -2,7 +2,7 @@ import {
   html, BaseElement, component,
 } from './core';
 
-export default @component('x-selector')
+export default @component('lutra-selector')
 class Selector extends BaseElement {
   render() {
     let {

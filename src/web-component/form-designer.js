@@ -216,7 +216,7 @@ function bindWindowEvents() {
   });
 }
 
-export default @component('x-form-designer')
+export default @component('lutra-form-designer')
 class FormDesigner extends BaseElement {
   $state = {
     editor: {
@@ -279,42 +279,42 @@ class FormDesigner extends BaseElement {
       required: false,
     };
     return html`
-    <x-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></x-toolbar>
+    <lutra-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></lutra-toolbar>
     <div class="content">
       <canvas></canvas>
       <div class="overlayer" style="${{ width, height }}"
         @mousemove="${overlayerMousemove.bind(this)}"
         @mousedown="${overlayerMousedown.bind(this)}">
         <div class="content" style="${olcstyle}">
-          <x-selector .show="${true}"
-            .offset="${selectedCellBox}"></x-selector>
-          <x-editor .show="${editor.show}"
+          <lutra-selector .show="${true}"
+            .offset="${selectedCellBox}"></lutra-selector>
+          <lutra-editor .show="${editor.show}"
             .offset="${editor.offset}"
             .content="${editor.content}"
             .style="${editor.style}"
-            @change="${editorChange.bind(this)}"></x-editor>
+            @change="${editorChange.bind(this)}"></lutra-editor>
         </div>
       </div>
-      <x-form-palette .items="${form}"></x-form-palette>
-      <x-form-property-palette .value="${formProperty}"></x-form-property-palette>
-      <x-resizer .type="row"
+      <lutra-form-palette .items="${form}"></lutra-form-palette>
+      <lutra-form-property-palette .value="${formProperty}"></lutra-form-property-palette>
+      <lutra-resizer .type="row"
         .show="${rResizer.show}"
         .value="${rResizer.value}"
         .min-value="${indexHeight}"
-        @change="${rResizerChange.bind(this)}"></x-resizer>
-      <x-resizer .type="col"
+        @change="${rResizerChange.bind(this)}"></lutra-resizer>
+      <lutra-resizer .type="col"
         .show="${cResizer.show}"
         .value="${cResizer.value}"
         .min-value="${indexWidth}"
-        @change="${cResizerChange.bind(this)}"></x-resizer>
-      <x-scrollbar .type="vertical"
+        @change="${cResizerChange.bind(this)}"></lutra-resizer>
+      <lutra-scrollbar .type="vertical"
         .value="${vScrollbar.value}"
         .scroll="${vScrollbar.scroll}"
-        @change="${vScrollbarChange.bind(this)}"></x-scrollbar>
-      <x-scrollbar .type="horizontal"
+        @change="${vScrollbarChange.bind(this)}"></lutra-scrollbar>
+      <lutra-scrollbar .type="horizontal"
         .value="${hScrollbar.value}"
         .scroll="${hScrollbar.scroll}"
-        @change="${hScrollbarChange.bind(this)}"></x-scrollbar>
+        @change="${hScrollbarChange.bind(this)}"></lutra-scrollbar>
     </div>
     `;
   }

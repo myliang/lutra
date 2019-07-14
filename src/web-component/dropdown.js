@@ -42,13 +42,13 @@ function renderContent() {
   // console.log('$visible:', $visible);
   return html`
   <div class="only-text">${vText(items, value)}</div>
-  <ul class="content x-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
+  <ul class="content lutra-list" .show="${$visible}" style="${{ width: width || 'auto' }}">
     ${items.map(it => html`<li @click.stop="${onChange.bind(this, itValue(it))}">${itText(it)}</li>`)}
   </ul>
   `;
 }
 
-@component('x-dropdown')
+@component('lutra-dropdown')
 class Dropdown extends BaseElement {
   $visible = false;
 

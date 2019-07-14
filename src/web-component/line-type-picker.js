@@ -23,13 +23,13 @@ function buildItems() {
   });
 }
 
-export default @component('x-line-type-picker')
+export default @component('lutra-line-type-picker')
 class LineTypePicker extends Dropdown {
   render() {
     const { $visible } = this;
     return html`
-    <x-icon .type="line-type"></x-icon>
-    <ul class="content x-list" .show="${$visible}">
+    <lutra-icon .type="line-type"></lutra-icon>
+    <ul class="content lutra-list" .show="${$visible}">
       ${buildItems.call(this)}
     </ul>
     `;

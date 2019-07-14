@@ -22,7 +22,7 @@ function setSelectionRange(position) {
   }, 0);
 }
 
-export default @component('x-editor')
+export default @component('lutra-editor')
 class Editor extends BaseElement {
   render() {
     const { offset, content, style } = this.$props;

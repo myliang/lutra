@@ -25,8 +25,8 @@ function translate(key, messages, ...args) {
 
 function t(key, ...args) {
   let v = translate(key, $messages, ...args);
-  if (!v && window && window.x && window.x.form_designer && window.x.form_designer.$messages) {
-    v = translate(key, window.x.form_designer.$messages);
+  if (!v && window && window.lutra && window.lutra.$messages) {
+    v = translate(key, window.lutra.$messages, ...args);
   }
   return v || '';
 }

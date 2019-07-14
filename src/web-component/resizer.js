@@ -41,7 +41,7 @@ function mousedownHandler() {
     });
   };
 }
-export default @component('x-resizer')
+export default @component('lutra-resizer')
 class Resizer extends BaseElement {
   $state = initState({});
 

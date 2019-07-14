@@ -2,7 +2,7 @@ import {
   html, BaseElement, component,
 } from './core';
 
-export default @component('x-icon')
+export default @component('lutra-icon')
 class Icon extends BaseElement {
   render() {
     const { type } = this.$props;

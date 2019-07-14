@@ -13,7 +13,7 @@ module.exports = merge(common, {
     //  you should know that the HtmlWebpackPlugin by default will generate its own index.html
     new HtmlWebpackPlugin({
       template: './index.html',
-      title: 'x-spreadsheet',
+      title: 'lutra',
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output

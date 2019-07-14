@@ -1,5 +1,5 @@
 {
-  "name": "x-form-designer",
+  "name": "lutra",
   "version": "1.0.0",
   "description": "a web javascript form designer",
   "main": "src/index.js",
@@ -33,6 +33,7 @@
   },
   "keywords": [
     "javascript",
+    "lutra",
     "form-designer",
     "form",
     "designer",

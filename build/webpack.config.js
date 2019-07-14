@@ -5,7 +5,7 @@ const resolve = dir => path.join(__dirname, '..', dir);
 
 module.exports = {
   entry: {
-    'x-form-designer': './src/index.js',
+    'lutra': './src/index2.js',
   },
   module: {
     rules: [

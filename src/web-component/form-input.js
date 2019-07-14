@@ -44,7 +44,7 @@ function validate(v) {
   return true;
 }
 
-export default @component('x-form-input')
+export default @component('lutra-form-input')
 class FormInput extends BaseElement {
   $state = {
     errors: [],

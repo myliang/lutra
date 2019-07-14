@@ -1,6 +1,6 @@
 import { html, BaseElement, component } from './core';
 
-export default @component('x-scrollbar')
+export default @component('lutra-scrollbar')
 class Scrollbar extends BaseElement {
   onscroll = (evt) => {
     evt.stopPropagation();

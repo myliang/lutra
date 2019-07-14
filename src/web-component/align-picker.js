@@ -4,16 +4,15 @@ import {
 import { onChange, Dropdown } from './dropdown';
 import './icon';
 
-export default @component('x-align-picker')
+export default @component('lutra-align-picker')
 class AlignPicker extends Dropdown {
   render() {
     const { items, value } = this.$props;
     const { $visible } = this;
     return html`
-    <x-icon .type="${`align-${value}`}"></x-icon>
-    </x-icon>
-    <ul class="content x-list" .show="${$visible}">
-      ${items.map(it => html`<li @click.stop="${onChange.bind(this, it)}"><x-icon .type="${`align-${it}`}"></x-icon></li>`)}
+    <lutra-icon .type="${`align-${value}`}"></lutra-icon>
+    <ul class="content lutra-list" .show="${$visible}">
+      ${items.map(it => html`<li @click.stop="${onChange.bind(this, it)}"><lutra-icon .type="${`align-${it}`}"></lutra-icon></li>`)}
     </ul>
     `;
   }

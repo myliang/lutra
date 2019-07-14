@@ -1,6 +1,6 @@
 import { html, BaseElement, component } from './core';
 
-export default @component('x-form-checkbox')
+export default @component('lutra-form-checkbox')
 class FormCheckbox extends BaseElement {
   onclick = () => {
     const nval = !this.$props.value;
