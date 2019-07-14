@@ -34,8 +34,8 @@ class FormPropertyPalette extends BaseElement {
       </div>
       <div class="field">
         <label style="width: 60px;">${t('form.property.precision')}</label>
-        <lutra-form-select .value="${value.precision || 6}"
-          .width="40px" .items="${[1, 2, 3, 4, 5, 6]}"></lutra-form-select>
+        <lutra-form-select class="bottom left" .value="${value.precision || 6}"
+          .width="46px" .items="${[1, 2, 3, 4, 5, 6]}"></lutra-form-select>
       </div>
       <div class="field">
         <label style="width: 60px;">${t('form.property.options')}</label>
