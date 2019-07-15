@@ -83,12 +83,7 @@ export default class NodeExpr extends Expr {
       expr = this.v[index];
       // console.log('index:', expr,  index, item);
       if (expr === undefined) {
-        if (index === 0) {
-          expr = NodeExpr.insertAfter(this.e);
-        } else {
-          // console.log('v.last:', this.v[this.v.length - 1]);
-          expr = NodeExpr.insertAfter(this.v[this.v.length - 1].e);
-        }
+        expr = NodeExpr.insertBefore(this.e);
         this.v.push(expr);
       }
       expr.update(item);
@@ -99,9 +94,8 @@ export default class NodeExpr extends Expr {
     if (lastIndex < this.v.length) {
       const { s } = this.v[lastIndex];
       this.v.length = lastIndex;
-      // console.log('expr:', expr);
       let node = s.nextSibling;
-      while (node) {
+      while (node && node !== this.e) {
         const n = node.nextSibling;
         s.parentNode.removeChild(node);
         node = n;
@@ -126,9 +120,8 @@ export default class NodeExpr extends Expr {
     return new NodeExpr(node.previousSibling, node);
   }
 
-  static insertAfter(node) {
-    const n = node.parentNode.appendChild(cc());
-    // console.log('parentNode:', node.parentNode, n.parentNode);
-    return new NodeExpr(node, n);
+  static insertBefore(node) {
+    const n = node.parentNode.insertBefore(cc(), node);
+    return new NodeExpr(n.previousSibling, n);
   }
 }

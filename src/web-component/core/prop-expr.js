@@ -22,7 +22,7 @@ export default class PropExpr extends Expr {
       v = el.value;
     }
     if (value !== undefined && !equals(v, value)) {
-      // console.log('name:', name, value, el);
+      // console.log('name:', name, v, value, el);
       if (name === 'show') {
         el.style.display = value === true ? 'block' : 'none';
       } else if (name === 'scroll') {
@@ -36,9 +36,8 @@ export default class PropExpr extends Expr {
       } else {
         setElementProp(el, name, value);
       }
-      const flag = v !== undefined;
       super.update(value);
-      return flag;
+      return true;
     }
     return false;
   }

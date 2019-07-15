@@ -52,6 +52,7 @@ export function offset(v) {
 
 export function equals(obj1, obj2) {
   if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+    if (obj1 === obj2) return true;
     const keys = Object.keys(obj1);
     if (keys.length !== Object.keys(obj2).length) return false;
     for (let i = 0; i < keys.length; i += 1) {
