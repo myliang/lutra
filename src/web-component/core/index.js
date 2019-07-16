@@ -9,6 +9,8 @@ import {
   unbindClickoutside,
   mouseMoveUp,
   offset,
+  toggle,
+  loop,
 } from './helper';
 
 // const stringsCache = new Map();
@@ -83,4 +85,6 @@ export {
   bindClickoutside,
   unbindClickoutside,
   mouseMoveUp,
+  toggle,
+  loop,
 };

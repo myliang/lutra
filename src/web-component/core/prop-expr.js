@@ -17,11 +17,14 @@ export default class PropExpr extends Expr {
   update(value) {
     const { el, name } = this;
     let { v } = this;
-    // reset old-value(v) in ['textarea']
-    if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {
+    const nodeName = el.nodeName.toUpperCase();
+    // if (name === 'value') console.log('nodeName:', nodeName);
+    const isInputValue = name === 'value' && (nodeName === 'TEXTAREA' || nodeName === 'INPUT');
+    if (isInputValue) {
+      // console.log('::::', el.value, ':, nodeName:', nodeName);
       v = el.value;
     }
-    if (value !== undefined && !equals(v, value)) {
+    if (!equals(v, value)) {
       // console.log('name:', name, v, value, el);
       if (name === 'show') {
         el.style.display = value === true ? 'block' : 'none';
@@ -31,7 +34,7 @@ export default class PropExpr extends Expr {
         if (top !== undefined) el.scrollTop = top;
       } else if (name === 'html') {
         el.innerHTML = value;
-      } else if (name === 'value' && el.nodeName.toUpperCase() === 'TEXTAREA') {
+      } else if (isInputValue) {
         el.value = value;
       } else {
         setElementProp(el, name, value);

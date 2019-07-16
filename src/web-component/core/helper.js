@@ -44,10 +44,17 @@ export function mouseMoveUp(target, movefunc, upfunc) {
   bind(target, 'mouseup', target.xEvtUp);
 }
 
+export function loop() {}
+
 export function offset(v) {
   ['left', 'top', 'width', 'height'].forEach((key) => {
     if (v[key] !== undefined) this.style[key] = `${v[key]}px`;
   });
+}
+
+export function toggle(flag, cls = 'active') {
+  if (flag) this.classList.add(cls);
+  else this.classList.remove(cls);
 }
 
 export function equals(obj1, obj2) {
