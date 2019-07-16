@@ -1,12 +1,16 @@
-import { html, BaseElement, component } from './core';
+import {
+  html, BaseElement, component, loop,
+} from './core';
 import { t } from '../locale/locale';
 
 const patterns = {
   integer: /^\d+$/,
+  key: /^[a-zA-Z0-9\-_]+$/,
   number: /(^\d+$)|(^\d+(\.\d{0,4})?$)/,
 };
 
 function validate(v) {
+  // console.log('input.v:', v);
   const {
     type, required, min, max, maxLength,
   } = this.$props;
@@ -18,7 +22,7 @@ function validate(v) {
 
   if (!/^\s*$/.test(v)) {
     if (type !== undefined) pattern = patterns[type];
-    if (!pattern.test(v)) {
+    if (pattern !== undefined && !pattern.test(v)) {
       errors.push(t('validation.notMatch'));
     }
 
@@ -37,10 +41,11 @@ function validate(v) {
 
   // console.log('errors:', errors);
   this.$state.errors = errors;
-  this.update();
+  // this.update();
   if (errors.length > 0) {
     return false;
   }
+  this.change(v);
   return true;
 }
 
@@ -53,7 +58,7 @@ class FormInput extends BaseElement {
   render() {
     const { width, value } = this.$props;
     const { errors } = this.$state;
-    // console.log('errors>:', errors);
+    // console.log('errors>:', errors, ', value:', value);
     if (errors.length > 0) {
       this.classList.add('error');
     } else {
@@ -62,7 +67,8 @@ class FormInput extends BaseElement {
     return html`
     <input style="width: ${width || 'auto'};"
       @input="${evt => validate.call(this, evt.target.value)}"
-      type="text" value="${value}"></input>
+      @change.stop="${loop}"
+      type="text" .value="${value || ''}"></input>
     <div class="tip">${errors[0]}</div>
     `;
   }

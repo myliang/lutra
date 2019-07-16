@@ -30,7 +30,7 @@ class Editor extends BaseElement {
       left, top, width, height,
     } = offset;
     this.setOffset({ left: left - 1, top: top - 1 });
-    const textStyle = Object.assign(style, { width: width - 9, height: height - 3 });
+    const textStyle = Object.assign(style, { width: width - 9, height: height - 9 });
     setSelectionRange.call(this, content.length);
     return html`
       <textarea

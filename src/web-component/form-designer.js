@@ -56,6 +56,7 @@ function overlayerClickLeftMouseButton(evt) {
   let { ri, ci } = $data.cellBoxAndIndex(offsetX, offsetY);
   const last = { ri, ci };
   // console.log('ri:', ri, ', ci:', ci);
+  if (ri === -1 || ci === -1) return;
 
   if (!shiftKey) {
     $data.select.s(ri, ci);
@@ -105,6 +106,24 @@ function overlayerMousedown(evt) {
   }
 }
 
+function overlayerDragover() {
+  // do nothing
+}
+function overlayerDrop(evt) {
+  const { offsetX, offsetY, dataTransfer } = evt;
+  const { $data } = this;
+  const { ri, ci } = $data.cellBoxAndIndex(offsetX, offsetY);
+  if (ri === -1 || ci === -1) return;
+  $data.select.s(ri, ci);
+  const type = dataTransfer.getData('type');
+  this.$state.formProperty = {
+    fields: form[type].fields,
+    value: $data.validations.find(ri, ci, type),
+    show: true,
+  };
+  this.update();
+}
+
 function vScrollbarChange(v) {
   this.$data.scroll.movey(v);
   this.update();
@@ -135,6 +154,15 @@ function toolbarChange([name, value]) {
 function editorChange(v) {
   // console.log(':::editor.change:', v);
   this.$data.update('text', v);
+}
+
+function formPropertyChange() {
+  const { formProperty } = this.$state;
+  const { validations } = this.$data;
+  formProperty.show = false;
+  validations.update(formProperty.value, formProperty.show);
+  // console.log('$data:', this.$data);
+  this.update();
 }
 
 function moveSelector(direction, multiple) {
@@ -235,6 +263,11 @@ class FormDesigner extends BaseElement {
       show: false,
       value: [0, 0, 0, 0, 0],
     },
+    formProperty: {
+      fields: [],
+      show: false,
+      value: { rule: {} },
+    },
   };
 
   constructor() {
@@ -250,7 +283,9 @@ class FormDesigner extends BaseElement {
       indexWidth, indexHeight, selectedCellBox, selectedCell,
       rows, cols, canvas, scroll, select,
     } = $data;
-    const { rResizer, cResizer, editor } = $state;
+    const {
+      rResizer, cResizer, editor, formProperty,
+    } = $state;
     // console.log(':::selectedCellbox:', selectedCellBox);
     // console.log('rResizer:', rResizer, ',cResizer:', cResizer);
     const {
@@ -275,14 +310,14 @@ class FormDesigner extends BaseElement {
       style: selectedCell.style,
       merge: [select.merged, !select.multiple],
     };
-    const formProperty = {
-      required: false,
-    };
+    // console.log('formProperty:', formProperty);
     return html`
     <lutra-toolbar .value="${toolbarValue}" @change="${toolbarChange.bind(this)}"></lutra-toolbar>
     <div class="content">
       <canvas></canvas>
       <div class="overlayer" style="${{ width, height }}"
+        @dragover.prevent="${overlayerDragover.bind(this)}"
+        @drop.prevent="${overlayerDrop.bind(this)}"
         @mousemove="${overlayerMousemove.bind(this)}"
         @mousedown="${overlayerMousedown.bind(this)}">
         <div class="content" style="${olcstyle}">
@@ -296,7 +331,12 @@ class FormDesigner extends BaseElement {
         </div>
       </div>
       <lutra-form-palette .items="${form}"></lutra-form-palette>
-      <lutra-form-property-palette .value="${formProperty}"></lutra-form-property-palette>
+      <lutra-form-property-palette
+        @change="${formPropertyChange.bind(this)}"
+        .fields="${formProperty.fields}"
+        .value="${formProperty.value}"
+        .show="${formProperty.show}">
+      </lutra-form-property-palette>
       <lutra-resizer .type="row"
         .show="${rResizer.show}"
         .value="${rResizer.value}"

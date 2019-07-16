@@ -3,6 +3,7 @@ import { html, BaseElement, component } from './core';
 import { t } from '../locale/locale';
 
 function dragstart(type, { dataTransfer, target }) {
+  // console.log(':::::::>');
   const crt = document.createElement('div');
   crt.className = 'lutra-drag';
   crt.innerHTML = target.innerHTML;
@@ -11,13 +12,13 @@ function dragstart(type, { dataTransfer, target }) {
   dataTransfer.setDragImage(crt, 20, 10);
   dataTransfer.dropEffect = 'move';
   dataTransfer.setData('type', type);
-  return true;
 }
 
 function dragend({ dataTransfer, target }) {
+  // console.log('dragend:');
   document.body.removeChild(target.dragEl);
-  dataTransfer.clearData('type');
-  return false;
+  delete target.dragEl;
+  dataTransfer.clearData();
 }
 
 function buildItems() {

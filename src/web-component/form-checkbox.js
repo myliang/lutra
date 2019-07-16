@@ -1,4 +1,6 @@
-import { html, BaseElement, component } from './core';
+import {
+  html, BaseElement, component, toggle,
+} from './core';
 
 export default @component('lutra-form-checkbox')
 class FormCheckbox extends BaseElement {
@@ -9,10 +11,7 @@ class FormCheckbox extends BaseElement {
 
   render() {
     const { value } = this.$props;
-    // console.log('value:', value);
-    const { classList } = this;
-    if (value) classList.add('active');
-    else classList.remove('active');
+    toggle.call(this, value);
     return html`
     <label></label>
     `;
