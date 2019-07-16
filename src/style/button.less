@@ -1,0 +1,36 @@
+@import './base.less';
+
+.@{css-prefix}-button {
+  display: inline-block;
+  border-radius: 2px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0.55em .95em;
+  background: #e0e1e2;
+  text-decoration: none;
+  outline: none;
+  font-size: 1em;
+  line-height: 1em;
+  color: rgba(0, 0, 0, .6);
+  font-weight: 600;
+
+  &.active, &:hover {
+    background-color: #c0c1c2;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.primary {
+    background-color: @primary-color;
+    color: #fff;
+  }
+}
+
+.@{css-prefix}-buttons {
+  display: flex;
+  justify-content: flex-end;
+
+  .@{css-prefix}-button {
+    margin-left: .75em;
+  }
+}
