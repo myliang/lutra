@@ -58,6 +58,7 @@ import CellRange from './cell-range';
 import Merges from './merge';
 import Scroll from './scroll';
 import Select from './select';
+import Validations from './validation';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
@@ -99,12 +100,13 @@ const defaultData = {
   cols: {},
   scroll: ['A1', 0, 0],
   select: ['A1', 'A1:A1'],
+  validations: [],
 };
 
 const toolbarHeight = 41;
 
 function loads() {
-  ['merges', 'styles', 'rows', 'cols', 'scroll', 'select'].forEach((it) => {
+  ['merges', 'styles', 'rows', 'cols', 'scroll', 'select', 'validations'].forEach((it) => {
     this[it].load(this.$[it]);
   });
 }
@@ -119,6 +121,7 @@ export default class Data {
     this.cols = new Cols(this.settings);
     this.scroll = new Scroll(this);
     this.select = new Select(this);
+    this.validations = new Validations();
     loads.call(this);
   }
 
