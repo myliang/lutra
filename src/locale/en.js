@@ -57,9 +57,12 @@ export default {
     concat: 'Concat',
   },
   form: {
-    palette: 'Palette',
+    palette: 'Form Palette',
     property: {
       title: 'Property',
+      type: 'Type',
+      ref: 'Ref',
+      key: 'Key',
       required: 'Required',
       min: 'Min',
       max: 'Max',
