@@ -65,6 +65,11 @@ export default class Validations extends Base {
     super([]);
   }
 
+  get(ri, ci) {
+    const ref = xy2expr(ci, ri);
+    return this.$.find(it => it.includes(ref));
+  }
+
   find(ri, ci, type) {
     const ref = xy2expr(ci, ri);
     const v = this.$.find(it => it.includes(ref));

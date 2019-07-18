@@ -74,12 +74,17 @@ export default class Cell {
     return $ ? $.text : '';
   }
 
+  get type() {
+    return undefined || (this.$ && this.$.type);
+  }
+
   // attr: font-name | font-italic | font-bold | font-size
-  // textwrap | underline | align | valign | color | bgcolor | border | text
+  // textwrap | underline | align | valign | color | bgcolor | border | text | type
   update(attr, value) {
     const { $, styles } = this;
-    if (attr === 'text') {
-      $.text = value;
+    if (attr === 'text' || attr === 'type') {
+      if (value === undefined) delete $[attr];
+      else $[attr] = value;
       return;
     }
     let nstyle = {};
@@ -95,9 +100,8 @@ export default class Cell {
       } else {
         delete nstyle[attr];
       }
-    } else {
-      nstyle[attr] = value;
-    }
+    } else if (value === undefined) delete nstyle[attr];
+    else nstyle[attr] = value;
     if (Object.keys(nstyle).length > 0) {
       $.style = styles.add(nstyle);
     } else {

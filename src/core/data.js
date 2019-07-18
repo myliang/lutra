@@ -59,6 +59,7 @@ import Merges from './merge';
 import Scroll from './scroll';
 import Select from './select';
 import Validations from './validation';
+import { expr2xy } from './alphabet';
 
 const defaultSettings = {
   mode: 'design', // design, write, read
@@ -288,5 +289,18 @@ export default class Data {
     return {
       ri, ci, left: x, top: y, width: w, height: h,
     };
+  }
+
+  validation(ri, ci, type) {
+    return this.validations.find(ri, ci, type);
+  }
+
+  updateValidation({ ref, key, rule }, isRemove = false) {
+    this.validations.update({ ref, key, rule }, isRemove);
+    const [ci, ri] = expr2xy(ref);
+    // console.log('ri:', ri, ', ci:', ci, isRemove ? undefined : rule.type);
+    Cell.write(this.$, this.styles, ri, ci)
+      .update('type', isRemove ? undefined : rule.type);
+    // console.log('data:', this);
   }
 }

@@ -28,13 +28,13 @@ export default {
   radio: {
     name: 'radio',
     icon: '',
-    fields: ['required'],
+    fields: ['required', 'options'],
     validator() {},
   },
   checkbox: {
     name: 'checkbox',
     icon: '',
-    fields: ['required'],
+    fields: ['required', 'options'],
     validator() {},
   },
   select: {

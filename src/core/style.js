@@ -19,10 +19,8 @@ export default class Styles extends Base {
 
   add(style) {
     const { $ } = this;
-    for (let i = 0; i < $.length; i += 1) {
-      const s = $[i];
-      if (helper.equals(style, s)) return i;
-    }
+    const i = $.findIndex(it => helper.equals(style, it));
+    if (i >= 0) return i;
     $.push(style);
     return $.length - 1;
   }
