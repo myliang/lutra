@@ -25,7 +25,7 @@ function overlayerMousemove(evt) {
     if (rResizer.show || cResizer.show) {
       rResizer.show = false;
       cResizer.show = false;
-      this.update();
+      this.update(false);
     }
   } else {
     const {
@@ -44,7 +44,7 @@ function overlayerMousemove(evt) {
       cResizer.show = false;
     }
     // console.log('rResizer:', rResizer, ', cResizer:', cResizer);
-    this.update();
+    this.update(false);
   }
 }
 
@@ -118,7 +118,7 @@ function overlayerDrop(evt) {
   const type = dataTransfer.getData('type');
   this.$state.formProperty = {
     fields: form[type].fields,
-    value: $data.validations.find(ri, ci, type),
+    value: $data.validation(ri, ci, type),
     show: true,
   };
   this.update();
@@ -158,10 +158,8 @@ function editorChange(v) {
 
 function formPropertyChange() {
   const { formProperty } = this.$state;
-  const { validations } = this.$data;
   formProperty.show = false;
-  validations.update(formProperty.value, formProperty.show);
-  // console.log('$data:', this.$data);
+  this.$data.updateValidation(formProperty.value, formProperty.show);
   this.update();
 }
 
@@ -359,11 +357,13 @@ class FormDesigner extends BaseElement {
     `;
   }
 
-  update() {
+  update(updateTable = true) {
     super.update();
-    if (this.$table === undefined) {
-      this.$table = new Table(element.call(this, 'canvas'), this.$data);
+    if (updateTable) {
+      if (this.$table === undefined) {
+        this.$table = new Table(element.call(this, 'canvas'), this.$data);
+      }
+      this.$table.render(this);
     }
-    this.$table.render(this);
   }
 }
