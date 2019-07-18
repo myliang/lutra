@@ -14,7 +14,7 @@ export function validate(v) {
   } = this.$props;
   let { pattern } = this.$props;
   const errors = [];
-  if (required !== undefined && /^\s*$/.test(v)) {
+  if (required !== undefined && (v === undefined || /^\s*$/.test(v))) {
     errors.push(t('validation.required'));
   }
 
@@ -39,12 +39,23 @@ export function validate(v) {
 
   // console.log('errors:', errors);
   this.$errors = errors;
-  // this.update();
+  this.update();
   if (errors.length > 0) {
     return false;
   }
-  this.change(v);
   return true;
+}
+
+export function updateClassList() {
+  const { $props, $errors, classList } = this;
+  if ($props.required !== undefined) {
+    classList.add('required');
+  }
+  if ($errors.length > 0) {
+    classList.add('error');
+  } else {
+    classList.remove('error');
+  }
 }
 
 export class Base extends BaseElement {

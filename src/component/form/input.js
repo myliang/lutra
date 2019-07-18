@@ -1,23 +1,32 @@
 import { html, component, loop } from '../../core';
-import { Base, validate } from './base';
+import { Base, validate, updateClassList } from './base';
+
+function updateTip(show) {
+  this.$state.tipShow = show && this.$errors.length > 0;
+  this.update();
+}
 
 export default @component('lutra-input')
 class Input extends Base {
+  $state = {
+    tipShow: false,
+  };
+
   render() {
-    const { width, value } = this.$props;
-    const { $errors } = this;
-    // console.log('errors>:', errors, ', value:', value);
-    if ($errors.length > 0) {
-      this.classList.add('error');
-    } else {
-      this.classList.remove('error');
-    }
+    const {
+      width, value, hint,
+    } = this.$props;
+    const { $errors, $state } = this;
+    updateClassList.call(this);
     return html`
     <input style="width: ${width || 'auto'};"
+      placeholder="${hint}"
       @input="${evt => validate.call(this, evt.target.value)}"
       @change.stop="${loop}"
+      @focus="${updateTip.bind(this, true)}"
+      @blur="${updateTip.bind(this, false)}"
       type="text" .value="${value || ''}"></input>
-    <div class="tip">${$errors[0]}</div>
+    <div class="tip" .show="${$state.tipShow}">${$errors[0]}</div>
     `;
   }
 }

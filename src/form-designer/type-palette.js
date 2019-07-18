@@ -34,7 +34,7 @@ function buildItems() {
 }
 
 export default @component('lutra-form-type-palette')
-class FormPicker extends BaseElement {
+class FormTypePalette extends BaseElement {
   render() {
     return html`
     <div class="header">${t('form.palette')}</div> 

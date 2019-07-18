@@ -1,4 +1,4 @@
-import './form';
+import { validate } from './form';
 import './icon';
 import './dropdown';
 import './editor';
@@ -11,3 +11,9 @@ import './color-picker';
 import './border-picker';
 import './line-type-picker';
 import './toolbar';
+
+export {
+  validate,
+};
+
+export default {};

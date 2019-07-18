@@ -1,5 +1,5 @@
 import { html, BaseElement, component } from '../core';
-import '../component';
+import { validate } from '../component';
 import { t } from '../locale/locale';
 
 const precisions = [1, 2, 3, 4, 5, 6];
@@ -16,7 +16,10 @@ function valueChange(prop, v) {
 }
 
 function change(type) {
-  this.change(type);
+  // console.log('validate:', validate.call(this));
+  if (type === 'remove' || validate.call(this)) {
+    this.change(type);
+  }
 }
 
 function buildField(prop, v) {
@@ -42,7 +45,7 @@ function buildField(prop, v) {
     `;
   } else if (prop === 'options') {
     field = html`
-      <lutra-input .value="${v}" .width="80px" .required="true"
+      <lutra-input .value="${v}" .width="80px" .required="true" .hint="k:na,k1:xx"
         @change="${valueChange.bind(this, `${prop}`)}"></lutra-input>
     `;
   } else {
