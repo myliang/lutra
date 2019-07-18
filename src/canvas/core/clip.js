@@ -4,7 +4,7 @@ export default function clipRect(canvas, box, contentcb) {
   } = box;
   canvas.saveRestore(() => {
     canvas.attr({ fillStyle: bgcolor || '#fff' })
-      .rect(x, y, width - 1, height - 1)
+      .rect(x + 1, y + 1, width - 2, height - 2)
       .clip()
       .fill();
     contentcb();

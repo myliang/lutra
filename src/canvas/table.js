@@ -1,23 +1,19 @@
 import Canvas from './core';
-import { npx, thinLineWidth } from './core/helper';
 import { stringAt } from '../core/alphabet';
-import { pt2px } from '../core/font';
 
 function renderGrid(viewRange) {
   const { canvas, data } = this;
-  const style = data.defaultStyle;
   const {
-    indexWidth, indexHeight, rows, cols,
+    rows, cols,
   } = data;
   const {
     sri, sci, eri, eci, w, h,
   } = viewRange;
   canvas.saveRestore(() => {
     canvas.attr({
-      fillStyle: style.bgcolor,
-      lineWidth: thinLineWidth(),
+      lineWidth: 1,
       strokeStyle: '#e6e6e6',
-    }).translate(indexWidth, indexHeight);
+    });
     // console.log('sri:', sri, ', eri:', eri);
     rows.heights(sri, eri, (i, hh, total) => {
       canvas.line([0, total], [w, total]);
@@ -54,31 +50,35 @@ function renderHeader(viewRange) {
     canvas.attr({
       textAlign: 'center',
       textBaseline: 'middle',
-      font: `500 ${npx(12)}px Source Sans Pro`,
+      font: '500 9pt Source Sans Pro',
       fillStyle: '#585757',
-      lineWidth: thinLineWidth(),
+      lineWidth: 1,
       strokeStyle: '#e6e6e6',
     });
     // console.log('viewRange:', viewRange);
-    // console.log('sri:', sri, ', eri:', eri);
-    rows.heights(sri, eri, (i, hh, total) => {
-      const y = total + indexHeight;
-      if (range.inRow(i)) {
-        renderSelectedHeader.call(this, 0, y, indexWidth, hh);
-      }
-      canvas.line([0, y], [indexWidth, y])
-        .fillText(i + 1, indexWidth / 2, y + (hh / 2));
+    canvas.saveRestore(() => {
+      canvas.translate(0, indexHeight);
+      rows.heights(sri, eri, (i, hh, total) => {
+        const y = total;
+        if (range.inRow(i)) {
+          renderSelectedHeader.call(this, 0, y, indexWidth, hh);
+        }
+        canvas.line([0, y], [indexWidth, y])
+          .fillText(i + 1, indexWidth / 2, y + (hh / 2));
+      });
+      canvas.line([indexWidth, indexHeight], [indexWidth, h]);
+    }).saveRestore(() => {
+      canvas.translate(indexWidth, 0);
+      cols.widths(sci, eci, (i, ww, total) => {
+        const x = total;
+        if (range.inCol(i)) {
+          renderSelectedHeader.call(this, x, 0, ww, indexHeight);
+        }
+        canvas.line([x, 0], [x, indexHeight])
+          .fillText(stringAt(i), x + (ww / 2), indexHeight / 2);
+      });
+      canvas.line([indexWidth, indexHeight], [w, indexHeight]);
     });
-    canvas.line([indexWidth, indexHeight], [indexWidth, h]);
-    cols.widths(sci, eci, (i, ww, total) => {
-      const x = total + indexWidth;
-      if (range.inCol(i)) {
-        renderSelectedHeader.call(this, x, 0, ww, indexHeight);
-      }
-      canvas.line([x, 0], [x, indexHeight])
-        .fillText(stringAt(i), x + (ww / 2), indexHeight / 2);
-    });
-    canvas.line([indexWidth, indexHeight], [w, indexHeight]);
   });
 }
 
@@ -88,11 +88,11 @@ function renderCell(ri, ci, cellBox, merge = false) {
   if (!merge && !cell.$) return;
   // if (data.merges.includes(ri, ci)) return;
 
+  // console.log(ri, ci, box);
   const box = Canvas.box(cellBox());
   const {
     bgcolor, border, font, align, valign, color, underline, textwrap,
   } = cell.style;
-  // console.log(ri, ci, box);
   box.bgcolor = bgcolor;
   if (border) {
     box.border = border;
@@ -100,13 +100,19 @@ function renderCell(ri, ci, cellBox, merge = false) {
   }
   canvas.clipRect(box, () => {
     // console.log(nfont);
-    const { value } = cell;
-    if (value) {
-      const nfont = Object.assign({}, font);
-      nfont.size = pt2px(font.size);
+    const { value, type } = cell;
+    if (type === 'radio' || type === 'checkbox') {
+      const { options } = data.validation(ri, ci).rule;
+      // console.log('valdation:', data.validation(ri, ci));
+      canvas.tag(box, options, value, textwrap);
+    } else if (value) {
+      // const nfont = Object.assign({}, font);
       canvas.text(value, box, {
-        align, valign, font: nfont, color, underline,
+        align, valign, font, color, underline,
       }, textwrap);
+    }
+    if (type !== undefined) {
+      canvas.icon(type, box);
     }
   });
 }
@@ -114,10 +120,9 @@ function renderCell(ri, ci, cellBox, merge = false) {
 function renderContent(viewRange) {
   const { canvas, data } = this;
   const {
-    indexWidth, indexHeight, merges,
+    merges,
   } = data;
   canvas.saveRestore(() => {
-    canvas.translate(indexWidth, indexHeight);
     // 1 render cell
     viewRange.each((ri, ci) => {
       renderCell.call(this, ri, ci, () => data.cellBox(ri, ci));
@@ -138,15 +143,17 @@ export default class Table {
   render() {
     const { canvas, data } = this;
     const {
-      viewRange, design,
+      viewRange, design, indexWidth, indexHeight,
     } = data;
     const { w, h } = viewRange;
-    canvas.clear(w, h).resize(w, h);
+    canvas.resize(w, h);
 
     if (design) {
-      // canvas.translate(indexWidth, indexHeight);
-      renderGrid.call(this, viewRange);
-      renderContent.call(this, viewRange);
+      canvas.saveRestore(() => {
+        canvas.translate(indexWidth, indexHeight);
+        renderGrid.call(this, viewRange);
+        renderContent.call(this, viewRange);
+      });
       renderHeader.call(this, viewRange);
     }
   }

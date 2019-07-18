@@ -14,8 +14,6 @@
  *  }
  * }
  */
-import { npx } from './helper';
-
 function drawFontLine(canvas, type, tx, ty, align, valign, blheight, blwidth) {
   const floffset = { x: 0, y: 0 };
   if (type === 'underline') {
@@ -56,7 +54,7 @@ export default function text(canvas, txt, box, attr = {}, textwrap = true) {
     canvas.attr({
       textAlign: align,
       textBaseline: valign,
-      font: `${italic ? 'italic' : ''} ${bold ? 'bold' : ''} ${npx(size)}px ${name}`,
+      font: `${italic ? 'italic' : ''} ${bold ? 'bold' : ''} ${size}pt ${name}`,
       fillStyle: color,
       strokeStyle: color,
     });
