@@ -1,5 +1,5 @@
 import Canvas from './core';
-import { stringAt } from '../core/alphabet';
+import { stringAt } from '../data/alphabet';
 
 function renderGrid(viewRange) {
   const { canvas, data } = this;

@@ -33,9 +33,11 @@ export default function icon(canvas, type, box) {
     canvas.translate(sx, sy);
     // console.log('sx:', sx, ', sy:', sy, draw[type]);
     if (draw[type]) draw[type](canvas);
+    /*
     else {
       canvas.attr({ fillStyle: defaultStyle })
         .fillRect(2, 4, 10, 10);
     }
+    */
   });
 }

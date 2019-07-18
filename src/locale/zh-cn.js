@@ -58,12 +58,22 @@ export default {
   },
   form: {
     palette: '表单类型',
+    type: {
+      text: '文本',
+      integer: '整数',
+      number: '小树',
+      radio: '单选',
+      checkbox: '多选',
+      select: '下拉',
+      date: '日期',
+    },
     property: {
       title: '属性',
       type: '类型',
       ref: 'Ref',
       key: 'Key',
       required: '是否必填',
+      pattern: '匹配模式',
       min: '最小值',
       max: '最大值',
       precision: '小数位数',

@@ -1,0 +1,42 @@
+@import './base.less';
+
+@{css-prefix}-checkbox {
+  position: relative;
+  display: inline-block;
+  outline: 0;
+
+  label {
+    cursor: pointer;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: ""!important;
+      background: #fff;
+      border-radius: 2px;
+      width: 11px;
+      height: 11px;
+      border: 1px solid #d9d9d9;
+    }
+  }
+
+  &.active {
+    label {
+      &:before {
+        background: #4b89ff;
+        border-color: #4b89ff;
+      }
+      &:after {
+        position: absolute;
+        left: 3.2px;
+        top: 1.2px;
+        content: "";
+        width: 4px;
+        height: 5.5px;
+        border-bottom: 2px solid #fff;
+        border-right: 2px solid #fff;
+        transform: rotate(45deg);
+      }
+    }
+  }
+}

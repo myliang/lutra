@@ -1,4 +1,4 @@
-const padding = 3;
+const padding = 4;
 
 export default function tag(canvas, box, options, key) {
   let { x, y } = box;
@@ -8,7 +8,7 @@ export default function tag(canvas, box, options, key) {
     const [k, v] = option.split(':');
     let [bgcolor, color] = ['#e8e8e8', '#000'];
     if (k === key) [bgcolor, color] = ['#4b89ff', '#fff'];
-    const w = canvas.textWidth(v) + 10;
+    const w = canvas.textWidth(v) + 16;
     canvas.saveRestore(() => {
       canvas.attr({
         fillStyle: bgcolor,
@@ -19,7 +19,8 @@ export default function tag(canvas, box, options, key) {
         textAlign: 'center',
         textBaseline: 'middle',
         fillStyle: color,
-      }).fillText(v, x + w / 2, y + (padding * 3));
+        font: '560 8.5pt Source Sans Pro',
+      }).fillText(v, x + w / 2, y + 9);
     });
 
     x += w + padding;

@@ -58,12 +58,22 @@ export default {
   },
   form: {
     palette: 'Form Palette',
+    type: {
+      text: 'Text',
+      integer: 'Integer',
+      number: 'Number',
+      radio: 'Radio',
+      checkbox: 'Checkbox',
+      select: 'Select',
+      date: 'Date',
+    },
     property: {
       title: 'Property',
       type: 'Type',
       ref: 'Ref',
       key: 'Key',
       required: 'Required',
+      pattern: 'Pattern',
       min: 'Min',
       max: 'Max',
       precision: 'Prescision',
