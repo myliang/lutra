@@ -39,7 +39,6 @@ export function validate(v) {
 
   // console.log('errors:', errors);
   this.$errors = errors;
-  this.update();
   if (errors.length > 0) {
     return false;
   }
@@ -62,6 +61,8 @@ export class Base extends BaseElement {
   $errors = [];
 
   validate() {
-    return validate.call(this, this.$props.value);
+    const ret = validate.call(this, this.$props.value);
+    if (!ret) this.update();
+    return ret;
   }
 }

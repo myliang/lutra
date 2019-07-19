@@ -163,10 +163,10 @@ function editorChange(v) {
   this.$data.update('text', v);
 }
 
-function formPropertyChange() {
+function formPropertyChange(type) {
   const { formProperty } = this.$state;
   formProperty.show = false;
-  this.$data.updateValidation(formProperty.value, formProperty.show);
+  this.$data.updateValidation(formProperty.value, type === 'remove');
   this.update();
 }
 

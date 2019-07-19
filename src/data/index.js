@@ -298,7 +298,7 @@ export default class Data {
   updateValidation({ ref, key, rule }, isRemove = false) {
     this.validations.update({ ref, key, rule }, isRemove);
     const [ci, ri] = expr2xy(ref);
-    // console.log('ri:', ri, ', ci:', ci, isRemove ? undefined : rule.type);
+    console.log('ri:', ri, ', ci:', ci, isRemove ? undefined : rule.type);
     Cell.write(this.$, this.styles, ri, ci)
       .update('type', isRemove ? undefined : rule.type);
     // console.log('data:', this);
