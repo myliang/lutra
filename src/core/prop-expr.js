@@ -7,6 +7,19 @@ function setElementProp(el, name, value) {
   // if (el.update) el.update();
 }
 
+const tableTagSet = new Set([
+  'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'col', 'colgroup',
+]);
+
+function setElementDisplay({ style, tagName }, show) {
+  if (tableTagSet.has(tagName.toLowerCase())) {
+    if (show) style.display = '';
+    else style.display = 'none';
+  } else {
+    style.display = show === true ? 'block' : 'none';
+  }
+}
+
 export default class PropExpr extends Expr {
   constructor(element, name) {
     super();
@@ -27,7 +40,8 @@ export default class PropExpr extends Expr {
     if (!equals(v, value)) {
       // console.log('name:', name, v, value, el);
       if (name === 'show') {
-        el.style.display = value === true ? 'block' : 'none';
+        // el.style.display = value === true ? 'block' : 'none';
+        setElementDisplay(el, value);
       } else if (name === 'scroll') {
         const { left, top } = value;
         if (left !== undefined) el.scrollLeft = left;
