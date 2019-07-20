@@ -6,6 +6,7 @@ import './scrollbar';
 import './resizer';
 import './selector';
 import './calendar';
+import './date-picker';
 import './color-palette';
 import './align-picker';
 import './color-picker';

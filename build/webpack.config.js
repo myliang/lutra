@@ -5,7 +5,7 @@ const resolve = dir => path.join(__dirname, '..', dir);
 
 module.exports = {
   entry: {
-    'lutra': './src/index2.js',
+    'lutra': './src/index.js',
   },
   module: {
     rules: [
