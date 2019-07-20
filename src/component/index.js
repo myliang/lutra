@@ -5,6 +5,7 @@ import './editor';
 import './scrollbar';
 import './resizer';
 import './selector';
+import './calendar';
 import './color-palette';
 import './align-picker';
 import './color-picker';

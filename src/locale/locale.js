@@ -14,7 +14,10 @@ function translate(key, messages, ...args) {
       const property = keys[i];
       const value = message[property];
       if (i === keys.length - 1) {
-        return value.replace(/\{(\d+)\}/g, (m, index) => args[index]);
+        if (typeof value === 'string') {
+          return value.replace(/\{(\d+)\}/g, (m, index) => args[index]);
+        }
+        return value;
       }
       if (!value) return undefined;
       message = value;
