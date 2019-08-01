@@ -27,6 +27,9 @@ const types = {
     validator() {},
   },
   */
+  bool: {
+    fields: [],
+  },
   radio: {
     fields: ['required', 'options'],
     validator() {},

@@ -60,6 +60,7 @@ export default {
     palette: 'Form Palette',
     type: {
       text: 'Text',
+      bool: 'Boolean',
       integer: 'Integer',
       number: 'Number',
       radio: 'Radio',

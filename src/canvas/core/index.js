@@ -114,6 +114,18 @@ export default class Canvas {
     return this;
   }
 
+  roundRect(x, y, w, h, r) {
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    // this.arcTo(x+r, y);
+    this.closePath();
+    return this;
+  }
+
   stroke() {
     const { ctx } = this;
     attrRadio(ctx,

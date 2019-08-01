@@ -1,6 +1,12 @@
 const defaultStyle = '#e6e6e6';
 
 const draw = {
+  bool(canvas, { width }) {
+    canvas.attr({
+      strokeStyle: '#999999',
+      lineWidth: 2,
+    }).roundRect((-width / 2) + 8, 2, 12, 12, 2).stroke();
+  },
   select(canvas) {
     canvas.attr({ fillStyle: defaultStyle })
       .moveTo(2, 4)
@@ -32,7 +38,7 @@ export default function icon(canvas, type, box) {
   canvas.saveRestore(() => {
     canvas.translate(sx, sy);
     // console.log('sx:', sx, ', sy:', sy, draw[type]);
-    if (draw[type]) draw[type](canvas);
+    if (draw[type]) draw[type](canvas, box);
     /*
     else {
       canvas.attr({ fillStyle: defaultStyle })

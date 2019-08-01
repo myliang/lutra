@@ -69,7 +69,7 @@ class FormPropertyPalette extends BaseElement {
     const { value, fields } = this.$props;
     const { ref, key, rule } = value;
     // set precision default value is 2
-    if (fields.includes('precision')) {
+    if (fields && fields.includes('precision')) {
       rule.precision = rule.precision || 2;
     }
     // console.log(ref, key, 'rule:', rule);

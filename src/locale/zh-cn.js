@@ -60,6 +60,7 @@ export default {
     palette: '表单类型',
     type: {
       text: '文本',
+      bool: '布尔值',
       integer: '整数',
       number: '小树',
       radio: '单选',
