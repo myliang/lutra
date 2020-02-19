@@ -47,7 +47,7 @@
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^0.1.19",
-    "codecov": "^3.3.0",
+    "codecov": "^3.6.5",
     "css-loader": "^1.0.0",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
